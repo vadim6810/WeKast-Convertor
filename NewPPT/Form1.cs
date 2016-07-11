@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Office.Interop.PowerPoint;
+using Application = Microsoft.Office.Interop.PowerPoint.Application;
 
 namespace NewPPT
 {
@@ -15,6 +17,11 @@ namespace NewPPT
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Converter.Converter.convert();
         }
     }
 }
