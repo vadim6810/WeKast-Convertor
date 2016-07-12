@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
+using NewPPT.Utils;
 using Application = Microsoft.Office.Interop.PowerPoint.Application;
 
 namespace NewPPT.Converter
@@ -18,8 +19,10 @@ namespace NewPPT.Converter
         public static void Convert(FrmMain frmMain)
         {
             _form = frmMain;
-            Log("Opening Power Point");
+            Log("Start Power Point");
             Application pw = new Application();
+            EventLogger el = new EventLogger(frmMain);
+
             string presName = @"d:\flip_split.pptx";
             Presentation pres = pw.Presentations.Open(presName);
             string vName = System.IO.Path.GetFileNameWithoutExtension(presName) + ".mp4";

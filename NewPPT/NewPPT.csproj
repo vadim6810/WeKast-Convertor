@@ -47,8 +47,13 @@
       <HintPath>..\packages\Accord.Video.FFMPEG.3.0.2\lib\net45\Accord.Video.FFMPEG.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Interop.Shell32">
+      <HintPath>D:\C#\Wekastcode_C#\10.08.14\WeKastRibbon\WeKastRibbon\obj\Debug\Interop.Shell32.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -69,6 +74,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\EventLogger.cs" />
+    <Compile Include="Utils\YouTubeDownloader\FileSizeFormatProvider.cs" />
+    <Compile Include="Utils\YouTubeDownloader\Helper.cs" />
+    <Compile Include="Utils\YouTubeDownloader\YouTubeDownloader.cs" />
+    <Compile Include="Utils\ZipDocument\ZipDocumentClass.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
