@@ -74,7 +74,16 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\AbortableBackgroundWorker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utils\DocumentsParserClass.cs" />
     <Compile Include="Utils\EventLogger.cs" />
+    <Compile Include="Utils\FileDownloader.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Utils\MediaDownloaderClass.cs" />
+    <Compile Include="Utils\SplitAnimation.cs" />
     <Compile Include="Utils\YouTubeDownloader\FileSizeFormatProvider.cs" />
     <Compile Include="Utils\YouTubeDownloader\Helper.cs" />
     <Compile Include="Utils\YouTubeDownloader\YouTubeDownloader.cs" />

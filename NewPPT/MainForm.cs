@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using Microsoft.Office.Interop.PowerPoint;
 using NewPPT.Utils;
 
 namespace NewPPT
 {
     public partial class FrmMain : Form
     {
-        EventLogger el;
+        //EventLogger _el;
         public FrmMain()
         {
             InitializeComponent();
@@ -24,8 +23,8 @@ namespace NewPPT
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            el = new EventLogger(this);
-            el.AttachEvents();
+            //_el = new EventLogger(this);
+            //_el.AttachEvents();
         }
 
 
@@ -57,7 +56,7 @@ namespace NewPPT
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            el.DetachEvents();
+            //_el.DetachEvents();
         }
     }
 }

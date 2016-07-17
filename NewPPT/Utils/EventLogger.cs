@@ -10,11 +10,11 @@ namespace NewPPT.Utils
         private static Application _oPpt;
         private static FrmMain _frmMain;
 
-        public EventLogger(FrmMain frmMain)
+        public EventLogger(FrmMain frmMain, Application pw)
         {
             _frmMain = frmMain;
             //Create an instance of PowerPoint.
-            _oPpt = new Application {Visible = MsoTriState.msoFalse};
+            _oPpt = pw;//new Application();
         }
 
         public void AttachEvents()
