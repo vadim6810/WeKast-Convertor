@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace NewPPT.Utils.YouTubeDownloader
+namespace WeCastConvertor.Utils.YouTubeDownloader
 {
     public static class FormatLeftTime
     {

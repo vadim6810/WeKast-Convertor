@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 
-namespace NewPPT.Utils
+namespace WeCastConvertor.Utils
 {
     internal class EventLogger
     {

@@ -6,7 +6,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Office.Core;
@@ -21,7 +20,7 @@ using Presentation = Microsoft.Office.Interop.PowerPoint.Presentation;
 using Slide = Microsoft.Office.Interop.PowerPoint.Slide;
 
 
-namespace NewPPT.Utils
+namespace WeCastConvertor.Utils
 {
     internal class DocumentsParserClass
     {

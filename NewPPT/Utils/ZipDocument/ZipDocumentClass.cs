@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading;
 using Shell32;
 
-namespace NewPPT.Utils.ZipDocument
+namespace WeCastConvertor.Utils.ZipDocument
 {
     internal class ZipDocumentClass
     {

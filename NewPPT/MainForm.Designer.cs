@@ -1,4 +1,4 @@
-﻿namespace NewPPT
+﻿namespace WeCastConvertor
 {
     partial class FrmMain
     {

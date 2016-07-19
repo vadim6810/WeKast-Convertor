@@ -1,56 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
-using NewPPT.Utils;
-using Application = Microsoft.Office.Interop.PowerPoint.Application;
+using WeCastConvertor.Utils;
+using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
-namespace NewPPT.Converter
+namespace WeCastConvertor.Converter
 {
-    class Converter
+    internal class Converter
     {
         private static FrmMain _form;
-        static EventLogger _el;
-        LinkedList<int> _durations;
-        static Application pw;
+        private static EventLogger _el;
+        private static Application _pw;
+        private LinkedList<int> _durations;
 
         public static void Convert(FrmMain frmMain)
         {
             _form = frmMain;
-            pw = new Application();
-            _el = new EventLogger(frmMain, pw);
+            _pw = new Application();
+            _el = new EventLogger(frmMain, _pw);
             _el.AttachEvents();
             const string presName = @"d:\flip_split.pptx";
-            var pres = pw.Presentations.Open(presName);
-            string vName = System.IO.Path.GetFileNameWithoutExtension(presName) + ".mp4";
+            var pres = _pw.Presentations.Open(presName);
+            var vName = Path.GetFileNameWithoutExtension(presName) + ".mp4";
             Log("vName=" + vName);
             ParseExternalMedia(pres);
             SetNullTrnsactDurations(pres);
             ExportToMp4(pres);
-            //pres.SlideShowSettings.
-            //pres.SaveAs(vName,PpSaveAsFileType.ppSaveAsMP4,MsoTriState.msoCTrue);
-            //pres.SlideShowSettings.Run();
-            //while(pw.SlideShowWindows.Count >= 1)
-            //{
-            //    System.Windows.Forms.Application.DoEvents();
-            //    Thread.Sleep(1000);
-            //}
-            while (false)
-            {
-
-            }
             _el.DetachEvents();
-            //pres.Close();
-            //Marshal.ReleaseComObject(pw); 
+            pres.Close();
+            _pw.Quit();
         }
 
         private static void ParseExternalMedia(Presentation pres)
@@ -60,20 +41,22 @@ namespace NewPPT.Converter
                 var isFileDownloaded = false;
                 var tempResFolderPath = Environment.GetEnvironmentVariable("TEMP");
                 var slideShapes = slide.Shapes;
-                foreach (Microsoft.Office.Interop.PowerPoint.Shape shape in slideShapes)
+                foreach (Shape shape in slideShapes)
                 {
                     if (shape.Type == MsoShapeType.msoEmbeddedOLEObject
                         || shape.Type == MsoShapeType.msoOLEControlObject
                         || shape.Type == MsoShapeType.msoLinkedOLEObject)
                     {
+                        Log(string.Format("SLide{0} shapeid={1} shapeType=",slide.SlideNumber,shape.Id,shape.Type));
                         try
                         {
                             //ShockwaveFlashObjects.ShockwaveFlash objFlash = (ShockwaveFlashObjects.ShockwaveFlash)shape.OLEFormat.Object;
                             //downloadAndSaveMedia(objFlash.Movie, tempResFolderPath, destDirectory, slide);
                             isFileDownloaded = true;
                         }
-                        catch (Exception e)
+                        catch (Exception exception)
                         {
+                            Log(exception.Message);
                         }
                         //string moviePath = objFlash.Movie;
                         //System.Windows.Forms.MessageBox.Show(" Slide  : " + moviePath);
@@ -93,7 +76,7 @@ namespace NewPPT.Converter
                         try
                         {
                             videoPath = shape.LinkFormat.SourceFullName; // contains the movie path 
-                                                                         //get the path like this
+                            //get the path like this
                             //////////getTargetVideoFile(videoPath, destDirectory, slide.SlideIndex);
                             //   System.Windows.Forms.MessageBox.Show(" After downloading : " + videoPath);
                         }
@@ -128,63 +111,44 @@ namespace NewPPT.Converter
                     }
                 }
                 //}
-
-                
             }
             //var filePath = MediaDownloaderClass.downloadMediaFile(address, tempPath, targetYoutubeVideo);
-
         }
 
         private static void ExportToMp4(Presentation pres)
         {
             try
             {
-                var strPath = @"D:\";//Path.GetTempPath();
-                Log("Temp path is "+strPath);
+                var strPath = @"D:\"; //Path.GetTempPath();
+                Log("Temp path is " + strPath);
                 //Environment.GetFolderPath("Temp");
-                var nFile = pres.Name;
-                nFile = Path.GetFileNameWithoutExtension(pres.Name)+".mp4";
-                Log("Presentation name is "+nFile);
+                var nFile = Path.GetFileNameWithoutExtension(pres.Name) + ".mp4";
+                Log("Presentation name is " + nFile);
                 pres.SaveAs(Path.Combine(strPath, nFile), PpSaveAsFileType.ppSaveAsMP4, MsoTriState.msoTrue);
-                while (pw.ActivePresentation.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress || pw.ActivePresentation.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusQueued)
+                while (_pw.ActivePresentation.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress ||
+                       _pw.ActivePresentation.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusQueued)
                 {
                     System.Windows.Forms.Application.DoEvents();
                     Thread.Sleep(500);
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-
-                throw;
+                Log(exception.Message);
             }
-
         }
 
         private static void SetNullTrnsactDurations(Presentation pres)
         {
-            int slidesCount = pres.Slides.Count;
-            int[] SlideIdx = new int[slidesCount];
-            for (int i = 0; i < slidesCount; i++) SlideIdx[i] = i + 1;
-            var objSldRng = pres.Slides.Range(SlideIdx);
-            var objSST = objSldRng.SlideShowTransition;
-            objSST.AdvanceOnTime = MsoTriState.msoTrue;
-            objSST.AdvanceTime = 0;
-            //objSST.EntryEffect = PpEntryEffect.ppEffectBoxOut;
-            //var master = slide.Master;
-            //master.SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
-            //Log(string.Format("slide{0} AdvenceOnTime : {1}",slide.SlideNumber,master.SlideShowTransition.AdvanceOnTime));
-            //master.SlideShowTransition.AdvanceTime = 0;
-            //Log(string.Format("slide{0} AdvenceTime : {1}", slide.SlideNumber,master.SlideShowTransition.AdvanceTime));
-            //master.SlideShowTransition.;
-            //foreach (Effect anim in slide.TimeLine.MainSequence)
-            //{
-            //    anim.Timing.Duration = 0;
-            //}
+            var slidesCount = pres.Slides.Count;
+            var slideIndex = new int[slidesCount];
+            for (var i = 0; i < slidesCount; i++) slideIndex[i] = i + 1;
+            var objSldRng = pres.Slides.Range(slideIndex);
+            var objSst = objSldRng.SlideShowTransition;
+            objSst.AdvanceOnTime = MsoTriState.msoTrue;
+            objSst.AdvanceTime = 0;
         }
 
         private static void Log(string s) => _form.AppendLog(DateTime.Now.ToString("hh:mm:ss") + ": " + s);
-
     }
-
-
 }

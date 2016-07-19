@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NewPPT.Utils.YouTubeDownloader
+namespace WeCastConvertor.Utils.YouTubeDownloader
 {
     public class FileSizeFormatProvider : IFormatProvider, ICustomFormatter
     {

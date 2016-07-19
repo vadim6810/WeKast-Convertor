@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using NewPPT.Utils;
 
-namespace NewPPT
+namespace WeCastConvertor
 {
     public partial class FrmMain : Form
     {

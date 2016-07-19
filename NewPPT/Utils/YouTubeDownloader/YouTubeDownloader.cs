@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace NewPPT.Utils.YouTubeDownloader
+namespace WeCastConvertor.Utils.YouTubeDownloader
 {
     /// <summary>
     ///     Contains information about the video url extension and dimension

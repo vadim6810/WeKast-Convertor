@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using NewPPT.Utils.YouTubeDownloader;
+using WeCastConvertor.Utils.YouTubeDownloader;
 
-namespace NewPPT.Utils
+namespace WeCastConvertor.Utils
 {
     class MediaDownloaderClass
     {

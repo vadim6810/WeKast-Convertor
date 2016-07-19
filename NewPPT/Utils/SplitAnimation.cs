@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 
-namespace NewPPT.Utils{
+namespace WeCastConvertor.Utils{
 
     public class SplitAnimation
     {
@@ -151,18 +151,18 @@ namespace NewPPT.Utils{
             {
                 for (int i = 0; i < filePaths.Length; i++)
                     fileName = filePaths[i];
-                Microsoft.Office.Interop.PowerPoint.Application ppApp = new Microsoft.Office.Interop.PowerPoint.Application();
+                Application ppApp = new Application();
                 ppApp.Visible = MsoTriState.msoTrue;
                 ppApp.WindowState = PpWindowState.ppWindowMinimized;
-                Microsoft.Office.Interop.PowerPoint.Presentations oPresSet = ppApp.Presentations;
-                Microsoft.Office.Interop.PowerPoint._Presentation oPres = oPresSet.Open(fileName,
+                Presentations oPresSet = ppApp.Presentations;
+                _Presentation oPres = oPresSet.Open(fileName,
                             MsoTriState.msoFalse, MsoTriState.msoFalse,
                             MsoTriState.msoFalse);
                 try
                 {
                     oPres.CreateVideo(exportName);
                     oPres.SaveCopyAs(String.Format(exportPath, exportName),
-                        Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsWMV,
+                        PpSaveAsFileType.ppSaveAsWMV,
                         MsoTriState.msoCTrue);
                 }
                 finally
@@ -186,9 +186,9 @@ namespace NewPPT.Utils{
 
             try
             {
-                Microsoft.Office.Interop.PowerPoint.Application pptApplication = new Microsoft.Office.Interop.PowerPoint.Application();
+                Application pptApplication = new Application();
                 pptPresentation = pptApplication.Presentations.Open(fileLocationDir, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoFalse);
-                pptPresentation.SaveAs(outputFile, Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsWMV, MsoTriState.msoTriStateMixed);
+                pptPresentation.SaveAs(outputFile, PpSaveAsFileType.ppSaveAsWMV, MsoTriState.msoTriStateMixed);
                 long len = 0;
                 do
                 {
@@ -216,7 +216,7 @@ namespace NewPPT.Utils{
         }
         private static void splitPesentationToSlides(string presFileName, string presPath, bool isPlaceHolder)
         {
-            Microsoft.Office.Interop.PowerPoint.Application pptApplication = new Microsoft.Office.Interop.PowerPoint.Application();
+            Application pptApplication = new Application();
             Presentation pptPresentation = pptApplication.Presentations.Open(presFileName, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoFalse);
             //original
             //SplitAnimationClass.AddElements(pptPresentation, presPath, isPlaceHolder);

@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using NewPPT.Utils.YouTubeDownloader;
+using WeCastConvertor.Utils.YouTubeDownloader;
 
-namespace NewPPT.Utils
+namespace WeCastConvertor.Utils
 {
     public enum DownloadStatus { None, Downloading, Paused, Success, Failed, Canceled }
     /// <summary>
@@ -77,10 +77,10 @@ namespace NewPPT.Utils
             _pause = false;
             DownloadStatus = DownloadStatus.Downloading;
        //     OnProgressChanged(new ProgressChangedEventArgs(Progress, null));
-            DownloadData = DownloadData.Create(FileUrl, DestFolder, this.DestFileName, Helper.InitialProxy());
+            DownloadData = DownloadData.Create(FileUrl, DestFolder, DestFileName, Helper.InitialProxy());
             if (string.IsNullOrEmpty(DestFileName))
                 Path.GetFileName(DownloadData.Response.ResponseUri.ToString());
-            this.downloadingTo = Path.Combine(DestFolder, DestFileName);
+            downloadingTo = Path.Combine(DestFolder, DestFileName);
             FileMode mode = DownloadData.StartPoint > 0 ? FileMode.Append : FileMode.OpenOrCreate;
             fileStream = File.Open(downloadingTo, mode, FileAccess.Write);
             byte[] buffer = new byte[DownloadBlockSize];
@@ -224,7 +224,7 @@ namespace NewPPT.Utils
             this.response = response;
             this.size = size;
             this.start = start;
-            this.stream = null;
+            stream = null;
         }
 
         /// <summary>
@@ -284,13 +284,13 @@ namespace NewPPT.Utils
         {
             //WebProxy proxy = WebProxy.GetDefaultProxy();
             WebRequest request = WebRequest.Create(url);
-            request.Proxy = this.proxy;
+            request.Proxy = proxy;
             return request;
         }
 
         public void Close()
         {
-            this.response.Close();
+            response.Close();
         }
 
         #region Properties
@@ -303,25 +303,25 @@ namespace NewPPT.Utils
         {
             get
             {
-                if (this.start == this.size)
+                if (start == size)
                     return Stream.Null;
-                if (this.stream == null)
-                    this.stream = this.response.GetResponseStream();
-                return this.stream;
+                if (stream == null)
+                    stream = response.GetResponseStream();
+                return stream;
             }
         }
         public long FileSize
         {
             get
             {
-                return this.size;
+                return size;
             }
         }
         public long StartPoint
         {
             get
             {
-                return this.start;
+                return start;
             }
         }
         public bool IsProgressKnown
@@ -331,7 +331,7 @@ namespace NewPPT.Utils
                 // If the size of the remote url is -1, that means we
                 // couldn't determine it, and so we don't know
                 // progress information.
-                return this.size > -1;
+                return size > -1;
             }
         }
         #endregion

@@ -1,13 +1,15 @@
-﻿using System.Threading;
+﻿using System;
+using System.ComponentModel;
+using System.Threading;
 
-namespace System.ComponentModel
+namespace WeCastConvertor.Utils
 {
     public class AbortableBackgroundWorker : BackgroundWorker
     {
         public AbortableBackgroundWorker()
         {
-            this.WorkerSupportsCancellation = true;
-            this.WorkerReportsProgress = true;
+            WorkerSupportsCancellation = true;
+            WorkerReportsProgress = true;
         }
         /// <summary>
         /// Start work in current thread
@@ -44,7 +46,7 @@ namespace System.ComponentModel
         public void Abort()
         {
             if (!IsBusy) return;
-            this.CancelAsync();
+            CancelAsync();
             try
             {
                 if (workerThread != null)
