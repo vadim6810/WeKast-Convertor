@@ -22,8 +22,6 @@ namespace WeCastConvertor
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //_el = new EventLogger(this);
-            //_el.AttachEvents();
         }
 
 
