@@ -161,6 +161,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Converter\Interop.ACTIVEXLib.dll" />
     <Content Include="Interop.Shell32.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
