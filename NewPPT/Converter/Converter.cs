@@ -13,12 +13,12 @@ namespace WeCastConvertor.Converter
 {
     internal class Converter
     {
-        private static FrmMain _form;
+        private static ILogger _form;
         private static EventLogger _el;
         private static Application _pw;
         private LinkedList<int> _durations;
 
-        public static void Convert(FrmMain frmMain)
+        public static void Convert(ILogger frmMain)
         {
             _form = frmMain;
             _pw = new Application();

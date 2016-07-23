@@ -8,9 +8,9 @@ namespace WeCastConvertor.Utils
     internal class EventLogger
     {
         private static Application _oPpt;
-        private static FrmMain _frmMain;
+        private static ILogger _frmMain;
 
-        public EventLogger(FrmMain frmMain, Application pw)
+        public EventLogger(ILogger frmMain, Application pw)
         {
             _frmMain = frmMain;
             //Create an instance of PowerPoint.

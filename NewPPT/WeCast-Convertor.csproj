@@ -78,11 +78,13 @@
     <Compile Include="Utils\AbortableBackgroundWorker.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utils\DebugLogger.cs" />
     <Compile Include="Utils\DocumentsParserClass.cs" />
     <Compile Include="Utils\EventLogger.cs" />
     <Compile Include="Utils\FileDownloader.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Utils\ILogger.cs" />
     <Compile Include="Utils\MediaDownloaderClass.cs" />
     <Compile Include="Utils\SplitAnimation.cs" />
     <Compile Include="Utils\ZipDocument\ZipDocumentClass.cs" />
@@ -114,19 +116,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="ACTIVEXLib">
-      <Guid>{012F24C1-35B0-11D0-BF2D-0000E8D0D146}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
     <COMReference Include="Microsoft.Office.Core">
       <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
       <VersionMajor>2</VersionMajor>
-      <VersionMinor>8</VersionMinor>
+      <VersionMinor>7</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>
@@ -135,7 +128,7 @@
     <COMReference Include="Microsoft.Office.Interop.PowerPoint">
       <Guid>{91493440-5A91-11CF-8700-00AA0060263B}</Guid>
       <VersionMajor>2</VersionMajor>
-      <VersionMinor>12</VersionMinor>
+      <VersionMinor>11</VersionMinor>
       <Lcid>0</Lcid>
       <WrapperTool>primary</WrapperTool>
       <Isolated>False</Isolated>

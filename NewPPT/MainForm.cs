@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using WeCastConvertor.Utils;
 
 namespace WeCastConvertor
 {
-    public partial class FrmMain : Form
+    public partial class FrmMain : Form, ILogger 
     {
         //EventLogger _el;
         public FrmMain()
@@ -18,7 +19,7 @@ namespace WeCastConvertor
             thread.Start();
         }
 
-        private void Convert() => Converter.Converter.Convert(this);
+        private void Convert() => Converter.Converter.Convert(new DebugLogger());
 
         private void Form1_Load(object sender, EventArgs e)
         {
