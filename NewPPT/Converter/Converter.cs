@@ -4,12 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
-using mshtml;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using WeCastConvertor.Utils;
-using WeCastConvertor.Utils.YouTubeDownloader;
-using YoutubeExtractor;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace WeCastConvertor.Converter
@@ -101,12 +98,12 @@ namespace WeCastConvertor.Converter
                             Log(videoPath);
                             //var urls = YouTubeDownloader.GetYouTubeVideoUrls(videoPath);
                             //var list = YouTubeDownloader.GetQuality(urls);
-                            var urls = YouTubeDownloader.GetYouTubeVideoUrls(videoPath);
+                            //var urls = YouTubeDownloader.GetYouTubeVideoUrls(videoPath);
 
-                            YouTubeVideoQuality[] arr = urls.ToArray();
-                            YouTubeVideoQuality tempItem = arr[0];
-                            var temp = tempItem.VideoTitle.Replace(@"\", "").Replace("&#39;", "'").Replace("&quot;", "'").Replace("&lt;", "(").Replace("&gt;", ")").Replace("+", " ").Replace(":", "-");
-                            string FileName = temp + "." + tempItem.Extention;
+                            //YouTubeVideoQuality[] arr = urls.ToArray();
+                            //YouTubeVideoQuality tempItem = arr[0];
+                            //var temp = tempItem.VideoTitle.Replace(@"\", "").Replace("&#39;", "'").Replace("&quot;", "'").Replace("&lt;", "(").Replace("&gt;", ")").Replace("+", " ").Replace(":", "-");
+                            //string FileName = temp + "." + tempItem.Extention;
 
                             //downloadedFilePath = Path.Combine(targetPath, FileName);
                             //initFileDownloader(tempItem.DownloadUrl, targetPath, FileName);

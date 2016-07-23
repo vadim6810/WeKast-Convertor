@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using WeCastConvertor.Utils.YouTubeDownloader;
+//using WeCastConvertor.Utils.YouTubeDownloader;
 
 namespace WeCastConvertor.Utils
 {
     class MediaDownloaderClass
     {
-        private List<YouTubeVideoQuality> urls;
+        //private List<YouTubeVideoQuality> urls;
         private FileDownloader downloader;
         private string downloadedFilePath = String.Empty;
         private static DocumentsParserClass.MediaHandler handler;
@@ -35,14 +35,14 @@ namespace WeCastConvertor.Utils
                 //        "Invalid URL");
                 //    return;
                 //}
-                urls = YouTubeDownloader.YouTubeDownloader.GetYouTubeVideoUrls(link);
+                //urls = YouTubeDownloader.YouTubeDownloader.GetYouTubeVideoUrls(link);
 
-                YouTubeVideoQuality[] arr = urls.ToArray();
-                YouTubeVideoQuality tempItem = arr[0];
-                string FileName = FormatTitle(tempItem.VideoTitle) +"." + tempItem.Extention;
+                //YouTubeVideoQuality[] arr = urls.ToArray();
+                //YouTubeVideoQuality tempItem = arr[0];
+                //string FileName = FormatTitle(tempItem.VideoTitle) +"." + tempItem.Extention;
 
-                downloadedFilePath = Path.Combine(targetPath, FileName);
-                initFileDownloader(tempItem.DownloadUrl, targetPath, FileName);
+                //downloadedFilePath = Path.Combine(targetPath, FileName);
+                //initFileDownloader(tempItem.DownloadUrl, targetPath, FileName);
             }
             catch (Exception ex) { Console.WriteLine (ex.Message); }
         }

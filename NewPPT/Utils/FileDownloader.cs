@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.IO;
 using System.Net;
-using WeCastConvertor.Utils.YouTubeDownloader;
+//using WeCastConvertor.Utils.YouTubeDownloader;
 
 namespace WeCastConvertor.Utils
 {
@@ -77,7 +77,7 @@ namespace WeCastConvertor.Utils
             _pause = false;
             DownloadStatus = DownloadStatus.Downloading;
        //     OnProgressChanged(new ProgressChangedEventArgs(Progress, null));
-            DownloadData = DownloadData.Create(FileUrl, DestFolder, DestFileName, Helper.InitialProxy());
+            //DownloadData = DownloadData.Create(FileUrl, DestFolder, DestFileName, Helper.InitialProxy());
             if (string.IsNullOrEmpty(DestFileName))
                 Path.GetFileName(DownloadData.Response.ResponseUri.ToString());
             downloadingTo = Path.Combine(DestFolder, DestFileName);

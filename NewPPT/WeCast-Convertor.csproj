@@ -159,12 +159,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\YoutubeExtractor\YoutubeExtractor\YoutubeExtractor\YoutubeExtractor.csproj">
-      <Project>{ECDC127F-8DEF-4F99-8300-72C13597339D}</Project>
-      <Name>YoutubeExtractor</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Accord.3.0.2\build\Accord.targets" Condition="Exists('..\packages\Accord.3.0.2\build\Accord.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
