@@ -48,7 +48,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Interop.Shell32">
-      <HintPath>D:\C#\Wekastcode_C#\10.08.14\WeKastRibbon\WeKastRibbon\obj\Debug\Interop.Shell32.dll</HintPath>
+      <HintPath>Utils\Interop.Shell32.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
