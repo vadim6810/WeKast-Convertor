@@ -15,6 +15,7 @@ namespace WeCastConvertor.Forms
         public LoginForm()
         {
             InitializeComponent();
+            //var localSettings = ApplicationData.Current.LocalSettings;
         }
 
         private void button1_Click(object sender, EventArgs e)

@@ -95,21 +95,22 @@
             // loginToolStripMenuItem
             // 
             this.loginToolStripMenuItem.Name = "loginToolStripMenuItem";
-            this.loginToolStripMenuItem.Size = new System.Drawing.Size(137, 26);
+            this.loginToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.loginToolStripMenuItem.Text = "Login";
             this.loginToolStripMenuItem.Click += new System.EventHandler(this.loginToolStripMenuItem_Click);
             // 
             // addFileToolStripMenuItem
             // 
             this.addFileToolStripMenuItem.Name = "addFileToolStripMenuItem";
-            this.addFileToolStripMenuItem.Size = new System.Drawing.Size(137, 26);
+            this.addFileToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.addFileToolStripMenuItem.Text = "Add file";
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(137, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -122,7 +123,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
