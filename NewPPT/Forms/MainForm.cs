@@ -86,5 +86,12 @@ namespace WeCastConvertor.Froms
             login.StartPosition = FormStartPosition.CenterParent;
             login.ShowDialog();
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutForm form = new AboutForm();
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.ShowDialog();
+        }
     }
 }
