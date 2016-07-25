@@ -30,7 +30,7 @@ namespace WeCastConvertor.Froms
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string file in files) {
-                Console.WriteLine(file);
+                Debug.WriteLine(file);
                 AppendLog(file);
             }
         }
@@ -83,8 +83,6 @@ namespace WeCastConvertor.Froms
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LoginForm login = new LoginForm();
-            this.TopLevel = false;
-            login.Parent = this;
             login.StartPosition = FormStartPosition.CenterParent;
             login.ShowDialog();
         }
