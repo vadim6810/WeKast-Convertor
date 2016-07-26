@@ -91,6 +91,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -137,6 +138,7 @@
     <Compile Include="Utils\MediaDownloaderClass.cs" />
     <Compile Include="Utils\SharedPreferences.cs" />
     <Compile Include="Utils\SplitAnimation.cs" />
+    <Compile Include="Utils\WeKastServerAPI.cs" />
     <Compile Include="Utils\ZipDocument\ZipDocumentClass.cs" />
     <EmbeddedResource Include="Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>

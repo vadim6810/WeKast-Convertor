@@ -26,10 +26,27 @@ namespace WeCastConvertor.Forms
             this.Close();
         }
 
-        private void save_button_Click(object sender, EventArgs e)
+        private async void save_button_Click(object sender, EventArgs e)
         {
-            SharedPreferences.login = login_textbox.Text;
-            SharedPreferences.password = password_textbox.Text;
+
+            var api = WeKastServerAPI.Instance;
+            api.serverUrl = @"http://78.153.150.254/";
+            api.login = login_textbox.Text;
+            api.password = password_textbox.Text;
+
+            Enabled = false;
+            bool res = await api.auth();
+            Enabled = true;
+            if (res) {
+                SharedPreferences.login = api.login;
+                SharedPreferences.password = api.password;
+                Close();
+            } else {
+                api.login = SharedPreferences.login;
+                api.password = SharedPreferences.password;
+                MessageBox.Show("Please check login and password", "Auth faild", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
         }
     }
 }
