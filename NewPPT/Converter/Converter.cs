@@ -82,8 +82,8 @@ namespace WeCastConvertor.Converter
                 if (ExistYouTubeVideo(slide))
                 {
                     Log($"slide{slide.SlideNumber} contains youtube videos");
-                    IEnumerable<VideoInfo> YoutubeLinks = GetAllYoutubeLinks(slide);
-                    var videoPath = DownloadVideoFromYouTube(YoutubeLinks);
+                    IEnumerable<VideoInfo> youtubeLinks = GetAllYoutubeLinks(slide);
+                    var videoPath = DownloadVideoFromYouTube(youtubeLinks);
                     Log($"YouTube video path: {videoPath}");
                     //CreateNewVideoShape(slide, videoPath);
 
@@ -98,15 +98,17 @@ namespace WeCastConvertor.Converter
 
         private static IEnumerable<VideoInfo> GetAllYoutubeLinks(Slide slide)
         {
-            try
-            {
-                List<VideoInfo> = 
-                return slide.Shapes.Cast<Shape>().Any(shape => shape.Type == msoMedia && shape.LinkFormat.SourceFullName != null && shape.LinkFormat.SourceFullName.Contains("youtube.com"));
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            foreach (Shape shape in slide.Shapes)
+                try
+                {
+                    if (shape.Type == msoMedia && shape.LinkFormat.SourceFullName.Contains("youtube.com"))
+                        return DownloadUrlResolver.GetDownloadUrls(shape.LinkFormat.SourceFullName, false);
+                }
+                catch (Exception)
+                {
+                    //return null;
+                }
+            return null;
         }
 
         private static void CreateNewVideoShape(Slide slide, string videoPath)
@@ -121,7 +123,7 @@ namespace WeCastConvertor.Converter
             /*
              * Select the first .mp4 video with 360p resolution
              */
-            VideoInfo video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 360);
+            VideoInfo video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 720);
 
             /*
              * If the video has a decrypted signature, decipher it
@@ -136,9 +138,9 @@ namespace WeCastConvertor.Converter
              * The first argument is the video to download.
              * The second argument is the path to save the video file.
              */
-            var videoDownloader = new VideoDownloader(video,
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                RemoveIllegalPathCharacters(video.Title) + video.VideoExtension));
+            string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                RemoveIllegalPathCharacters(video.Title) + video.VideoExtension);
+            var videoDownloader = new VideoDownloader(video,savePath);
 
             // Register the ProgressChanged event and print the current progress
             videoDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage);
@@ -147,8 +149,8 @@ namespace WeCastConvertor.Converter
              * Execute the video downloader.
              * For GUI applications note, that this method runs synchronously.
              */
-            videoDownloader.Execute();
-            return string.Empty;
+            //videoDownloader.Execute();
+            return savePath;
         }
 
         // Returns true if slide consist youtube videos
