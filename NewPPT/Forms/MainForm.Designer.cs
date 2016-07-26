@@ -1,6 +1,6 @@
-﻿namespace WeCastConvertor.Froms
+﻿namespace WeCastConvertor.Forms
 {
-    partial class FrmMain
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.

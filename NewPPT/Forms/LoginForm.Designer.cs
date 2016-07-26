@@ -34,8 +34,8 @@
             this.password_label = new System.Windows.Forms.Label();
             this.login_textbox = new System.Windows.Forms.TextBox();
             this.password_textbox = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox1.SuspendLayout();
+            this.login_group = new System.Windows.Forms.GroupBox();
+            this.login_group.SuspendLayout();
             this.SuspendLayout();
             // 
             // save_button
@@ -46,7 +46,7 @@
             this.save_button.TabIndex = 0;
             this.save_button.Text = "Save";
             this.save_button.UseVisualStyleBackColor = true;
-            this.save_button.Click += new System.EventHandler(this.button1_Click);
+            this.save_button.Click += new System.EventHandler(this.save_button_Click);
             // 
             // cancel_button
             // 
@@ -67,7 +67,6 @@
             this.login_label.TabIndex = 2;
             this.login_label.Text = "Login:";
             this.login_label.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            this.login_label.Click += new System.EventHandler(this.label1_Click);
             // 
             // password_label
             // 
@@ -92,27 +91,27 @@
             this.password_textbox.Size = new System.Drawing.Size(148, 22);
             this.password_textbox.TabIndex = 5;
             // 
-            // groupBox1
+            // login_group
             // 
-            this.groupBox1.Controls.Add(this.login_label);
-            this.groupBox1.Controls.Add(this.password_textbox);
-            this.groupBox1.Controls.Add(this.save_button);
-            this.groupBox1.Controls.Add(this.login_textbox);
-            this.groupBox1.Controls.Add(this.cancel_button);
-            this.groupBox1.Controls.Add(this.password_label);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(258, 129);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Login";
+            this.login_group.Controls.Add(this.login_label);
+            this.login_group.Controls.Add(this.password_textbox);
+            this.login_group.Controls.Add(this.save_button);
+            this.login_group.Controls.Add(this.login_textbox);
+            this.login_group.Controls.Add(this.cancel_button);
+            this.login_group.Controls.Add(this.password_label);
+            this.login_group.Location = new System.Drawing.Point(12, 12);
+            this.login_group.Name = "login_group";
+            this.login_group.Size = new System.Drawing.Size(258, 129);
+            this.login_group.TabIndex = 6;
+            this.login_group.TabStop = false;
+            this.login_group.Text = "Login";
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(282, 153);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.login_group);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(300, 200);
@@ -122,8 +121,8 @@
             this.ShowInTaskbar = false;
             this.Text = "LoginForm";
             this.Load += new System.EventHandler(this.LoginForm_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.login_group.ResumeLayout(false);
+            this.login_group.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -136,6 +135,6 @@
         private System.Windows.Forms.Label password_label;
         private System.Windows.Forms.TextBox login_textbox;
         private System.Windows.Forms.TextBox password_textbox;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox login_group;
     }
 }

@@ -5,12 +5,12 @@ using System.Windows.Forms;
 using WeCastConvertor.Forms;
 using WeCastConvertor.Utils;
 
-namespace WeCastConvertor.Froms
+namespace WeCastConvertor.Forms
 {
-    public partial class FrmMain : Form, ILogger 
+    public partial class MainForm : Form, ILogger 
     {
         //EventLogger _el;
-        public FrmMain()
+        public MainForm()
         {
             InitializeComponent();
             AllowDrop = true;

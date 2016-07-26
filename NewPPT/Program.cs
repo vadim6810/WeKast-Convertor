@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using WeCastConvertor.Froms;
+using WeCastConvertor.Forms;
 
 namespace WeCastConvertor
 {
@@ -14,7 +14,8 @@ namespace WeCastConvertor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMain());
+            Application.Run(new MainForm());
+            //Application.Run(new LoginForm());
         }
     }
 }
