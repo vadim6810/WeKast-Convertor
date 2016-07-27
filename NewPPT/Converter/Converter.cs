@@ -23,6 +23,10 @@ namespace WeCastConvertor.Converter
         private static Application _pw;
         private LinkedList<int> _durations;
         static string _tempFolderPath = Environment.GetEnvironmentVariable("TEMP");
+        static string ezsFolder = _tempFolderPath + @"\EZSTemp";
+        static string commentsFolder = ezsFolder + @"\comments";
+        static string videosFolder = ezsFolder + @"\videos";
+        static string animFolder = ezsFolder + @"\animations";
 
         public static void Convert(ILogger iLogger)
         {
@@ -32,9 +36,8 @@ namespace WeCastConvertor.Converter
             _el.AttachEvents();
             const string presName = @"d:\flip_split.pptx";
             var pres = _pw.Presentations.Open(presName);
-            ParseExternalMedia(pres);
-            _tempFolderPath += @"\EZSlides";
-            Log(ZipDocumentClass.ZipDocumentStructure(_tempFolderPath, _tempFolderPath, "NewZip"));
+            ParseSlides(pres);
+            //Log(ZipDocumentClass.ZipDocumentStructure(_tempFolderPath, _tempFolderPath, "NewZip"));
             //SetNullTransactDurations(pres);
             //CreateNewVideoShape(pres);
             //ExportToMp4(pres);
@@ -70,30 +73,55 @@ namespace WeCastConvertor.Converter
             }
         }
 
-        private static void ParseExternalMedia(Presentation pres)
+        private static void ParseSlides(Presentation pres)
         {
+            CreateDirrectories();
             foreach (Slide slide in pres.Slides)
             {
                 Log($"Parsing slide{slide.SlideNumber}:");
-                //ShowAllHiperlinks(slide);
-                //ShowAllComments(slide);
-                //ShowAllNotes(slide);
-                //ShowAllShapes(slide);
+                string outputFile = ezsFolder + "\\" + slide.SlideNumber + ".jpg";
+                slide.Export(outputFile, "jpg", 1440, 1080);
+                ExtractAndSaveComments(slide);
+              
                 if (ExistYouTubeVideo(slide))
                 {
                     Log($"slide{slide.SlideNumber} contains youtube videos");
                     IEnumerable<VideoInfo> youtubeLinks = GetAllYoutubeLinks(slide);
-                    var videoPath = DownloadVideoFromYouTube(youtubeLinks);
+                    var videoPath = DownloadVideoFromYouTube(youtubeLinks, slide.SlideNumber);
                     Log($"YouTube video path: {videoPath}");
-                    //CreateNewVideoShape(slide, videoPath);
 
                 }
-                var isFileDownloaded = false;
-                var tempResFolderPath = Environment.GetEnvironmentVariable("TEMP");
-                var slideShapes = slide.Shapes;
-
             }
             //var filePath = MediaDownloaderClass.downloadMediaFile(address, tempPath, targetYoutubeVideo);
+        }
+
+        private static void CreateDirrectories()
+        {
+            if (!Directory.Exists(ezsFolder))
+                Directory.CreateDirectory(ezsFolder);
+            if (!Directory.Exists(animFolder))
+                Directory.CreateDirectory(animFolder);
+            if (!Directory.Exists(commentsFolder))
+                Directory.CreateDirectory(commentsFolder);
+            if (!Directory.Exists(videosFolder))
+                Directory.CreateDirectory(videosFolder);
+
+        }
+
+        private static void ExtractAndSaveComments(Slide slide)
+        {
+            if (!Directory.Exists(commentsFolder))
+                Directory.CreateDirectory(commentsFolder);
+            var path = commentsFolder + $"\\s{slide.SlideNumber}.txt";
+            if (File.Exists(path)) return;
+            // Create a file to write to. 
+            using (var sw = File.CreateText(path))
+            {
+                foreach (string comment in GetAllCommentsAndNodes(slide))
+                {
+                    sw.WriteLine(comment);
+                }
+            }
         }
 
         private static IEnumerable<VideoInfo> GetAllYoutubeLinks(Slide slide)
@@ -118,12 +146,14 @@ namespace WeCastConvertor.Converter
 
         }
 
-        private static string DownloadVideoFromYouTube(IEnumerable<VideoInfo> videoInfos)
+        private static string DownloadVideoFromYouTube(IEnumerable<VideoInfo> videoInfos, int slideNumber)
         {
+            if (videoInfos == null)
+                return null;
             /*
              * Select the first .mp4 video with 360p resolution
              */
-            VideoInfo video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 720);
+            var video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 720);
 
             /*
              * If the video has a decrypted signature, decipher it
@@ -138,8 +168,9 @@ namespace WeCastConvertor.Converter
              * The first argument is the video to download.
              * The second argument is the path to save the video file.
              */
-            string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                RemoveIllegalPathCharacters(video.Title) + video.VideoExtension);
+            string savePath = Path.Combine(videosFolder,
+                //RemoveIllegalPathCharacters(video.Title)
+                $"v{slideNumber}"+ video.VideoExtension);
             var videoDownloader = new VideoDownloader(video,savePath);
 
             // Register the ProgressChanged event and print the current progress
