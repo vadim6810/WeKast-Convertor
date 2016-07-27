@@ -82,8 +82,10 @@ namespace WeCastConvertor.Forms
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoginForm login = new LoginForm();
-            login.StartPosition = FormStartPosition.CenterParent;
+            LoginForm login = new LoginForm()
+            {
+                StartPosition = FormStartPosition.CenterParent,
+            };
             login.ShowDialog();
         }
 

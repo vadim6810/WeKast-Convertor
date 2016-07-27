@@ -34,9 +34,14 @@ namespace WeCastConvertor.Forms
             api.login = login_textbox.Text;
             api.password = password_textbox.Text;
 
-            Enabled = false;
-            bool res = await api.auth();
-            Enabled = true;
+            Cursor = Cursors.WaitCursor;
+            login_group.Enabled = false;
+            var res = await api.auth();
+            login_group.Enabled = true;
+
+            Cursor = Cursors.Default;
+
+
             if (res) {
                 SharedPreferences.login = api.login;
                 SharedPreferences.password = api.password;
