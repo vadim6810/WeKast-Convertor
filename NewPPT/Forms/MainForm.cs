@@ -1,24 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
-using WeCastConvertor.Forms;
 using WeCastConvertor.Utils;
 
 namespace WeCastConvertor.Forms
 {
+
     public partial class MainForm : Form, ILogger 
     {
-        //EventLogger _el;
+        // Constructor
         public MainForm()
         {
             InitializeComponent();
-            AllowDrop = true;
-            DragEnter += new DragEventHandler(DragEnterEvent);
-            DragDrop += new DragEventHandler(DropFileEvent);
         }
 
-        private void DragEnterEvent(object sender, DragEventArgs e)
+       
+
+        // Form Load Event
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            AllowDrop = true;
+            DragEnter += DragEnterEvent;
+            DragDrop += DropFileEvent;
+            
+        }
+
+        // Form Close Event
+        private void MainForm_Close(object sender, FormClosingEventArgs e)
+        {
+            //_el.DetachEvents();
+        }
+
+        // Mouse Enter With Object Event
+        private static void DragEnterEvent(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -26,31 +43,32 @@ namespace WeCastConvertor.Forms
             }
         }
 
+        // Drop Event
         private void DropFileEvent(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (string file in files) {
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (var file in files) {
                 Debug.WriteLine(file);
                 AppendLog(file);
+                gridData.Add(new Presentation() { SourcePath = file });
+                //var thread = new Thread(Convert);
+                //thread.Start();
             }
         }
 
-
+        // Click 
         private void button1_Click(object sender, EventArgs e)
         {
-            var thread = new Thread(Convert);
-            thread.Start();
+            //var thread = new Thread(Convert);
+            //thread.Start();
+            gridData.Add(new Presentation() { SourcePath = "Msasd", EzsPath = "eewqweq" });
         }
 
         private void Convert() => Converter.Converter.Convert(new DebugLogger());
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-        }
-
 
         
-
+        // Logger
         public void AppendLog(string s)
         {
             if (InvokeRequired)
@@ -75,16 +93,15 @@ namespace WeCastConvertor.Forms
             }
         }
 
-        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //_el.DetachEvents();
-        }
+        
 
+
+        // Menu events
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoginForm login = new LoginForm()
+            LoginForm login = new LoginForm
             {
-                StartPosition = FormStartPosition.CenterParent,
+                StartPosition = FormStartPosition.CenterParent
             };
             login.ShowDialog();
         }
@@ -98,7 +115,16 @@ namespace WeCastConvertor.Forms
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
+
+    public class Presentation
+    {
+        public string SourcePath { get; set; }
+        public string EzsPath { get; set; }
+        public int Upload { get; set; }
+        public int Convert { get; set; }
+    }
+
 }
