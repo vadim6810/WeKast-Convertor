@@ -7,24 +7,17 @@ using WeCastConvertor.Utils;
 
 namespace WeCastConvertor.Forms
 {
-    public partial class MainForm : Form, ILogger 
+    public partial class MainForm : Form, ILogger
     {
+        private bool inProgress = false;
+
         // Constructor
         public MainForm()
         {
             InitializeComponent();
         }
 
-        // Form Load Event
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            AllowDrop = true;
-            DragEnter += DragEnterEvent;
-            DragDrop += DropFileEvent;
-        }
-
-        // Mouse Enter With Object Event
-        private static void DragEnterEvent(object sender, DragEventArgs e)
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
@@ -32,11 +25,11 @@ namespace WeCastConvertor.Forms
             }
         }
 
-        // Drop Event
-        private async void DropFileEvent(object sender, DragEventArgs e)
+        private async void MainForm_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var file in files) {
+            foreach (var file in files)
+            {
                 Debug.WriteLine(file);
                 AppendLog(file);
                 var presentation = new Presentation() { SourcePath = file };
@@ -44,6 +37,7 @@ namespace WeCastConvertor.Forms
             }
         }
 
+     
         // Click 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -113,6 +107,15 @@ namespace WeCastConvertor.Forms
         {
             Close();
         }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (inProgress)
+            {
+                e.Cancel = true;
+            }   
+        }
+
     }
 
     public class Presentation
