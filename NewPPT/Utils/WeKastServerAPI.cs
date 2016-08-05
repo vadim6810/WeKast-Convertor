@@ -111,6 +111,8 @@ namespace WeCastConvertor.Utils
 
         public async Task<bool> Upload(P.Presentation presentation)
         {
+            // TODO: upload ezs file
+            Console.WriteLine(@"Upload " + presentation.SourcePath);
             var file = new FileStream(presentation.SourcePath, FileMode.Open, FileAccess.Read);
             using (var content = new MultipartFormDataContent("A67R7E769FF862SF2M32WLE3345RWD"))
             {
@@ -121,6 +123,7 @@ namespace WeCastConvertor.Utils
                 var response = await PostRequest("/upload", content);
                 var json = new DataContractJsonSerializer(typeof(UploadResponse));
                 var uploadResponse = (UploadResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+                Console.WriteLine(@"Presentation uploaded " + presentation.SourcePath);
                 return uploadResponse.Status == 0;
             }      
         }

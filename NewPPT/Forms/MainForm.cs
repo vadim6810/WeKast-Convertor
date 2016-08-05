@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeCastConvertor.Converter;
 using WeCastConvertor.Utils;
 
 namespace WeCastConvertor.Forms
@@ -21,12 +23,6 @@ namespace WeCastConvertor.Forms
             DragDrop += DropFileEvent;
         }
 
-        // Form Close Event
-        private void MainForm_Close(object sender, FormClosingEventArgs e)
-        {
-            //_el.DetachEvents();
-        }
-
         // Mouse Enter With Object Event
         private static void DragEnterEvent(object sender, DragEventArgs e)
         {
@@ -44,26 +40,31 @@ namespace WeCastConvertor.Forms
                 Debug.WriteLine(file);
                 AppendLog(file);
                 var presentation = new Presentation() { SourcePath = file };
-                gridData.Add(presentation);
-                var res = await WeKastServerAPI.Instance.Upload(presentation);
-                if (res)
-                {
-                    
-                }
-                //var thread = new Thread(Convert);
-                //thread.Start();
+                await Convert(presentation);
             }
         }
 
         // Click 
         private void button1_Click(object sender, EventArgs e)
         {
-            //var thread = new Thread(Convert);
-            //thread.Start();
-            gridData.Add(new Presentation() { SourcePath = "Msasd", EzsPath = "eewqweq" });
+            //var presentation = new Presentation() { SourcePath = file };
+            //gridData.Add(new Presentation() { SourcePath = "Msasd", EzsPath = "eewqweq" });
         }
 
-        private static void Convert(string file) => Converter.Converter.Convert(file, new DebugLogger());
+        private async Task<bool> Convert(Presentation presentation)
+        {
+            gridData.Add(presentation);
+            await Wrapper.ConvertAsync(presentation);
+            if (presentation.Convert == 100)
+            {
+                return await WeKastServerAPI.Instance.Upload(presentation);
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
 
 
         
