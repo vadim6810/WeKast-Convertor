@@ -5,7 +5,6 @@ using WeCastConvertor.Utils;
 
 namespace WeCastConvertor.Forms
 {
-
     public partial class MainForm : Form, ILogger 
     {
         // Constructor
@@ -14,15 +13,12 @@ namespace WeCastConvertor.Forms
             InitializeComponent();
         }
 
-       
-
         // Form Load Event
         private void MainForm_Load(object sender, EventArgs e)
         {
             AllowDrop = true;
             DragEnter += DragEnterEvent;
             DragDrop += DropFileEvent;
-            
         }
 
         // Form Close Event
@@ -67,7 +63,7 @@ namespace WeCastConvertor.Forms
             gridData.Add(new Presentation() { SourcePath = "Msasd", EzsPath = "eewqweq" });
         }
 
-        private void Convert() => Converter.Converter.Convert(new DebugLogger());
+        private static void Convert(string file) => Converter.Converter.Convert(file, new DebugLogger());
 
 
         
@@ -87,7 +83,7 @@ namespace WeCastConvertor.Forms
 
         private void CheckForTrim()
         {
-            var maxLineCount = 100;
+            const int maxLineCount = 100;
             if (lstLog.Items.Count < maxLineCount + 10)
                 return;
             for (var i = 0; i < 5; i++)
@@ -108,8 +104,7 @@ namespace WeCastConvertor.Forms
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AboutForm form = new AboutForm();
-            form.StartPosition = FormStartPosition.CenterParent;
+            var form = new AboutForm { StartPosition = FormStartPosition.CenterParent };
             form.ShowDialog();
         }
 

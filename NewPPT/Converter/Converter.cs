@@ -12,6 +12,9 @@ using YoutubeExtractor;
 using static Microsoft.Office.Core.MsoShapeType;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 using System.IO.Compression;
+using System.Linq.Expressions;
+using System.Security.AccessControl;
+using System.Xml;
 
 
 namespace WeCastConvertor.Converter
@@ -23,77 +26,162 @@ namespace WeCastConvertor.Converter
         private static Application _pw;
         private LinkedList<int> _durations;
         static string _tempFolderPath = Environment.GetEnvironmentVariable("TEMP");
+        static string ezsFolder = _tempFolderPath + @"\EZSTemp";
+        static string commentsFolder = ezsFolder + @"\comments";
+        static string videosFolder = ezsFolder + @"\video";
+        static string audioFolder = ezsFolder + @"\audio";
+        static string animFolder = ezsFolder + @"\animations";
+        //static string tempCopy = @"d:\Users\Misteric\AppData\Local\Temp\EZSTemp\test2.rar";
+        static string tempCopy = string.Empty;
+        //static LinkedList<string> tempPictures = new LinkedList<string>();
 
-        public static void Convert(ILogger iLogger)
+        public static void Convert(string fileName, ILogger iLogger)
         {
             _logger = iLogger;
             _pw = new Application();
             _el = new EventLogger(iLogger, _pw);
             _el.AttachEvents();
-            const string presName = @"d:\flip_split.pptx";
-            var pres = _pw.Presentations.Open(presName);
-            ParseExternalMedia(pres);
-            _tempFolderPath += @"\EZSlides";
-            Log(ZipDocumentClass.ZipDocumentStructure(_tempFolderPath, _tempFolderPath, "NewZip"));
-            //SetNullTransactDurations(pres);
-            //CreateNewVideoShape(pres);
-            //ExportToMp4(pres);
+            var pres = _pw.Presentations.Open(fileName, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoFalse);
+            ParseSlides(pres);
+            string videoPath = CreateVideo(pres);
+            GetDurations(pres);
             _el.DetachEvents();
-            //pres.Close();
+            CleanTempFiles();
+            pres.Close();
             //_pw.Quit();
         }
-        /**
-         * 
-         */
 
-        private static void CreateVideo(Presentation pres)
+        private static void GetDurations(Presentation pres)
+        {
+            foreach (Slide slide in pres.Slides)
+            {
+                
+            }
+        }
+
+        private static void CleanTempFiles()
+        {
+            File.Delete(tempCopy);
+        }
+
+        private static string CreateVideo(Presentation pres)
         {
             //The name of the video file to create.
-            var fileName = @"d:\video.mp4";
+            var fileName = $"{ezsFolder}\\tempVideo.mp4";
             //Indicates whether to use timings and narrations.
-            var useTimingsAndNarrations = true;
+            const bool useTimingsAndNarrations = true;
             //The duration, in seconds, to view the slide.
-            var defaultSlideDuration = 0;
+            const int defaultSlideDuration = 0;
             //The resolution of the slide.
-            var vertResolution = 1080;
+            const int vertResolution = 1080;
             //The number of frames per second.
-            var framesPerSecond = 30;
+            const int framesPerSecond = 30;
             //The level of quality of the slide.
-            var quality = 100;
+            const int quality = 100;
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond, quality);
-            while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress ||
-                pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
+            while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
+                //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
                 Log(pres.CreateVideoStatus.ToString());
                 Thread.Sleep(2000);
             }
+            return fileName;
         }
 
-        private static void ParseExternalMedia(Presentation pres)
+        private static void ParseSlides(Presentation pres)
         {
+            CreateDirrectories();
             foreach (Slide slide in pres.Slides)
             {
                 Log($"Parsing slide{slide.SlideNumber}:");
-                //ShowAllHiperlinks(slide);
-                //ShowAllComments(slide);
-                //ShowAllNotes(slide);
-                //ShowAllShapes(slide);
-                if (ExistYouTubeVideo(slide))
+                string outputFile = ezsFolder + "\\" + slide.SlideNumber + ".jpg";
+                //slide.Export(outputFile, "jpg", 1440, 1080);
+                ExtractAndSaveComments(slide);
+                ParseShapes(slide);
+                if (ExistEmbeddedMedia(slide))
                 {
-                    Log($"slide{slide.SlideNumber} contains youtube videos");
-                    IEnumerable<VideoInfo> youtubeLinks = GetAllYoutubeLinks(slide);
-                    var videoPath = DownloadVideoFromYouTube(youtubeLinks);
-                    Log($"YouTube video path: {videoPath}");
-                    //CreateNewVideoShape(slide, videoPath);
-
+                    Log($"slide{slide.SlideNumber} contains embedded media");
+                    ExtractEmbeddedVideo(slide);
                 }
-                var isFileDownloaded = false;
-                var tempResFolderPath = Environment.GetEnvironmentVariable("TEMP");
-                var slideShapes = slide.Shapes;
-
+                ChangeMediaShapes(slide);
             }
             //var filePath = MediaDownloaderClass.downloadMediaFile(address, tempPath, targetYoutubeVideo);
+        }
+
+        private static void ChangeMediaShapes(Slide slide)
+        {
+            foreach (Shape shape in slide.Shapes)
+            {
+                if (shape.Type != msoMedia) continue;
+                if (shape.MediaType == PpMediaType.ppMediaTypeMovie)
+                    ChangeShape(shape);
+            }
+            while (HasMedia(slide))
+            {
+                foreach (Shape shape in slide.Shapes.Cast<Shape>().Where(shape => shape.Type == msoMedia))
+                {
+                    shape.Delete();
+                }
+            }
+
+        }
+
+        private static bool HasMedia(Slide slide)
+        {
+            return slide.Shapes.Cast<Shape>().Any(shape => shape.Type == msoMedia);
+        }
+
+        private static void ChangeShape(Shape shape)
+        {
+            //tempPictures.AddLast($"{ezsFolder}\\tempPicture{tempPictures.Count}.jpeg"); 
+            string tempPicture = $"{ezsFolder}\\tempPicture.jpeg";
+            shape.Export(tempPicture, PpShapeFormat.ppShapeFormatJPG);
+            Slide slide = shape.Parent;
+            Shape newPicture = slide.Shapes.AddPicture(tempPicture,
+                MsoTriState.msoTriStateMixed,
+                MsoTriState.msoFalse,
+                shape.Left,
+                shape.Top,
+                shape.Width,
+                shape.Height);
+            File.Delete(tempPicture);
+        }
+
+        private static void CreateDirrectories()
+        {
+            if (!Directory.Exists(ezsFolder))
+                Directory.CreateDirectory(ezsFolder);
+            else
+            {
+                Directory.Delete(ezsFolder, true);
+                Directory.CreateDirectory(ezsFolder);
+            }
+            if (!Directory.Exists(animFolder))
+                Directory.CreateDirectory(animFolder);
+            if (!Directory.Exists(commentsFolder))
+                Directory.CreateDirectory(commentsFolder);
+            if (!Directory.Exists(videosFolder))
+                Directory.CreateDirectory(videosFolder);
+            if (!Directory.Exists(audioFolder))
+                Directory.CreateDirectory(audioFolder);
+
+        }
+
+        private static void ExtractAndSaveComments(Slide slide)
+        {
+            if (!Directory.Exists(commentsFolder))
+                Directory.CreateDirectory(commentsFolder);
+            var path = commentsFolder + $"\\s{slide.SlideNumber}.txt";
+            if (File.Exists(path)) return;
+            // Create a file to write to. 
+            using (var sw = File.CreateText(path))
+            {
+                foreach (string comment in GetAllCommentsAndNodes(slide))
+                {
+                    sw.WriteLine(comment);
+                }
+            }
         }
 
         private static IEnumerable<VideoInfo> GetAllYoutubeLinks(Slide slide)
@@ -118,12 +206,14 @@ namespace WeCastConvertor.Converter
 
         }
 
-        private static string DownloadVideoFromYouTube(IEnumerable<VideoInfo> videoInfos)
+        private static string DownloadVideoFromYouTube(IEnumerable<VideoInfo> videoInfos, int slideNumber)
         {
+            if (videoInfos == null)
+                return null;
             /*
              * Select the first .mp4 video with 360p resolution
              */
-            VideoInfo video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 720);
+            var video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 720);
 
             /*
              * If the video has a decrypted signature, decipher it
@@ -138,9 +228,10 @@ namespace WeCastConvertor.Converter
              * The first argument is the video to download.
              * The second argument is the path to save the video file.
              */
-            string savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                RemoveIllegalPathCharacters(video.Title) + video.VideoExtension);
-            var videoDownloader = new VideoDownloader(video,savePath);
+            string savePath = Path.Combine(videosFolder,
+                //RemoveIllegalPathCharacters(video.Title)
+                $"v{slideNumber}" + video.VideoExtension);
+            var videoDownloader = new VideoDownloader(video, savePath);
 
             // Register the ProgressChanged event and print the current progress
             videoDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage);
@@ -153,12 +244,12 @@ namespace WeCastConvertor.Converter
             return savePath;
         }
 
-        // Returns true if slide consist youtube videos
-        private static bool ExistYouTubeVideo(_Slide slide)
+        private static bool ExistLinkedMedia(Shape shape)
         {
             try
             {
-                return slide.Shapes.Cast<Shape>().Any(shape => shape.Type == msoMedia && shape.LinkFormat.SourceFullName != null && shape.LinkFormat.SourceFullName.Contains("youtube.com"));
+                return shape.MediaFormat.IsLinked;
+                //return slide.Shapes.Cast<Shape>().Any(shape => shape.Type == msoMedia && shape.LinkFormat.SourceFullName != null);
             }
             catch (Exception)
             {
@@ -166,131 +257,169 @@ namespace WeCastConvertor.Converter
             }
         }
 
-        private void Temp()
+        private static bool ExistEmbeddedMedia(Slide slide)
         {
-            //foreach (Shape shape in slideShapes)
-            //{
-            //    if (shape.Type == MsoShapeType.msoEmbeddedOLEObject
-            //        || shape.Type == MsoShapeType.msoOLEControlObject
-            //        || shape.Type == MsoShapeType.msoLinkedOLEObject)
-            //    {
-            //        Log(string.Format("SLide{0} shapeid={1} shapeType={2}", slide.SlideNumber, shape.Id, shape.Type));
-            //        try
-            //        {
-            //            //ShockwaveFlashObjects.ShockwaveFlash objFlash = (ShockwaveFlashObjects.ShockwaveFlash)shape.OLEFormat.Object;
-            //            //downloadAndSaveMedia(objFlash.Movie, _tempFolderPath, destDirectory, slide);
-            //            isFileDownloaded = true;
-            //        }
-            //        catch (Exception exception)
-            //        {
-            //            Log(exception.Message);
-            //        }
-            //        //string moviePath = objFlash.Movie;
-            //        //System.Windows.Forms.MessageBox.Show(" Slide  : " + moviePath);
-            //    }
-            //    //if (!isFileDownloaded)
-            //    //{
-            //    //    extractDataFromURLByHyperlink(destDirectory, slide);
-            //    //}
 
-            //    //if (shape.Type == MsoShapeType.msoMedia &&
-            //    //    shape.MediaType == PpMediaType.ppMediaTypeMovie)
-            //    //{
-            //    //    //var isLocalFile = true;
-
-
-            //    //    //var videoPath = string.Empty;
-            //    //    //try
-            //    //    //{
-            //    //    //    videoPath = shape.LinkFormat.SourceFullName; // contains the movie path 
-            //    //    //    Log(videoPath);
-            //    //    //    //var urls = YouTubeDownloader.GetYouTubeVideoUrls(videoPath);
-            //    //    //    //var list = YouTubeDownloader.GetQuality(urls);
-            //    //    //    //var urls = YouTubeDownloader.GetYouTubeVideoUrls(videoPath);
-
-            //    //    //    //YouTubeVideoQuality[] arr = urls.ToArray();
-            //    //    //    //YouTubeVideoQuality tempItem = arr[0];
-            //    //    //    //var temp = tempItem.VideoTitle.Replace(@"\", "").Replace("&#39;", "'").Replace("&quot;", "'").Replace("&lt;", "(").Replace("&gt;", ")").Replace("+", " ").Replace(":", "-");
-            //    //    //    //string FileName = temp + "." + tempItem.Extention;
-
-            //    //    //    //downloadedFilePath = Path.Combine(targetPath, FileName);
-            //    //    //    //initFileDownloader(tempItem.DownloadUrl, targetPath, FileName);
-            //    //    //    //get the path like this
-            //    //    //    //////////getTargetVideoFile(videoPath, destDirectory, slide.SlideIndex);
-            //    //    //    //   System.Windows.Forms.MessageBox.Show(" After downloading : " + videoPath);
-            //    //    //}
-            //    //    //catch (Exception e)
-            //    //    //{
-            //    //    //    isLocalFile = false;
-            //    //    //    //System.Windows.Forms.MessageBox.Show(e.Message);
-            //    //    //}
-            //    //    ////or use 
-            //    //    //System.IO.File.Copy(shape.LinkFormat.SourceFullName, destDirectory); 
-            //    //    //to export them
-            //    //    // shape.OLEFormat.Object.
-
-            //    //    //if (!isLocalFile)
-            //    //    //{
-            //    //    //    var destination = _tempFolderPath + "\\v" + slide.SlideIndex + "\\";
-            //    //    //    if (!Directory.Exists(destination))
-            //    //    //        Directory.CreateDirectory(destination);
-            //    //    //    slide.PublishSlides(destination, true, true);
-            //    //    //    var filePaths = Directory.GetFiles(destination);
-            //    //    //    if (filePaths.Length != 0)
-            //    //    //    {
-            //    //    //        //for (var i = 0; i < filePaths.Length; i++)
-            //    //    //        //    extractMediaFromSlide(filePaths[i], destDirectory, slide.SlideIndex);
-            //    //    //    }
-            //    //    //}
-            //    //    // SaveSlideAsWmvFile(destination, objPres, destDirectory);
-            //    //    //objPres.ExportAsFixedFormat("c:\\temp\\slide\\example.pdf", PpFixedFormatType.ppFixedFormatTypePDF,
-            //    //    //PpFixedFormatIntent.ppFixedFormatIntentScreen);
-            //    //    //pptPresentation.SaveAs("c:\\temp\\slide\\example.html", PpSaveAsFileType.ppSaveAsHTMLDual);
-            //    //    //pptPresentation.SaveAs("c:\\temp\\slide\\exampledual.html", PpSaveAsFileType.ppSaveAsHTMLDual);
-            //    //}
-            //}
-            //}
+            foreach (Shape shape in slide.Shapes)
+            {
+                try
+                {
+                    if (shape.Type == msoMedia && shape.MediaFormat.IsEmbedded)
+                        return true;
+                }
+                catch (Exception)
+                {
+                    continue;
+                }
+            }
+            return false;
         }
 
-        private static void ShowAllShapes(Slide slide)
+
+        // Returns true if slide consist youtube videos
+        private static bool ExistYouTubeVideo(Shape shape)
+        {
+            try
+            {
+                return shape.LinkFormat.SourceFullName != null && shape.LinkFormat.SourceFullName.Contains("youtube.com");
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private static void ParseShapes(Slide slide)
         {
             foreach (Shape shape in slide.Shapes)
             {
-                if (HasLinkedVideo(shape))
+                if (shape.Type != msoMedia) continue;
+                try
                 {
-                    var videoPath = shape.LinkFormat.SourceFullName;
-                    Log($"{videoPath}");
-                    //    IEnumerable<VideoInfo> videoInfos = DownloadUrlResolver.GetDownloadUrls(videoPath, false);
-                    //    VideoInfo video = videoInfos
-                    //.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 360);
-                    //    if (video.RequiresDecryption)
-                    //    {
-                    //        DownloadUrlResolver.DecryptDownloadUrl(video);
-                    //    }
-                    //    var videoDownloader = new VideoDownloader(video,
-                    //Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    //RemoveIllegalPathCharacters(video.Title) + video.VideoExtension));
-
-                    //    // Register the ProgressChanged event and print the current progress
-                    //    videoDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage);
-
-                    //    /*
-                    //     * Execute the video downloader.
-                    //     * For GUI applications note, that this method runs synchronously.
-                    //     */
-                    //    videoDownloader.Execute();
-                    //    //var urls = YouTubeDownloader.GetYouTubeVideoUrls(videoPath);
-
-                    //    //YouTubeVideoQuality[] arr = urls.ToArray();
-                    //YouTubeVideoQuality tempItem = arr[0];
-                    //var temp = tempItem.VideoTitle.Replace(@"\", "").Replace("&#39;", "'").Replace("&quot;", "'").Replace("&lt;", "(").Replace("&gt;", ")").Replace("+", " ").Replace(":", "-");
-                    //string FileName = temp + "." + tempItem.Extention;
-                    var left = shape.Left + 10;
-                    var top = shape.Top + 10;
-                    var width = shape.Width - 20;
-                    var height = shape.Height - 20;
+                    Log($"{shape.Type} - {shape.MediaType} - {shape.MediaFormat.IsEmbedded} - {shape.MediaFormat.IsLinked}");
+                }
+                catch
+                {
+                }
+                if (ExistYouTubeVideo(shape))
+                {
+                    Log($"slide{slide.SlideNumber} contains youtube videos");
+                    IEnumerable<VideoInfo> youtubeLinks = GetAllYoutubeLinks(slide);
+                    var videoPath = DownloadVideoFromYouTube(youtubeLinks, slide.SlideNumber);
+                    Log($"YouTube video path: {videoPath}");
+                }
+                if (ExistLinkedMedia(shape))
+                {
+                    Log($"slide{slide.SlideNumber} contains linked media");
+                    CopyLinkedVideo(shape, slide.SlideNumber);
                 }
             }
+        }
+
+        private static void ExtractEmbeddedVideo(Slide slide)
+        {
+            if (tempCopy == string.Empty)
+                DoPresantationCopy(slide.Parent);
+            using (ZipArchive archive = ZipFile.OpenRead(tempCopy))
+            {
+                //string xmlPath = "ppt/slides/_rels/slide2.xml.rels";
+                string xmlPath = $"ppt/slides/_rels/slide{slide.SlideNumber}.xml.rels";
+                ZipArchiveEntry zipSlideXml = archive.GetEntry(xmlPath);
+                var slideXml = new XmlDocument();
+                slideXml.Load(zipSlideXml.Open());
+                foreach (XmlNode node in slideXml.DocumentElement)
+                {
+                    if (node.Attributes == null) continue;
+                    var type = node.Attributes["Type"].Value;
+                    if (!(type.Contains("audio") || type.Contains("video"))) continue;
+                    var target = node.Attributes["Target"].Value;
+                    Log(target);
+                    string nameMedia = Path.GetFileName(target);
+                    string pathMedia = $"ppt/media/{nameMedia}";
+                    Log(pathMedia);
+                    ZipArchiveEntry zipMedia = archive.GetEntry(pathMedia);
+                    var pathToUnzip = type.Contains("audio") ? $"{ezsFolder}\\audio\\a{slide.SlideNumber}{Path.GetExtension(pathMedia)}" :
+                        $"{ezsFolder}\\video\\v{slide.SlideNumber}{Path.GetExtension(pathMedia)}";
+                    var needToExtract = true;
+                    int tryCount = 0;
+                    while (needToExtract)
+                        try
+                        {
+                            tryCount++;
+                            zipMedia.ExtractToFile(pathToUnzip);
+                            needToExtract = false;
+                        }
+                        catch (Exception)
+                        {
+                            pathToUnzip = type.Contains("audio") ? $"{ezsFolder}\\audio\\a{slide.SlideNumber}_{tryCount}{Path.GetExtension(pathMedia)}" :
+                        $"{ezsFolder}\\video\\v{slide.SlideNumber}_{tryCount}{Path.GetExtension(pathMedia)}";
+                        }
+                }
+            }
+        }
+
+        private static void DoPresantationCopy(Presentation pres)
+        {
+            string sourcePath = pres.FullName;//Path + pres.Name;
+            Log(sourcePath);
+            tempCopy = $"{ezsFolder}\\{pres.Name}";
+            bool needToCopy = true;
+            int fileCount = 0;
+            while (needToCopy)
+                try
+                {
+                    File.Copy(sourcePath, tempCopy);
+                    needToCopy = false;
+                }
+                catch (Exception)
+                {
+                    needToCopy = true;
+                    fileCount++;
+                    tempCopy =
+                        $"{ezsFolder}\\{Path.GetFileNameWithoutExtension(pres.Name)}({fileCount}).{Path.GetExtension(pres.Name)}";
+                    Log($"New destinition: {tempCopy}");
+                }
+
+        }
+
+        private static void CopyLinkedVideo(Shape shape, int slideNumber)
+        {
+            var sourcePath = shape.LinkFormat.SourceFullName;
+            var extension = Path.GetExtension(sourcePath);
+            string newName;
+            var destPath = string.Empty;
+            if (shape.MediaType == PpMediaType.ppMediaTypeMovie)
+            {
+                newName = $"v{slideNumber}{extension}";
+                destPath = videosFolder + "\\" + newName;
+            }
+            if (shape.MediaType == PpMediaType.ppMediaTypeSound)
+            {
+                newName = $"audio{slideNumber}{extension}";
+                destPath = audioFolder + "\\" + newName;
+            }
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException($"File {sourcePath} not found");
+            SaveFile(sourcePath, destPath);
+        }
+
+        private static string SaveFile(string sourcePath, string destPath)
+        {
+            int tryCount = 0;
+            bool needToSave = true;
+
+            while (needToSave && tryCount < 10)
+                try
+                {
+                    tryCount++;
+                    File.Copy(sourcePath, destPath);
+                    needToSave = false;
+                }
+                catch (IOException)
+                {
+                    destPath = $"{Path.GetFileNameWithoutExtension(destPath)}_{tryCount}{Path.GetExtension(destPath)}";
+                }
+            return destPath;
         }
 
         protected static bool HasLinkedVideo(Shape shape)
