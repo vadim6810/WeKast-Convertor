@@ -7,7 +7,6 @@ namespace WeCastConvertor.Forms
 {
     public partial class LoginForm : Form
     {    
-        const string appKeyPath = "HKEY_CURRENT_USER\\Software\\WeKast";
 
         public LoginForm()
         {
@@ -16,9 +15,8 @@ namespace WeCastConvertor.Forms
 
         private void LoginForm_Load(object sender, EventArgs e)
         {
-            Console.WriteLine(Registry.GetValue(appKeyPath, "login", "no"));
-            login_textbox.Text = SharedPreferences.login;
-            password_textbox.Text = SharedPreferences.password;
+            login_textbox.Text = SharedPreferences.Login;
+            password_textbox.Text = SharedPreferences.Password;
         }
 
         private void cancel_button_Click(object sender, EventArgs e)
@@ -30,28 +28,26 @@ namespace WeCastConvertor.Forms
         {
 
             var api = WeKastServerAPI.Instance;
-            api.serverUrl = @"http://78.153.150.254/";
-            api.login = login_textbox.Text;
-            api.password = password_textbox.Text;
+            api.Login = login_textbox.Text;
+            api.Password = password_textbox.Text;
 
             Cursor = Cursors.WaitCursor;
             login_group.Enabled = false;
-            var res = await api.auth();
+            var res = await api.Auth();
             login_group.Enabled = true;
 
             Cursor = Cursors.Default;
 
 
             if (res) {
-                SharedPreferences.login = api.login;
-                SharedPreferences.password = api.password;
+                SharedPreferences.Login = api.Login;
+                SharedPreferences.Password = api.Password;
                 Close();
             } else {
-                api.login = SharedPreferences.login;
-                api.password = SharedPreferences.password;
+                api.Login = SharedPreferences.Login;
+                api.Password = SharedPreferences.Password;
                 MessageBox.Show("Please check login and password", "Auth faild", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
-
         }
     }
 }

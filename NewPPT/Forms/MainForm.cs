@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows.Forms;
 using WeCastConvertor.Utils;
 
@@ -44,13 +41,19 @@ namespace WeCastConvertor.Forms
         }
 
         // Drop Event
-        private void DropFileEvent(object sender, DragEventArgs e)
+        private async void DropFileEvent(object sender, DragEventArgs e)
         {
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files) {
                 Debug.WriteLine(file);
                 AppendLog(file);
-                gridData.Add(new Presentation() { SourcePath = file });
+                var presentation = new Presentation() { SourcePath = file };
+                gridData.Add(presentation);
+                var res = await WeKastServerAPI.Instance.Upload(presentation);
+                if (res)
+                {
+                    
+                }
                 //var thread = new Thread(Convert);
                 //thread.Start();
             }
@@ -95,16 +98,13 @@ namespace WeCastConvertor.Forms
 
         
 
-
         // Menu events
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LoginForm login = new LoginForm
-            {
-                StartPosition = FormStartPosition.CenterParent
-            };
+            var login = new LoginForm {StartPosition = FormStartPosition.CenterParent};
             login.ShowDialog();
         }
+        
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
