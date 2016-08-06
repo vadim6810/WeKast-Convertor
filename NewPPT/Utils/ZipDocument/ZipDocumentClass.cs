@@ -5,7 +5,7 @@ using Shell32;
 
 namespace WeCastConvertor.Utils.ZipDocument
 {
-    internal class ZipDocumentClass
+    internal class ZipDocumentClass_1
     {
         public static string ZipDocumentStructure(string sourseFolder, string destinationFolder, string fileName)
         {
