@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeCastConvertor.Converter;
@@ -31,7 +31,10 @@ namespace WeCastConvertor.Forms
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files)
             {
-                Debug.WriteLine(file);
+                // Пропускаем неподдерживаемые форматы
+                if (!Array.Exists(Wrapper.SupportedFormats, (string s) =>  s == Path.GetExtension(file))) continue;
+                
+                Console.WriteLine(file);
                 AppendLog(file);
                 var presentation = new Presentation() { SourcePath = file };
                 await Convert(presentation);
@@ -44,17 +47,10 @@ namespace WeCastConvertor.Forms
             InProgress++;
             gridData.Add(presentation);
             await Wrapper.ConvertAsync(presentation);
-            if (presentation.Convert == 100)
-            {               
-                var result = await WeKastServerAPI.Instance.Upload(presentation);
-                InProgress--;
-                return result;
-            }
-            else
-            {
-                return false;
-            }
-            
+            if (presentation.Convert != 100) return false;
+            var result = await WeKastServerAPI.Instance.Upload(presentation);
+            InProgress--;
+            return result;
         }
         
         // Logger
@@ -86,7 +82,7 @@ namespace WeCastConvertor.Forms
         {
             if (InProgress > 0)
             {
-                e.Cancel = true;
+                //e.Cancel = true;
             }   
         }
 
@@ -96,9 +92,20 @@ namespace WeCastConvertor.Forms
             login.ShowDialog();
         }
 
-        private void AddButton_Click(object sender, EventArgs e)
+        private async void AddButton_Click(object sender, EventArgs e)
         {
             
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = @"Now Supported Formats (*.pptx, *.ppt)|*.pptx;*.ppt" +
+                         @"|All Supported Formats (*.pptx, *.ppt, *.pdf, *.doc, *.docx)|*.pptx;*.ppt;*.pdf;*.doc;*.docx" +
+                         @"|All PowerPoint Presentations (*.pptx;*.ppt;*.pptm;*.ppsx;*.pps;*.ppsm;*.potx;*.pot;*.potm;*.odp)|*.pptx;*.ppt;*.pptm;*.ppsx;*.pps;*.ppsm;*.potx;*.pot;*.potm;*.odp",
+                Title = @"Select presentation for co"
+            };
+
+            if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            var presentation = new Presentation() {SourcePath = openFileDialog.FileName};
+            await Convert(presentation);
         }
 
         private void AboutButton_Click(object sender, EventArgs e)
