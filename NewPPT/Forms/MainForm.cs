@@ -36,12 +36,6 @@ namespace WeCastConvertor.Forms
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var thread = new Thread(() => Convert(null));
-            thread.Start();
-        }
-
         private static void Convert(string file) => Converter.Converter.Convert(file, new DebugLogger());
 
         private void Form1_Load(object sender, EventArgs e)

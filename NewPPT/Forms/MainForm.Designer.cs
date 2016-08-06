@@ -28,8 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnOpen = new System.Windows.Forms.Button();
-            this.txtPath = new System.Windows.Forms.TextBox();
             this.lstLog = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -40,23 +38,6 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnOpen
-            // 
-            this.btnOpen.Location = new System.Drawing.Point(582, 113);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(75, 23);
-            this.btnOpen.TabIndex = 0;
-            this.btnOpen.Text = "Open";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // txtPath
-            // 
-            this.txtPath.Location = new System.Drawing.Point(227, 118);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(330, 22);
-            this.txtPath.TabIndex = 1;
             // 
             // lstLog
             // 
@@ -131,8 +112,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(824, 499);
             this.Controls.Add(this.lstLog);
-            this.Controls.Add(this.txtPath);
-            this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -149,9 +128,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnOpen;
-        private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.ListBox lstLog;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
