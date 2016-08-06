@@ -15,7 +15,8 @@ namespace WeCastConvertor.Converter
             return Task.Run(() =>
             {
                 Console.WriteLine(@"Starting convert " + presentation.SourcePath);
-                presentation.EzsPath = Converter.Convert(presentation.SourcePath, new DebugLogger());
+                Converter converter = new Converter(presentation.SourcePath);
+                presentation.EzsPath = converter.Convert();
                 presentation.Convert = 100;
                 Console.WriteLine(@"Presentations converted " + presentation.EzsPath);
             });
