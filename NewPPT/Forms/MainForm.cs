@@ -9,11 +9,12 @@ namespace WeCastConvertor.Forms
 {
     public partial class MainForm : Form, ILogger
     {
-        private bool inProgress = false;
+        public int InProgress { get; set; }
 
         // Constructor
         public MainForm()
         {
+            InProgress = 0;
             InitializeComponent();
         }
 
@@ -37,21 +38,17 @@ namespace WeCastConvertor.Forms
             }
         }
 
-     
-        // Click 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //var presentation = new Presentation() { SourcePath = file };
-            //gridData.Add(new Presentation() { SourcePath = "Msasd", EzsPath = "eewqweq" });
-        }
 
         private async Task<bool> Convert(Presentation presentation)
         {
+            InProgress++;
             gridData.Add(presentation);
             await Wrapper.ConvertAsync(presentation);
             if (presentation.Convert == 100)
-            {
-                return await WeKastServerAPI.Instance.Upload(presentation);
+            {               
+                var result = await WeKastServerAPI.Instance.Upload(presentation);
+                InProgress--;
+                return result;
             }
             else
             {
@@ -59,8 +56,6 @@ namespace WeCastConvertor.Forms
             }
             
         }
-
-
         
         // Logger
         public void AppendLog(string s)
@@ -70,52 +65,52 @@ namespace WeCastConvertor.Forms
                 Invoke(new Action<string>(AppendLog), s);
                 return;
             }
-            lstLog.Items.Add(s);
+            LogWindow.Items.Add(s);
             CheckForTrim();
-            lstLog.SelectedIndex = lstLog.Items.Count - 1;
-            lstLog.SelectedIndex = -1;
+            LogWindow.SelectedIndex = LogWindow.Items.Count - 1;
+            LogWindow.SelectedIndex = -1;
         }
 
         private void CheckForTrim()
         {
             const int maxLineCount = 100;
-            if (lstLog.Items.Count < maxLineCount + 10)
+            if (LogWindow.Items.Count < maxLineCount + 10)
                 return;
             for (var i = 0; i < 5; i++)
             {
-                lstLog.Items.RemoveAt(0);
+                LogWindow.Items.RemoveAt(0);
             }
-        }
-
-        
-
-        // Menu events
-        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var login = new LoginForm {StartPosition = FormStartPosition.CenterParent};
-            login.ShowDialog();
-        }
-        
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var form = new AboutForm { StartPosition = FormStartPosition.CenterParent };
-            form.ShowDialog();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (inProgress)
+            if (InProgress > 0)
             {
                 e.Cancel = true;
             }   
         }
 
+        private void LoginButton_Click(object sender, EventArgs e)
+        {
+            var login = new LoginForm { StartPosition = FormStartPosition.CenterParent };
+            login.ShowDialog();
+        }
+
+        private void AddButton_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void AboutButton_Click(object sender, EventArgs e)
+        {
+            var form = new AboutForm { StartPosition = FormStartPosition.CenterParent };
+            form.ShowDialog();
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 
     public class Presentation
