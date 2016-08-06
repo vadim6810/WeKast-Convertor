@@ -7,7 +7,6 @@ using System.Threading;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using WeCastConvertor.Utils;
-using WeCastConvertor.Utils.ZipDocument;
 using YoutubeExtractor;
 using static Microsoft.Office.Core.MsoShapeType;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
@@ -77,7 +76,7 @@ namespace WeCastConvertor.Converter
                 {
                     //Slide before transaction
                     Durations.AddLast(1);
-                    StoreSlide(slide.SlideNumber, "before_transaction");
+                    XmlSlideAddCategory(slide.SlideNumber, "before_transaction");
                     //Log($"slide{slide.SlideNumber} transact duration: {slide.SlideShowTransition.Duration}");
                     //Transact animation
                     Durations.AddLast((int)(30 * slide.SlideShowTransition.Duration));
@@ -109,7 +108,7 @@ namespace WeCastConvertor.Converter
             Log($"Total : {Durations.Sum()}");
         }
         //Opens video file and cut first kadr
-        private static void StoreSlide(int slideNumber, string type)
+        private static void XmlSlideAddCategory(int slideNumber, string type)
         {
             XmlNode slideNode = GetSlideNodeById(slideNumber);
             if (slideNode == null)

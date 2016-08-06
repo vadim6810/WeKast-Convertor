@@ -128,21 +128,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\AbortableBackgroundWorker.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Utils\DebugLogger.cs" />
-    <Compile Include="Utils\DocumentsParserClass.cs" />
     <Compile Include="Utils\EventLogger.cs" />
-    <Compile Include="Utils\FileDownloader.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Utils\ILogger.cs" />
-    <Compile Include="Utils\MediaDownloaderClass.cs" />
     <Compile Include="Utils\SharedPreferences.cs" />
-    <Compile Include="Utils\SplitAnimation.cs" />
-    <Compile Include="Utils\WeKastServerApi.cs" />
-    <Compile Include="Utils\ZipDocument\ZipDocumentClass.cs" />
+    <Compile Include="Utils\WeKastServerAPI.cs" />
     <EmbeddedResource Include="Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -216,10 +206,6 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Converter\Interop.ACTIVEXLib.dll" />
-    <Content Include="Interop.Shell32.dll" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
