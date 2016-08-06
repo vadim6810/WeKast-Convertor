@@ -13,6 +13,7 @@ using static Microsoft.Office.Core.MsoShapeType;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 using System.IO.Compression;
 using System.Linq.Expressions;
+using System.Runtime.ExceptionServices;
 using System.Security.AccessControl;
 using System.Xml;
 
@@ -24,7 +25,7 @@ namespace WeCastConvertor.Converter
         private static ILogger _logger;
         private static EventLogger _el;
         private static Application _pw;
-        private LinkedList<int> _durations;
+        private static LinkedList<int> Durations = new LinkedList<int>();
         static string _tempFolderPath = Environment.GetEnvironmentVariable("TEMP");
         static string ezsFolder = _tempFolderPath + @"\EZSTemp";
         static string commentsFolder = ezsFolder + @"\comments";
@@ -33,41 +34,129 @@ namespace WeCastConvertor.Converter
         static string animFolder = ezsFolder + @"\animations";
         //static string tempCopy = @"d:\Users\Misteric\AppData\Local\Temp\EZSTemp\test2.rar";
         static string tempCopy = string.Empty;
+        static string tempVideo = ezsFolder+@"\tempVideo.mp4";
         //static LinkedList<string> tempPictures = new LinkedList<string>();
+        static XmlDocument xmlInfo;
 
-        public static void Convert(string fileName, ILogger iLogger)
+        public static string Convert(string fileName, ILogger iLogger)
         {
             _logger = iLogger;
             _pw = new Application();
             _el = new EventLogger(iLogger, _pw);
             _el.AttachEvents();
-            var pres = _pw.Presentations.Open(fileName, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoFalse);
+            var pres = _pw.Presentations.Open(fileName, MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoTrue);
             ParseSlides(pres);
             string videoPath = CreateVideo(pres);
             GetDurations(pres);
             _el.DetachEvents();
             CleanTempFiles();
+            string result = CreateEZS(pres);
             pres.Close();
             //_pw.Quit();
+            return null;
+        }
+
+        private static string CreateEZS(Presentation pres)
+        {
+            string startPath = ezsFolder;//@"c:\example\start";
+            string path = Path.GetFullPath(pres.Path);
+            var name = Path.GetFileNameWithoutExtension(pres.Name);
+            string zipPath = path+$"{name}.ezs";
+            //string extractPath = @"c:\example\extract";
+
+            ZipFile.CreateFromDirectory(startPath, zipPath);
+            return zipPath;
         }
 
         private static void GetDurations(Presentation pres)
         {
+
             foreach (Slide slide in pres.Slides)
             {
-                
+                if (slide != null && slide.SlideShowTransition.EntryEffect != PpEntryEffect.ppEffectNone)
+                {
+                    //Slide before transaction
+                    Durations.AddLast(1);
+                    StoreSlide(slide.SlideNumber, "before_transaction");
+                    //Log($"slide{slide.SlideNumber} transact duration: {slide.SlideShowTransition.Duration}");
+                    //Transact animation
+                    Durations.AddLast((int)(30 * slide.SlideShowTransition.Duration));
+                    //Slide after transaction
+                    Durations.AddLast(1);
+                }
+                bool isFirst = true;
+                //Slide before animation
+                Durations.AddLast(1);
+                foreach (Effect eff in slide.TimeLine.MainSequence)
+                {
+                    //Slide animation duration
+                    //Log($"Effect {eff.EffectType} duration: {eff.Timing.Duration}");
+                    Durations.AddLast((int)(30 * eff.Timing.Duration));
+                    //If this is a first animation slide after animation
+                    if (isFirst)
+                    {
+                        Durations.AddLast(1);
+                        isFirst = false;
+                    }
+                }
+                //If no animations on slide
+                if (isFirst)
+                {
+                    Durations.AddLast(1);
+                }
             }
+            //End of last slide black window
+            Log($"Total : {Durations.Sum()}");
+        }
+        //Opens video file and cut first kadr
+        private static void StoreSlide(int slideNumber, string type)
+        {
+            XmlNode slideNode = GetSlideNodeById(slideNumber);
+            if (slideNode == null)
+                slideNode = CreateSlideNode(slideNumber);
+            xmlInfo.Save(Path.Combine(ezsFolder, "info.xml"));
+        }
+
+        private static XmlNode CreateSlideNode(int slideNumber)
+        {
+            XmlNode root = xmlInfo.DocumentElement;
+            XmlNode node = xmlInfo.CreateElement("slide");
+            XmlAttribute attr = xmlInfo.CreateAttribute("id");
+            attr.Value = slideNumber.ToString();
+            node.Attributes?.Append(attr);
+            root?.AppendChild(node);
+            //xmlInfo.Save(Path.Combine(ezsFolder, "info.xml"));
+            return node;
+        }
+
+        private static XmlNode GetSlideNodeById(int slideNumber)
+        {
+            foreach (XmlNode node in xmlInfo.DocumentElement.ChildNodes)
+            {
+                if (node.Name == "slide" && node.Attributes["id"].Value == slideNumber.ToString())
+                    return node;
+            }
+            return null;
         }
 
         private static void CleanTempFiles()
         {
-            File.Delete(tempCopy);
+            try
+            {
+                File.Delete(tempCopy);
+                File.Delete(tempVideo);
+                xmlInfo.Save(Path.Combine(ezsFolder, "info.xml"));
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
         private static string CreateVideo(Presentation pres)
         {
             //The name of the video file to create.
-            var fileName = $"{ezsFolder}\\tempVideo.mp4";
+            var fileName = tempVideo;//$"{ezsFolder}\\tempVideo.mp4";
             //Indicates whether to use timings and narrations.
             const bool useTimingsAndNarrations = true;
             //The duration, in seconds, to view the slide.
@@ -80,7 +169,7 @@ namespace WeCastConvertor.Converter
             const int quality = 100;
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond, quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
-                //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
+            //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
                 Log(pres.CreateVideoStatus.ToString());
@@ -91,13 +180,17 @@ namespace WeCastConvertor.Converter
 
         private static void ParseSlides(Presentation pres)
         {
-            CreateDirrectories();
+            CreateDirrectories(pres);
             foreach (Slide slide in pres.Slides)
             {
-                Log($"Parsing slide{slide.SlideNumber}:");
+                //Log($"Parsing slide{slide.SlideNumber}:");
                 string outputFile = ezsFolder + "\\" + slide.SlideNumber + ".jpg";
-                //slide.Export(outputFile, "jpg", 1440, 1080);
-                ExtractAndSaveComments(slide);
+                XmlNode slideNode = CreateSlideNode(slide.SlideNumber);
+                XmlAttribute attr = xmlInfo.CreateAttribute("path");
+                attr.Value = slide.SlideNumber + ".jpg";
+                slideNode.Attributes.Append(attr);
+                slide.Export(outputFile, "jpg", 1440, 1080);
+                ExtractAndSaveComments(slide, slideNode);
                 ParseShapes(slide);
                 if (ExistEmbeddedMedia(slide))
                 {
@@ -106,7 +199,6 @@ namespace WeCastConvertor.Converter
                 }
                 ChangeMediaShapes(slide);
             }
-            //var filePath = MediaDownloaderClass.downloadMediaFile(address, tempPath, targetYoutubeVideo);
         }
 
         private static void ChangeMediaShapes(Slide slide)
@@ -148,8 +240,9 @@ namespace WeCastConvertor.Converter
             File.Delete(tempPicture);
         }
 
-        private static void CreateDirrectories()
+        private static void CreateDirrectories(Presentation pres)
         {
+            //ezsFolder += $"_{pres.Name}";
             if (!Directory.Exists(ezsFolder))
                 Directory.CreateDirectory(ezsFolder);
             else
@@ -165,21 +258,28 @@ namespace WeCastConvertor.Converter
                 Directory.CreateDirectory(videosFolder);
             if (!Directory.Exists(audioFolder))
                 Directory.CreateDirectory(audioFolder);
-
+            xmlInfo = new XmlDocument();
+            xmlInfo.CreateXmlDeclaration("1.0", "utf-8", null);
+            XmlNode root = xmlInfo.CreateElement("root");
+            xmlInfo.AppendChild(root);
+            xmlInfo.Save(Path.Combine(ezsFolder, "info.xml"));
         }
 
-        private static void ExtractAndSaveComments(Slide slide)
+        private static void ExtractAndSaveComments(Slide slide, XmlNode slideNode)
         {
             if (!Directory.Exists(commentsFolder))
                 Directory.CreateDirectory(commentsFolder);
             var path = commentsFolder + $"\\s{slide.SlideNumber}.txt";
-            if (File.Exists(path)) return;
+            //if (File.Exists(path)) return;
             // Create a file to write to. 
             using (var sw = File.CreateText(path))
             {
                 foreach (string comment in GetAllCommentsAndNodes(slide))
                 {
                     sw.WriteLine(comment);
+                    XmlNode commentXml = xmlInfo.CreateElement("comment");
+                    commentXml.InnerText = comment;
+                    slideNode.AppendChild(commentXml);
                 }
             }
         }
@@ -240,7 +340,7 @@ namespace WeCastConvertor.Converter
              * Execute the video downloader.
              * For GUI applications note, that this method runs synchronously.
              */
-            //videoDownloader.Execute();
+            videoDownloader.Execute();
             return savePath;
         }
 
