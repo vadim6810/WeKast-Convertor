@@ -52,7 +52,7 @@ namespace WeCastConvertor.Converter
             string result = CreateEZS(pres);
             pres.Close();
             //_pw.Quit();
-            return null;
+            return result;
         }
 
         private static string CreateEZS(Presentation pres)
