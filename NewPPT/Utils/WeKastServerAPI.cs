@@ -111,20 +111,28 @@ namespace WeCastConvertor.Utils
 
         public async Task<bool> Upload(P.Presentation presentation)
         {
-            // TODO: upload ezs file
-            Console.WriteLine(@"Upload " + presentation.SourcePath);
-            var file = new FileStream(presentation.SourcePath, FileMode.Open, FileAccess.Read);
+            var path = presentation.EzsPath;
+            var name = Path.GetFileName(path);
+            Console.WriteLine(@"Upload " + path);
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"Coudn't upload {path}: File not found");
+                return false;
+            }
+            var file = new FileStream(path, FileMode.Open, FileAccess.Read);
             using (var content = new MultipartFormDataContent("A67R7E769FF862SF2M32WLE3345RWD"))
             {
                 content.Add(new StringContent(Login), "login");
                 content.Add(new StringContent(Password), "password");
-                content.Add(new StreamContent(file), "file", "file.ezs");
+                content.Add(new StreamContent(file), "file", name);
 
                 var response = await PostRequest("/upload", content);
                 var json = new DataContractJsonSerializer(typeof(UploadResponse));
                 var uploadResponse = (UploadResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
-                Console.WriteLine(@"Presentation uploaded " + presentation.SourcePath);
-                return uploadResponse.Status == 0;
+                Console.WriteLine(@"Presentation uploaded " + path);
+                if (uploadResponse.Status != 0) return false;
+                presentation.Upload = 100;
+                return true;
             }      
         }
     }

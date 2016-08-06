@@ -18,7 +18,7 @@ namespace WeCastConvertor.Converter
                 Converter converter = new Converter(presentation.SourcePath);
                 presentation.EzsPath = converter.Convert();
                 presentation.Convert = 100;
-                Console.WriteLine(@"Presentations converted " + presentation.SourcePath);
+                Console.WriteLine(@"Presentations converted " + presentation.EzsPath);
             });
         }
     }
