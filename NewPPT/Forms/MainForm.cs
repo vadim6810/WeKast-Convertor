@@ -44,13 +44,23 @@ namespace WeCastConvertor.Forms
 
         private async Task<bool> Convert(Presentation presentation)
         {
-            InProgress++;
-            gridData.Add(presentation);
-            await Wrapper.ConvertAsync(presentation);
-            if (presentation.Convert != 100) return false;
-            var result = await WeKastServerAPI.Instance.Upload(presentation);
-            InProgress--;
-            return result;
+            try
+            {
+                InProgress++;
+                gridData.Add(presentation);
+                await Wrapper.ConvertAsync(presentation);
+                if (presentation.Convert != 100) return false;
+                return await WeKastServerAPI.Instance.Upload(presentation);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            finally 
+            {
+                InProgress--;
+            }
         }
         
         // Logger
@@ -77,13 +87,18 @@ namespace WeCastConvertor.Forms
                 LogWindow.Items.RemoveAt(0);
             }
         }
-
+        
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (InProgress > 0)
+            if (InProgress <= 0) return;
+            var result = MessageBox.Show(
+                @"Converting in progress. Do you whant to exit?", 
+                @"Are you realy want to exit?", 
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Cancel)
             {
-                //e.Cancel = true;
-            }   
+                e.Cancel = true;   
+            }
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
@@ -103,7 +118,7 @@ namespace WeCastConvertor.Forms
                 Title = @"Select presentation for co"
             };
 
-            if (openFileDialog.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             var presentation = new Presentation() {SourcePath = openFileDialog.FileName};
             await Convert(presentation);
         }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.save_button = new System.Windows.Forms.Button();
+            this.SaveButton = new System.Windows.Forms.Button();
             this.cancel_button = new System.Windows.Forms.Button();
             this.login_label = new System.Windows.Forms.Label();
             this.password_label = new System.Windows.Forms.Label();
@@ -38,15 +38,15 @@
             this.login_group.SuspendLayout();
             this.SuspendLayout();
             // 
-            // save_button
+            // SaveButton
             // 
-            this.save_button.Location = new System.Drawing.Point(104, 95);
-            this.save_button.Name = "save_button";
-            this.save_button.Size = new System.Drawing.Size(65, 25);
-            this.save_button.TabIndex = 0;
-            this.save_button.Text = "Save";
-            this.save_button.UseVisualStyleBackColor = true;
-            this.save_button.Click += new System.EventHandler(this.save_button_Click);
+            this.SaveButton.Location = new System.Drawing.Point(104, 95);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(65, 25);
+            this.SaveButton.TabIndex = 0;
+            this.SaveButton.Text = "Save";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
             // cancel_button
             // 
@@ -56,7 +56,7 @@
             this.cancel_button.TabIndex = 1;
             this.cancel_button.Text = "Cancel";
             this.cancel_button.UseVisualStyleBackColor = true;
-            this.cancel_button.Click += new System.EventHandler(this.cancel_button_Click);
+            this.cancel_button.Click += new System.EventHandler(this.CancelButton_Click);
             // 
             // login_label
             // 
@@ -95,7 +95,7 @@
             // 
             this.login_group.Controls.Add(this.login_label);
             this.login_group.Controls.Add(this.password_textbox);
-            this.login_group.Controls.Add(this.save_button);
+            this.login_group.Controls.Add(this.SaveButton);
             this.login_group.Controls.Add(this.login_textbox);
             this.login_group.Controls.Add(this.cancel_button);
             this.login_group.Controls.Add(this.password_label);
@@ -129,7 +129,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button save_button;
+        private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Button cancel_button;
         private System.Windows.Forms.Label login_label;
         private System.Windows.Forms.Label password_label;

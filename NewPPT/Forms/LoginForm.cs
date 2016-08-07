@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Windows.Forms;
 using WeCastConvertor.Utils;
 
@@ -19,12 +18,12 @@ namespace WeCastConvertor.Forms
             password_textbox.Text = SharedPreferences.Password;
         }
 
-        private void cancel_button_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private async void save_button_Click(object sender, EventArgs e)
+        private async void SaveButton_Click(object sender, EventArgs e)
         {
 
             var api = WeKastServerAPI.Instance;
@@ -46,7 +45,7 @@ namespace WeCastConvertor.Forms
             } else {
                 api.Login = SharedPreferences.Login;
                 api.Password = SharedPreferences.Password;
-                MessageBox.Show("Please check login and password", "Auth faild", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Please check login and password", @"Auth faild", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
     }
