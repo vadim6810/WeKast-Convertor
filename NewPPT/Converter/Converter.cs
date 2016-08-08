@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using AForge.Video.FFMPEG;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using WeCastConvertor.Utils;
@@ -15,7 +17,6 @@ using YoutubeExtractor;
 using static Microsoft.Office.Core.MsoShapeType;
 using Application = Microsoft.Office.Interop.PowerPoint.Application;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
-
 
 namespace WeCastConvertor.Converter
 {
@@ -25,17 +26,19 @@ namespace WeCastConvertor.Converter
         private static readonly Application Pw = new Application();
         private static readonly EventLogger El = new EventLogger(Logger, Pw);
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
-        private static XmlDocument _xmlInfo;
+        //private static XmlDocument _xmlInfo;
         private readonly string _fileName;
         private string _animFolder;
         private string _audioFolder;
         private string _commentsFolder;
         private readonly LinkedList<int> Durations = new LinkedList<int>();
-        private string _ezsFolder = TempFolderPath + @"\EZSTemp";
+        private string _ezsFolder;
         private MsoTriState _showPp = MsoTriState.msoTrue;
         private string _tempCopy = string.Empty;
         private string _tempVideo;
         private string _videosFolder;
+        private VideoFileReader reader = new VideoFileReader();
+        InfoWriter _writer;
 
         public Converter(string fileName)
         {
@@ -50,6 +53,7 @@ namespace WeCastConvertor.Converter
             CreateVideo(pres);
             GetDurations(pres);
             El.DetachEvents();
+            _writer.Save();
             CleanTempFiles();
             var result = CreateEzs(pres);
             pres.Close();
@@ -85,15 +89,7 @@ namespace WeCastConvertor.Converter
             {
                 if (slide != null && slide.SlideShowTransition.EntryEffect != PpEntryEffect.ppEffectNone)
                 {
-                    //Slide before transaction
-                    Durations.AddLast(1);
-                    VideoSplitPicture(Durations.Last);
-                    XmlSlideAddCategory(slide.SlideNumber,"transactionbefore");
-                    //Log($"slide{slide.SlideNumber} transact duration: {slide.SlideShowTransition.Duration}");
-                    //Transact animation
-                    Durations.AddLast((int) (30*slide.SlideShowTransition.Duration));
-                    //Slide after transaction
-                    Durations.AddLast(1);
+                    SaveTransaction(slide.SlideNumber, 1, (int)(30 * slide.SlideShowTransition.Duration));
                 }
                 var isFirst = true;
                 //Slide before animation
@@ -120,41 +116,17 @@ namespace WeCastConvertor.Converter
             Log($"Total : {Durations.Sum()}");
         }
 
-        private void VideoSplitPicture(LinkedListNode<int> last)
+        private void SaveTransaction(int slideNumber, int animId, int count)
         {
-            //MediaDetClass md = new MediaDetClass();
-            //ffmpeg
+            string pathToVideo = $"animations/slide{slideNumber}_animation{animId}.mp4";
+            string pathToPicture = $"animations/slide{slideNumber}_animation{animId}.jpg";
+            _writer.AddAnimation(slideNumber,animId, pathToVideo, pathToPicture);
         }
 
-        //Opens video file and cut first kadr
-        private void XmlSlideAddCategory(int slideNumber, string type)
+        private void VideoSplitPicture(int count)
         {
-            var slideNode = GetSlideNodeById(slideNumber);
-            if (slideNode == null)
-                slideNode = CreateSlideNode(slideNumber);
-            _xmlInfo.Save(Path.Combine(_ezsFolder, "info.xml"));
-        }
-
-        private static XmlNode CreateSlideNode(int slideNumber)
-        {
-            XmlNode root = _xmlInfo.DocumentElement;
-            XmlNode node = _xmlInfo.CreateElement("slide");
-            var attr = _xmlInfo.CreateAttribute("id");
-            attr.Value = slideNumber.ToString();
-            node.Attributes?.Append(attr);
-            root?.AppendChild(node);
-            //_xmlInfo.Save(Path.Combine(_ezsFolder, "info.xml"));
-            return node;
-        }
-
-        private static XmlNode GetSlideNodeById(int slideNumber)
-        {
-            foreach (XmlNode node in _xmlInfo.DocumentElement.ChildNodes)
-            {
-                if (node.Name == "slide" && node.Attributes["id"].Value == slideNumber.ToString())
-                    return node;
-            }
-            return null;
+            Bitmap picture = reader.ReadVideoFrame();
+            //picture.Save();
         }
 
         private void CleanTempFiles()
@@ -163,7 +135,7 @@ namespace WeCastConvertor.Converter
             {
                 File.Delete(_tempCopy);
                 File.Delete(_tempVideo);
-                _xmlInfo.Save(Path.Combine(_ezsFolder, "info.xml"));
+                _writer.Save();
             }
             catch (Exception)
             {
@@ -193,6 +165,7 @@ namespace WeCastConvertor.Converter
                 Log(pres.CreateVideoStatus.ToString());
                 Thread.Sleep(2000);
             }
+            reader.Open(fileName);
             return fileName;
         }
 
@@ -203,12 +176,9 @@ namespace WeCastConvertor.Converter
             {
                 //Log($"Parsing slide{slide.SlideNumber}:");
                 var outputFile = _ezsFolder + "\\" + slide.SlideNumber + ".jpg";
-                var slideNode = CreateSlideNode(slide.SlideNumber);
-                var attr = _xmlInfo.CreateAttribute("path");
-                attr.Value = slide.SlideNumber + ".jpg";
-                slideNode.Attributes.Append(attr);
+                _writer.AddSlide(slide.SlideNumber);
                 slide.Export(outputFile, "jpg", 1440, 1080);
-                ExtractAndSaveComments(slide, slideNode);
+                ExtractAndSaveComments(slide);
                 ParseShapes(slide);
                 if (ExistEmbeddedMedia(slide))
                 {
@@ -264,7 +234,7 @@ namespace WeCastConvertor.Converter
             _videosFolder = _ezsFolder + @"\video";
             _audioFolder = _ezsFolder + @"\audio";
             _animFolder = _ezsFolder + @"\animations";
-            _tempVideo = _ezsFolder + @"\_tempVideo.mp4";
+            _tempVideo = _ezsFolder + @"\tempVideo.mp4";
             _tempCopy = _ezsFolder + @"\";
             if (!Directory.Exists(_ezsFolder))
                 Directory.CreateDirectory(_ezsFolder);
@@ -281,11 +251,7 @@ namespace WeCastConvertor.Converter
                 Directory.CreateDirectory(_videosFolder);
             if (!Directory.Exists(_audioFolder))
                 Directory.CreateDirectory(_audioFolder);
-            _xmlInfo = new XmlDocument();
-            _xmlInfo.CreateXmlDeclaration("1.0", "utf-8", null);
-            XmlNode root = _xmlInfo.CreateElement("root");
-            _xmlInfo.AppendChild(root);
-            _xmlInfo.Save(Path.Combine(_ezsFolder, "info.xml"));
+            _writer = new InfoWriter(Path.Combine(_ezsFolder, "info.xml"));
         }
 
         private string GetRandomEzsFolder()
@@ -293,30 +259,31 @@ namespace WeCastConvertor.Converter
             const string rc = "qwertyuiopasdfghjklzxcvbnm0123456789";
             char[] letters = rc.ToCharArray();
             StringBuilder s = new StringBuilder();
+            var rnd = new Random();
             for (int i = 0; i < 8; i++)
             {
-                s.Append(letters[new Random().Next(letters.Length)].ToString());
+                s.Append(letters[rnd.Next(letters.Length)].ToString());
             }
             return TempFolderPath + @"\EZS_" + s;
         }
 
-        private void ExtractAndSaveComments(Slide slide, XmlNode slideNode)
+        private void ExtractAndSaveComments(Slide slide)
         {
             if (!Directory.Exists(_commentsFolder))
                 Directory.CreateDirectory(_commentsFolder);
             var path = _commentsFolder + $"\\s{slide.SlideNumber}.txt";
             //if (File.Exists(path)) return;
             // Create a file to write to. 
+            StringBuilder text = new StringBuilder(); 
             using (var sw = File.CreateText(path))
             {
                 foreach (var comment in GetAllCommentsAndNodes(slide))
                 {
                     sw.WriteLine(comment);
-                    XmlNode commentXml = _xmlInfo.CreateElement("comment");
-                    commentXml.InnerText = comment;
-                    slideNode.AppendChild(commentXml);
+                    text.Append(comment);
                 }
             }
+            _writer.AddAttribute(slide.SlideNumber, "comment", text);
         }
 
         private static IEnumerable<VideoInfo> GetAllYoutubeLinks(Slide slide)
@@ -585,9 +552,9 @@ namespace WeCastConvertor.Converter
             if (slide.HasNotesPage != MsoTriState.msoTrue) return;
             var notesPages = slide.NotesPage;
             foreach (var shape in from Shape shape in notesPages.Shapes
-                where shape.Type == msoPlaceholder
-                where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                select shape)
+                                  where shape.Type == msoPlaceholder
+                                  where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+                                  select shape)
             {
                 Log($"Slide[{slide.SlideIndex}] Notes: [{shape.TextFrame.TextRange.Text}]");
             }
@@ -603,9 +570,9 @@ namespace WeCastConvertor.Converter
                 if (slide.HasNotesPage == MsoTriState.msoTrue)
                 {
                     result.AddRange((from Shape shape in slide.NotesPage.Shapes
-                        where shape.Type == msoPlaceholder
-                        where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                        select shape).Select(shape => shape.TextFrame.TextRange.Text));
+                                     where shape.Type == msoPlaceholder
+                                     where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+                                     select shape).Select(shape => shape.TextFrame.TextRange.Text));
                 }
             }
             catch (Exception exception)
