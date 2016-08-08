@@ -98,7 +98,7 @@ namespace WeCastConvertor.Converter
                 {
                     //Slide animation duration
                     //Log($"Effect {eff.EffectType} duration: {eff.Timing.Duration}");
-                    Durations.AddLast((int)(30 * eff.Timing.Duration));
+                    Durations.AddLast((int) (30*eff.Timing.Duration));
                     //If this is a first animation slide after animation
                     if (isFirst)
                     {
@@ -159,7 +159,7 @@ namespace WeCastConvertor.Converter
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond,
                 quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
-            //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
+                //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
                 Log(pres.CreateVideoStatus.ToString());
