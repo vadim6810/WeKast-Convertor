@@ -50,6 +50,14 @@ namespace WeCastConvertor.Converter
             _doc.Save(_fileName);
         }
 
-        
+        public void CheckSum()
+        {
+            //throw new System.NotImplementedException();
+        }
+
+        public void AddSlidePicture(int slideNumber, string pathToPicture)
+        {
+            //throw new System.NotImplementedException();
+        }
     }
 }

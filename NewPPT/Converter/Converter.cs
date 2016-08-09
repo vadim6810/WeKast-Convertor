@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -13,7 +12,6 @@ using Microsoft.Office.Interop.PowerPoint;
 using WeCastConvertor.Utils;
 using YoutubeExtractor;
 using static Microsoft.Office.Core.MsoShapeType;
-using Application = Microsoft.Office.Interop.PowerPoint.Application;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace WeCastConvertor.Converter
@@ -23,28 +21,33 @@ namespace WeCastConvertor.Converter
         private static readonly ILogger Logger = new DebugLogger();
         private static readonly Application Pw = new Application();
         private static readonly EventLogger El = new EventLogger(Logger, Pw);
+
+        //Path to windows TEMP dirrectory
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
-        //Temp EZS dirrectories with content
-        private string _ezsTemp;
-        private string _ezsContent;
+        //private readonly LinkedList<int> Durations = new LinkedList<int>();
         private string _animFolder;
         private string _audioFolder;
-        private string _videosFolder;
+        private string _slideFolder;
+        private VideoCutter _cutter;
+        private string _ezsContent;
+
+        //Temp EZS dirrectories with content
+        private string _ezsTemp;
 
         private MsoTriState _showPp = MsoTriState.msoTrue;
-        public string PathToPresentation { get; }
-        private string TempCopy { get; set; }
         private string _tempVideo;
-        private readonly LinkedList<int> Durations = new LinkedList<int>();
+        private string _videosFolder;
         private InfoWriter _writer;
-        private VideoCutter _cutter;
 
         public Converter(string pathToPresentation)
         {
             PathToPresentation = pathToPresentation;
-            string presName = Path.GetFileName(pathToPresentation);
+            var presName = Path.GetFileName(pathToPresentation);
             CreateDirrectories(presName);
         }
+
+        public string PathToPresentation { get; }
+        private string TempCopy { get; set; }
 
         public string Convert()
         {
@@ -65,7 +68,7 @@ namespace WeCastConvertor.Converter
         private string CreateEzs(Presentation pres)
         {
             var startPath = _ezsContent;
-            var path = _ezsTemp;//Path.GetFullPath(pres.Path);
+            var path = _ezsTemp; //Path.GetFullPath(pres.Path);
             var name = Path.GetFileNameWithoutExtension(pres.Name);
             var zipPath = path + $"\\{name}.ezs";
             var tryCount = 0;
@@ -84,40 +87,54 @@ namespace WeCastConvertor.Converter
             return zipPath;
         }
 
-        private void GetDurations(Presentation pres)
+        private void GetDurations(_Presentation pres)
         {
             foreach (Slide slide in pres.Slides)
             {
+                var animId = 0;
                 if (slide != null && slide.SlideShowTransition.EntryEffect != PpEntryEffect.ppEffectNone)
                 {
-                    SaveAnimation(slide.SlideNumber, 1, (int)(30 * slide.SlideShowTransition.Duration));
+                    animId++;
+                    var numberOfFrames = (int) (30*slide.SlideShowTransition.Duration);
+                    SaveAnimation(slide.SlideNumber, animId, numberOfFrames, true, true);
                 }
-                var isFirst = true;
+                var isFirstAnimation = true;
                 //Slide before animation
-                Durations.AddLast(1);
+                //Durations.AddLast(1);
                 foreach (Effect eff in slide.TimeLine.MainSequence)
                 {
+                    animId++;
                     //Slide animation duration
-                    //Log($"Effect {eff.EffectType} duration: {eff.Timing.Duration}");
-                    Durations.AddLast((int)(30 * eff.Timing.Duration));
-                    //If this is a first animation slide after animation
-                    if (isFirst)
+                    var numberOfFrames = (int)(30 * eff.Timing.Duration);
+                    if (isFirstAnimation)
                     {
-                        Durations.AddLast(1);
-                        isFirst = false;
+                        SaveAnimation(slide.SlideNumber, animId, numberOfFrames, true, true);
+                        isFirstAnimation = false;
+                    }
+                    else
+                    {
+                        SaveAnimation(slide.SlideNumber, animId, numberOfFrames, false, false);
                     }
                 }
                 //If no animations on slide
-                if (isFirst)
+                if (isFirstAnimation)
                 {
-                    Durations.AddLast(1);
+                    SavePicture(slide);
+                    //Durations.AddLast(1);
                 }
             }
             //End of last slide black window
-            Log($"Total : {Durations.Sum()}");
+            _writer.CheckSum();
+            //Log($"Total : {Durations.Sum()}");
         }
 
-        private void SaveAnimation(int slideNumber, int animId, int count)
+        private void SavePicture(_Slide slide)
+        {
+            string pathToPicture = $"slides/slide{slide.SlideNumber}.jpg";
+            _writer.AddSlidePicture(slide.SlideNumber, pathToPicture);
+        }
+
+        private void SaveAnimation(int slideNumber, int animId, int count, bool hasFirstFrame, bool hasLastFrame)
         {
             string pathToVideo = $"animations/slide{slideNumber}_animation{animId}.mp4";
             string pathToPicture = $"animations/slide{slideNumber}_animation{animId}.jpg";
@@ -156,7 +173,7 @@ namespace WeCastConvertor.Converter
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond,
                 quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
-            //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
+                //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
                 Log(pres.CreateVideoStatus.ToString());
@@ -231,8 +248,10 @@ namespace WeCastConvertor.Converter
             _videosFolder = _ezsContent + @"\video";
             _audioFolder = _ezsContent + @"\audio";
             _animFolder = _ezsContent + @"\animations";
+            _slideFolder = _ezsContent + @"\slides";
             _tempVideo = _ezsTemp + @"\tempVideo.mp4";
-            TempCopy = _ezsTemp + @"\" + presName; ;
+            TempCopy = _ezsTemp + @"\" + presName;
+            ;
             if (!Directory.Exists(_ezsContent))
                 Directory.CreateDirectory(_ezsContent);
             else
@@ -248,6 +267,8 @@ namespace WeCastConvertor.Converter
                 Directory.CreateDirectory(_videosFolder);
             if (!Directory.Exists(_audioFolder))
                 Directory.CreateDirectory(_audioFolder);
+            if (!Directory.Exists(_slideFolder))
+                Directory.CreateDirectory(_slideFolder);
             _writer = new InfoWriter(Path.Combine(_ezsContent, "info.xml"));
             _cutter = new VideoCutter(_tempVideo);
         }
@@ -543,9 +564,9 @@ namespace WeCastConvertor.Converter
             if (slide.HasNotesPage != MsoTriState.msoTrue) return;
             var notesPages = slide.NotesPage;
             foreach (var shape in from Shape shape in notesPages.Shapes
-                                  where shape.Type == msoPlaceholder
-                                  where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                                  select shape)
+                where shape.Type == msoPlaceholder
+                where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+                select shape)
             {
                 Log($"Slide[{slide.SlideIndex}] Notes: [{shape.TextFrame.TextRange.Text}]");
             }
@@ -561,9 +582,9 @@ namespace WeCastConvertor.Converter
                 if (slide.HasNotesPage == MsoTriState.msoTrue)
                 {
                     result.AddRange((from Shape shape in slide.NotesPage.Shapes
-                                     where shape.Type == msoPlaceholder
-                                     where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                                     select shape).Select(shape => shape.TextFrame.TextRange.Text));
+                        where shape.Type == msoPlaceholder
+                        where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+                        select shape).Select(shape => shape.TextFrame.TextRange.Text));
                 }
             }
             catch (Exception exception)
