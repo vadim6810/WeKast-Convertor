@@ -91,6 +91,7 @@
   <ItemGroup>
     <Compile Include="Converter\Converter.cs" />
     <Compile Include="Converter\InfoWriter.cs" />
+    <Compile Include="Converter\VideoCutter.cs" />
     <Compile Include="Converter\Wrapper.cs" />
     <Compile Include="Forms\AboutForm.cs">
       <SubType>Form</SubType>
