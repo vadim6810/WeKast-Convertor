@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeCastConvertor.Converter;
@@ -31,7 +31,10 @@ namespace WeCastConvertor.Forms
             var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files)
             {
-                Debug.WriteLine(file);
+                // Пропускаем неподдерживаемые форматы
+                if (!Array.Exists(Wrapper.SupportedFormats, (string s) =>  s == Path.GetExtension(file))) continue;
+                
+                Console.WriteLine(file);
                 AppendLog(file);
                 var presentation = new Presentation() { SourcePath = file };
                 await Convert(presentation);
@@ -41,20 +44,23 @@ namespace WeCastConvertor.Forms
 
         private async Task<bool> Convert(Presentation presentation)
         {
-            InProgress++;
-            gridData.Add(presentation);
-            await Wrapper.ConvertAsync(presentation);
-            if (presentation.Convert == 100)
-            {               
-                var result = await WeKastServerAPI.Instance.Upload(presentation);
-                InProgress--;
-                return result;
-            }
-            else
+            try
             {
+                InProgress++;
+                gridData.Add(presentation);
+                await Wrapper.ConvertAsync(presentation);
+                if (presentation.Convert != 100) return false;
+                return await WeKastServerAPI.Instance.Upload(presentation);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
                 return false;
             }
-            
+            finally 
+            {
+                InProgress--;
+            }
         }
         
         // Logger
@@ -81,13 +87,18 @@ namespace WeCastConvertor.Forms
                 LogWindow.Items.RemoveAt(0);
             }
         }
-
+        
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (InProgress > 0)
+            if (InProgress <= 0) return;
+            var result = MessageBox.Show(
+                @"Converting in progress. Do you whant to exit?", 
+                @"Are you realy want to exit?", 
+                MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+            if (result == DialogResult.Cancel)
             {
-                e.Cancel = true;
-            }   
+                e.Cancel = true;   
+            }
         }
 
         private void LoginButton_Click(object sender, EventArgs e)
@@ -96,9 +107,20 @@ namespace WeCastConvertor.Forms
             login.ShowDialog();
         }
 
-        private void AddButton_Click(object sender, EventArgs e)
+        private async void AddButton_Click(object sender, EventArgs e)
         {
             
+            var openFileDialog = new OpenFileDialog
+            {
+                Filter = @"Now Supported Formats (*.pptx, *.ppt)|*.pptx;*.ppt" +
+                         @"|All Supported Formats (*.pptx, *.ppt, *.pdf, *.doc, *.docx)|*.pptx;*.ppt;*.pdf;*.doc;*.docx" +
+                         @"|All PowerPoint Presentations (*.pptx;*.ppt;*.pptm;*.ppsx;*.pps;*.ppsm;*.potx;*.pot;*.potm;*.odp)|*.pptx;*.ppt;*.pptm;*.ppsx;*.pps;*.ppsm;*.potx;*.pot;*.potm;*.odp",
+                Title = @"Select presentation for co"
+            };
+
+            if (openFileDialog.ShowDialog() != DialogResult.OK) return;
+            var presentation = new Presentation() {SourcePath = openFileDialog.FileName};
+            await Convert(presentation);
         }
 
         private void AboutButton_Click(object sender, EventArgs e)
