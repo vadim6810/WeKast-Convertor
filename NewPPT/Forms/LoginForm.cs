@@ -26,7 +26,7 @@ namespace WeCastConvertor.Forms
         private async void SaveButton_Click(object sender, EventArgs e)
         {
 
-            var api = WeKastServerAPI.Instance;
+            var api = WeKastServerApi.Instance;
             api.Login = login_textbox.Text;
             api.Password = password_textbox.Text;
 

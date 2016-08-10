@@ -32,7 +32,7 @@ namespace WeCastConvertor.Forms
             foreach (var file in files)
             {
                 // Пропускаем неподдерживаемые форматы
-                if (!Array.Exists(Wrapper.SupportedFormats, (string s) =>  s == Path.GetExtension(file))) continue;
+                if (!Array.Exists(Wrapper.SupportedFormats, s => s.Equals(Path.GetExtension(file)))) continue;
                 
                 Console.WriteLine(file);
                 AppendLog(file);
@@ -50,7 +50,7 @@ namespace WeCastConvertor.Forms
                 gridData.Add(presentation);
                 await Wrapper.ConvertAsync(presentation);
                 if (presentation.Convert != 100) return false;
-                return await WeKastServerAPI.Instance.Upload(presentation);
+                return await WeKastServerApi.Instance.Upload(presentation);
             }
             catch (Exception e)
             {

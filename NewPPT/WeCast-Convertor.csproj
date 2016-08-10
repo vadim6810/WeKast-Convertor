@@ -68,6 +68,12 @@
     <StartupObject>WeCastConvertor.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accord">
+      <HintPath>..\packages\Accord.3.0.2\lib\net45\Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Video">
+      <HintPath>..\packages\Accord.Video.3.0.2\lib\net45\Accord.Video.dll</HintPath>
+    </Reference>
     <Reference Include="Accord.Video.FFMPEG, Version=3.0.0.0, Culture=neutral, PublicKeyToken=fa1a88e29555ccf7, processorArchitecture=x86">
       <HintPath>..\packages\Accord.Video.FFMPEG.3.0.2\lib\net45\Accord.Video.FFMPEG.dll</HintPath>
       <Private>True</Private>
@@ -117,7 +123,7 @@
     <Compile Include="Utils\EventLogger.cs" />
     <Compile Include="Utils\ILogger.cs" />
     <Compile Include="Utils\SharedPreferences.cs" />
-    <Compile Include="Utils\WeKastServerAPI.cs" />
+    <Compile Include="Utils\WeKastServerApi.cs" />
     <EmbeddedResource Include="Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
