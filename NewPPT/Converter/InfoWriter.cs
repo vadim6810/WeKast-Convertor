@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -18,18 +19,35 @@ namespace WeCastConvertor.Converter
             _doc.Add(_root);
         }
 
-        public void AddSlide(int slideId)
+        public XElement AddSlide(int slideId)
         {
-            var slide = new XElement("slide",
+            var slide = GetSlideNodeById(slideId);
+            if (slide != null) return slide;
+            slide = new XElement("slide",
                 new XAttribute("id", slideId));
             _root.Add(slide);
+            return slide;
+        }
+
+        private XElement GetSlideNodeById(int slideId)
+        {
+            try
+            {
+                return _doc.Root?.Elements()
+                            .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideId.ToString());
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public void AddAnimation(int slideId, int animId, string pathToVideo, string pathToEndState)
         {
-            var slide =
-                _doc.Root?.Elements()
-                    .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideId.ToString());
+            var slide = AddSlide(slideId);
+            //GetSlideNodeById(slideId);
+            //_doc.Root?.Elements()
+            //    .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideId.ToString());
             var animation = new XElement("animation",
                 new XAttribute("id", animId),
                 new XAttribute("video", pathToVideo),
@@ -42,7 +60,7 @@ namespace WeCastConvertor.Converter
             var slide =
                 _doc.Root?.Elements()
                     .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideNumber.ToString());
-            slide?.Add(new XAttribute(attrName,value));
+            slide?.Add(new XAttribute(attrName, value));
         }
 
         public void Save()
