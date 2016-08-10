@@ -42,7 +42,7 @@ namespace WeCastConvertor.Converter
             }
         }
 
-        public void AddAnimation(int slideId, int animId, string pathToVideo, string pathToEndState)
+        public XElement AddAnimation(int slideId, int animId, string pathToVideo, string pathToEndState)
         {
             var slide = AddSlide(slideId);
             //GetSlideNodeById(slideId);
@@ -53,6 +53,7 @@ namespace WeCastConvertor.Converter
                 new XAttribute("video", pathToVideo),
                 new XAttribute("picture", pathToEndState));
             slide?.Add(animation);
+            return animation;
         }
 
         public void AddAttribute(int slideNumber, string attrName, StringBuilder value)
@@ -68,14 +69,15 @@ namespace WeCastConvertor.Converter
             _doc.Save(_fileName);
         }
 
-        public void AddSlidePicture(int slideNumber, string pathToPicture)
+        public XElement AddSlideMedia(int slideNumber, string pathToMedia, string type)
         {
-            //throw new System.NotImplementedException();
-        }
-
-        public void AddSlideMedia(int slideNumber, string pathToMedia, string type)
-        {
-            //throw new System.NotImplementedException();
+            var slide = AddSlide(slideNumber);
+            var media = new XElement("media",
+                //new XAttribute("id", animId),
+                new XAttribute("type", type),
+                new XAttribute("path", pathToMedia));
+            slide?.Add(media);
+            return media;
         }
     }
 }
