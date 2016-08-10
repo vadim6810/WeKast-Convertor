@@ -124,14 +124,15 @@ namespace WeCastConvertor.Converter
                 }
             }
             //End of last slide black window
-            _writer.CheckSum();
+            _cutter.CheckSum();
             //Log($"Total : {Durations.Sum()}");
         }
 
         private void SavePicture(_Slide slide)
         {
-            string pathToPicture = $"slides/slide{slide.SlideNumber}.jpg";
-            _writer.AddSlidePicture(slide.SlideNumber, pathToPicture);
+            _cutter.SkipFrames(2);
+            //string pathToPicture = $"slides/slide{slide.SlideNumber}.jpg";
+            //_writer.AddSlidePicture(slide.SlideNumber, pathToPicture);
         }
 
         private void SaveAnimation(int slideNumber, int animId, int count, bool hasFirstFrame, bool hasLastFrame)
@@ -188,9 +189,9 @@ namespace WeCastConvertor.Converter
         {
             foreach (Slide slide in pres.Slides)
             {
-                //Log($"Parsing slide{slide.SlideNumber}:");
-                var outputFile = _ezsContent + "\\" + slide.SlideNumber + ".jpg";
+                var outputFile = _slideFolder + "\\" + slide.SlideNumber + ".jpg";
                 _writer.AddSlide(slide.SlideNumber);
+                _writer.AddAttribute(slide.SlideNumber, "picture", new StringBuilder($"slides/{slide.SlideNumber}.jpg"));
                 slide.Export(outputFile, "jpg", 1440, 1080);
                 ExtractAndSaveComments(slide);
                 ParseShapes(slide);

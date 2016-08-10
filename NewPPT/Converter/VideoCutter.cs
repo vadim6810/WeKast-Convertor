@@ -26,5 +26,15 @@ namespace WeCastConvertor.Converter
         {
             _reader.Close();
         }
+
+        public void SkipFrames(int i)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CheckSum()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
