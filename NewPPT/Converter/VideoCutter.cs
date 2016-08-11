@@ -11,6 +11,7 @@ namespace WeCastConvertor.Converter
     {
         private readonly VideoFileReader _reader = new VideoFileReader();
         string _path;
+        private int currentFrame { get; set; }
 
         public VideoCutter(string pathToVideo)
         {
@@ -29,12 +30,12 @@ namespace WeCastConvertor.Converter
 
         public void SkipFrames(int i)
         {
-            throw new NotImplementedException();
+            currentFrame += 2;
         }
 
-        public void CheckSum()
+        public bool CheckSum()
         {
-            throw new NotImplementedException();
+            return currentFrame == _reader.FrameCount;
         }
     }
 }

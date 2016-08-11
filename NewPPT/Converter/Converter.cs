@@ -124,7 +124,8 @@ namespace WeCastConvertor.Converter
                 }
             }
             //End of last slide black window
-            _cutter.CheckSum();
+            Log(_cutter.CheckSum().ToString());
+            _cutter.CloseVideo();
             //Log($"Total : {Durations.Sum()}");
         }
 
@@ -181,7 +182,6 @@ namespace WeCastConvertor.Converter
                 Thread.Sleep(2000);
             }
             _cutter.OpenVideo();
-            _cutter.CloseVideo();
             return fileName;
         }
 
@@ -324,7 +324,7 @@ namespace WeCastConvertor.Converter
             if (videoInfos == null)
                 return null;
             /*
-             * Select the first .mp4 video with 360p resolution
+             * Select the first .mp4 video with 720p resolution
              */
             var video = videoInfos.First(info => info.VideoType == VideoType.Mp4 && info.Resolution == 720);
 
@@ -354,6 +354,7 @@ namespace WeCastConvertor.Converter
              * For GUI applications note, that this method runs synchronously.
              */
             videoDownloader.Execute();
+            _writer.AddSlideMedia(slideNumber, $"video\v{slideNumber}{video.VideoExtension}", "video");
             return savePath;
         }
 
@@ -411,8 +412,9 @@ namespace WeCastConvertor.Converter
                     Log(
                         $"{shape.Type} - {shape.MediaType} - {shape.MediaFormat.IsEmbedded} - {shape.MediaFormat.IsLinked}");
                 }
-                catch
+                catch(Exception e)
                 {
+                    Log(e.Message);
                 }
                 if (ExistYouTubeVideo(shape))
                 {
@@ -468,6 +470,9 @@ namespace WeCastConvertor.Converter
                                 ? $"{_ezsContent}\\audio\\a{slide.SlideNumber}_{tryCount}{Path.GetExtension(pathMedia)}"
                                 : $"{_ezsContent}\\video\\v{slide.SlideNumber}_{tryCount}{Path.GetExtension(pathMedia)}";
                         }
+                    var typeForInfoWriter = type.Contains("audio") ? "audio" : "video";
+                    var pathForInfoWriter = $"{typeForInfoWriter}/{Path.GetFileName(pathToUnzip)}";
+                    _writer.AddSlideMedia(slide.SlideNumber, pathForInfoWriter, typeForInfoWriter);
                 }
                 //slideXml.
                 //archive.
@@ -502,20 +507,27 @@ namespace WeCastConvertor.Converter
             var sourcePath = shape.LinkFormat.SourceFullName;
             var extension = Path.GetExtension(sourcePath);
             string newName;
+            string type = null;
+            string internalPath = null;
             var destPath = string.Empty;
             if (shape.MediaType == PpMediaType.ppMediaTypeMovie)
             {
                 newName = $"v{slideNumber}{extension}";
                 destPath = _videosFolder + "\\" + newName;
+                type = "video";
+                internalPath = $"video/{newName}";
             }
             if (shape.MediaType == PpMediaType.ppMediaTypeSound)
             {
                 newName = $"audio{slideNumber}{extension}";
                 destPath = _audioFolder + "\\" + newName;
+                type = "audio";
+                internalPath = $"video/{newName}";
             }
             if (!File.Exists(sourcePath))
                 throw new FileNotFoundException($"File {sourcePath} not found");
             SaveFile(sourcePath, destPath);
+            _writer.AddSlideMedia(slideNumber, internalPath, type);
         }
 
         private static string SaveFile(string sourcePath, string destPath)
