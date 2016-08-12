@@ -354,7 +354,7 @@ namespace WeCastConvertor.Converter
              * For GUI applications note, that this method runs synchronously.
              */
             videoDownloader.Execute();
-            _writer.AddSlideMedia(slideNumber, $"video\v{slideNumber}{video.VideoExtension}", "video");
+            _writer.AddSlideMedia(slideNumber, $"video/v{slideNumber}{video.VideoExtension}", "video");
             return savePath;
         }
 
@@ -522,7 +522,7 @@ namespace WeCastConvertor.Converter
                 newName = $"audio{slideNumber}{extension}";
                 destPath = _audioFolder + "\\" + newName;
                 type = "audio";
-                internalPath = $"video/{newName}";
+                internalPath = $"audio/{newName}";
             }
             if (!File.Exists(sourcePath))
                 throw new FileNotFoundException($"File {sourcePath} not found");

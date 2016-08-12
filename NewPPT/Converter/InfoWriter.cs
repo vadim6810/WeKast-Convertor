@@ -1,7 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Linq;
+using System.Xml.Schema;
 
 namespace WeCastConvertor.Converter
 {
@@ -66,7 +69,14 @@ namespace WeCastConvertor.Converter
 
         public void Save()
         {
-            _doc.Save(_fileName);
+            try
+            {
+                _doc.Save(_fileName);
+            }
+            catch (IOException)
+            {
+                Thread.Sleep(1000);
+            }
         }
 
         public XElement AddSlideMedia(int slideNumber, string pathToMedia, string type)
