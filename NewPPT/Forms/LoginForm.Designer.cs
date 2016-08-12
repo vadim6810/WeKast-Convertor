@@ -119,6 +119,7 @@
             this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name = "LoginForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "LoginForm";
             this.Load += new System.EventHandler(this.LoginForm_Load);
             this.login_group.ResumeLayout(false);

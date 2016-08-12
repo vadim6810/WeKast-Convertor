@@ -133,6 +133,22 @@ namespace WeCastConvertor.Forms
         {
             Close();
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            if (!SharedPreferences.IsSet())
+            {
+                var login = new LoginForm { StartPosition = FormStartPosition.CenterScreen };
+                var result = login.ShowDialog();
+                if (result == DialogResult.Cancel)
+                {
+                    Application.Exit();
+                }
+            }
+            //WeKastServerApi.Instance.Auth();
+            // check if login
+            // check if
+        }
     }
 
     public class Presentation

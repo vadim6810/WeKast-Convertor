@@ -20,6 +20,7 @@ namespace WeCastConvertor.Forms
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
@@ -41,6 +42,7 @@ namespace WeCastConvertor.Forms
             if (res) {
                 SharedPreferences.Login = api.Login;
                 SharedPreferences.Password = api.Password;
+                DialogResult = DialogResult.OK;
                 Close();
             } else {
                 api.Login = SharedPreferences.Login;
