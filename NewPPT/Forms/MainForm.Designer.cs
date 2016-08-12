@@ -42,18 +42,20 @@
             this.LoginButton = new System.Windows.Forms.Button();
             this.AboutButton = new System.Windows.Forms.Button();
             this.ExitButton = new System.Windows.Forms.Button();
+            this.GroupBox = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).BeginInit();
+            this.GroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // LogWindow
             // 
             this.LogWindow.FormattingEnabled = true;
             this.LogWindow.ItemHeight = 16;
-            this.LogWindow.Location = new System.Drawing.Point(12, 440);
+            this.LogWindow.Location = new System.Drawing.Point(6, 454);
             this.LogWindow.Margin = new System.Windows.Forms.Padding(4);
             this.LogWindow.Name = "LogWindow";
-            this.LogWindow.Size = new System.Drawing.Size(856, 100);
+            this.LogWindow.Size = new System.Drawing.Size(845, 68);
             this.LogWindow.TabIndex = 2;
             // 
             // grid
@@ -84,7 +86,7 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.grid.DefaultCellStyle = dataGridViewCellStyle2;
-            this.grid.Location = new System.Drawing.Point(13, 41);
+            this.grid.Location = new System.Drawing.Point(6, 39);
             this.grid.Name = "grid";
             this.grid.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -96,7 +98,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.grid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.grid.RowTemplate.Height = 24;
-            this.grid.Size = new System.Drawing.Size(857, 392);
+            this.grid.Size = new System.Drawing.Size(845, 408);
             this.grid.TabIndex = 4;
             // 
             // SourcePath
@@ -133,7 +135,7 @@
             // 
             // AddButton
             // 
-            this.AddButton.Location = new System.Drawing.Point(93, 11);
+            this.AddButton.Location = new System.Drawing.Point(87, 10);
             this.AddButton.Name = "AddButton";
             this.AddButton.Size = new System.Drawing.Size(75, 23);
             this.AddButton.TabIndex = 5;
@@ -143,7 +145,7 @@
             // 
             // LoginButton
             // 
-            this.LoginButton.Location = new System.Drawing.Point(12, 11);
+            this.LoginButton.Location = new System.Drawing.Point(6, 10);
             this.LoginButton.Name = "LoginButton";
             this.LoginButton.Size = new System.Drawing.Size(75, 23);
             this.LoginButton.TabIndex = 6;
@@ -153,7 +155,7 @@
             // 
             // AboutButton
             // 
-            this.AboutButton.Location = new System.Drawing.Point(714, 12);
+            this.AboutButton.Location = new System.Drawing.Point(695, 10);
             this.AboutButton.Name = "AboutButton";
             this.AboutButton.Size = new System.Drawing.Size(75, 23);
             this.AboutButton.TabIndex = 7;
@@ -163,13 +165,27 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(795, 11);
+            this.ExitButton.Location = new System.Drawing.Point(776, 10);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(75, 23);
             this.ExitButton.TabIndex = 8;
             this.ExitButton.Text = "Exit";
             this.ExitButton.UseVisualStyleBackColor = true;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
+            // 
+            // GroupBox
+            // 
+            this.GroupBox.Controls.Add(this.LoginButton);
+            this.GroupBox.Controls.Add(this.LogWindow);
+            this.GroupBox.Controls.Add(this.grid);
+            this.GroupBox.Controls.Add(this.ExitButton);
+            this.GroupBox.Controls.Add(this.AddButton);
+            this.GroupBox.Controls.Add(this.AboutButton);
+            this.GroupBox.Location = new System.Drawing.Point(13, 12);
+            this.GroupBox.Name = "GroupBox";
+            this.GroupBox.Size = new System.Drawing.Size(857, 529);
+            this.GroupBox.TabIndex = 9;
+            this.GroupBox.TabStop = false;
             // 
             // MainForm
             // 
@@ -178,12 +194,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.ClientSize = new System.Drawing.Size(882, 553);
-            this.Controls.Add(this.ExitButton);
-            this.Controls.Add(this.AboutButton);
-            this.Controls.Add(this.LoginButton);
-            this.Controls.Add(this.AddButton);
-            this.Controls.Add(this.grid);
-            this.Controls.Add(this.LogWindow);
+            this.Controls.Add(this.GroupBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximumSize = new System.Drawing.Size(900, 600);
@@ -196,6 +207,7 @@
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gridData)).EndInit();
+            this.GroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -211,6 +223,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn SourcePath;
         private System.Windows.Forms.DataGridViewTextBoxColumn Converted;
         private System.Windows.Forms.DataGridViewTextBoxColumn Uploaded;
+        private System.Windows.Forms.GroupBox GroupBox;
     }
 }
 

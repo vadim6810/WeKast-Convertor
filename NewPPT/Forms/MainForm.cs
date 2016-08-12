@@ -143,20 +143,18 @@ namespace WeCastConvertor.Forms
             else
             {
                 Cursor = Cursors.WaitCursor;
-                Enabled = false;
+                AllowDrop = false;
+                GroupBox.Enabled = false;
                 var authResult = await WeKastServerApi.Instance.Auth();
-                Enabled = true;
+                GroupBox.Enabled = true;
                 Cursor = Cursors.Default;
+                AllowDrop = true;
                 if (!authResult)
                 {
                     LoginDialogStartupOrExit(FormStartPosition.CenterParent);    
                 } 
             }
             
-
-            
-            // check if login
-            // check if
         }
 
         private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen)
