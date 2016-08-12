@@ -32,9 +32,9 @@ namespace WeCastConvertor.Forms
             api.Password = password_textbox.Text;
 
             Cursor = Cursors.WaitCursor;
-            login_group.Enabled = false;
+            LoginGroup.Enabled = false;
             var res = await api.Auth();
-            login_group.Enabled = true;
+            LoginGroup.Enabled = true;
 
             Cursor = Cursors.Default;
 

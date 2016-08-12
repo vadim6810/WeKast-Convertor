@@ -5,23 +5,26 @@ namespace WeCastConvertor.Utils
 {
     internal static class SharedPreferences
     {
-        private const string AppKeyPath = "HKEY_CURRENT_USER\\Software\\WeKast";
+        private const string AppKeyPath = @"HKEY_CURRENT_USER\Software\WeKast";
+
+        private const string LoginName = "Login";
+        private const string PasswordName = "Password";
 
         public static string Login
         {
-            get { return GetValue("Login"); }
-            set { SetValue("Login", value); }
+            get { return GetValue(LoginName); }
+            set { SetValue(LoginName, value); }
         }
 
         public static string Password
         {
-            get { return GetValue("password"); }
-            set { SetValue("password", value); }
+            get { return GetValue(PasswordName); }
+            set { SetValue(PasswordName, value); }
         }
 
         public static bool IsSet()
         {
-            return "".Equals(Login) && "".Equals(Password);
+            return !string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password);
         }
 
         private static string GetValue(string name)

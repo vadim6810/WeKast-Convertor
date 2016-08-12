@@ -134,20 +134,39 @@ namespace WeCastConvertor.Forms
             Close();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private async void MainForm_Load(object sender, EventArgs e)
         {
             if (!SharedPreferences.IsSet())
             {
-                var login = new LoginForm { StartPosition = FormStartPosition.CenterScreen };
-                var result = login.ShowDialog();
-                if (result == DialogResult.Cancel)
-                {
-                    Application.Exit();
-                }
+                LoginDialogStartupOrExit();
             }
-            //WeKastServerApi.Instance.Auth();
+            else
+            {
+                Cursor = Cursors.WaitCursor;
+                Enabled = false;
+                var authResult = await WeKastServerApi.Instance.Auth();
+                Enabled = true;
+                Cursor = Cursors.Default;
+                if (!authResult)
+                {
+                    LoginDialogStartupOrExit(FormStartPosition.CenterParent);    
+                } 
+            }
+            
+
+            
             // check if login
             // check if
+        }
+
+        private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        {
+            var login = new LoginForm { StartPosition = startPosition};
+            var dialogResult = login.ShowDialog();
+            if (dialogResult == DialogResult.Cancel)
+            {
+                Application.Exit();
+            }
         }
     }
 

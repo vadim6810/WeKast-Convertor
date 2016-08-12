@@ -103,7 +103,6 @@ namespace WeCastConvertor.Utils
                 { "login", Login },
                 { "password", Password }
             };
-
             var response = await PostRequest("/list", data);
             var json = new DataContractJsonSerializer(typeof(ListResponse));
             var listResponse = (ListResponse) json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
