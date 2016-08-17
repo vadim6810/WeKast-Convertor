@@ -141,6 +141,9 @@ namespace WeCastConvertor.Converter
             string pathToVideo = $"animations/slide{slideNumber}_animation{animId}.mp4";
             string pathToPicture = $"animations/slide{slideNumber}_animation{animId}.jpg";
             _writer.AddAnimation(slideNumber, animId, pathToVideo, pathToPicture);
+            string videoName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.mp4";
+            string pictureName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.jpg";
+            _cutter.SaveAnimation(count, slideNumber, animId, videoName, pictureName, hasFirstFrame, hasLastFrame);
         }
 
         private void CleanTempFiles()
@@ -149,8 +152,8 @@ namespace WeCastConvertor.Converter
             {
                 if (File.Exists(TempCopy))
                     File.Delete(TempCopy);
-                if (File.Exists(_tempVideo))
-                    File.Delete(_tempVideo);
+                //if (File.Exists(_tempVideo))
+                //    File.Delete(_tempVideo);
                 _writer.Save();
             }
             catch (Exception)
