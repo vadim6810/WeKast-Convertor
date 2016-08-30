@@ -24,7 +24,7 @@ namespace WeCastConvertor.Converter
 
         //Path to windows TEMP dirrectory
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
-        //private readonly LinkedList<int> Durations = new LinkedList<int>();
+        private readonly LinkedList<int> Durations = new LinkedList<int>();
         private string _animFolder;
         private string _audioFolder;
         private string _slideFolder;
@@ -95,37 +95,40 @@ namespace WeCastConvertor.Converter
                 if (slide != null && slide.SlideShowTransition.EntryEffect != PpEntryEffect.ppEffectNone)
                 {
                     animId++;
-                    var numberOfFrames = (int) (30*slide.SlideShowTransition.Duration);
-                    SaveAnimation(slide.SlideNumber, animId, numberOfFrames, true, true);
+                    //Durations.AddLast(slide.SlideShowTransition.Duration+2f/30);
+                    var numberOfFrames = (int)(30 * slide.SlideShowTransition.Duration + 2);
+                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
+                    Durations.AddLast(numberOfFrames);
                 }
                 var isFirstAnimation = true;
                 //Slide before animation
-                //Durations.AddLast(1);
+                Durations.AddLast(1);
                 foreach (Effect eff in slide.TimeLine.MainSequence)
                 {
                     animId++;
                     //Slide animation duration
+
                     var numberOfFrames = (int)(30 * eff.Timing.Duration);
                     if (isFirstAnimation)
                     {
-                        SaveAnimation(slide.SlideNumber, animId, numberOfFrames, true, true);
+                        numberOfFrames += 2;
+                        //Durations.AddLast(2f / 30);
                         isFirstAnimation = false;
                     }
-                    else
-                    {
-                        SaveAnimation(slide.SlideNumber, animId, numberOfFrames, false, false);
-                    }
+                    SaveAnimation( slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
+                    Durations.AddLast(numberOfFrames);
                 }
+               
                 //If no animations on slide
                 if (isFirstAnimation)
                 {
                     SavePicture(slide);
-                    //Durations.AddLast(1);
+                    Durations.AddLast(1);
                 }
             }
             //End of last slide black window
-            Log(_cutter.CheckSum().ToString());
-            _cutter.CloseVideo();
+            Log(_cutter.CheckSum(Durations.Sum()).ToString());
+            //_cutter.CloseVideo();
             //Log($"Total : {Durations.Sum()}");
         }
 
@@ -136,14 +139,14 @@ namespace WeCastConvertor.Converter
             //_writer.AddSlidePicture(slide.SlideNumber, pathToPicture);
         }
 
-        private void SaveAnimation(int slideNumber, int animId, int count, bool hasFirstFrame, bool hasLastFrame)
+        private void SaveAnimation(int slideNumber, int animId, int fromFrame, int frameCount)
         {
             string pathToVideo = $"animations/slide{slideNumber}_animation{animId}.mp4";
             string pathToPicture = $"animations/slide{slideNumber}_animation{animId}.jpg";
             _writer.AddAnimation(slideNumber, animId, pathToVideo, pathToPicture);
             string videoName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.mp4";
             string pictureName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.jpg";
-            _cutter.SaveAnimation(count, slideNumber, animId, videoName, pictureName, hasFirstFrame, hasLastFrame);
+            _cutter.SaveAnimation(fromFrame, frameCount, slideNumber, animId, videoName, pictureName);
         }
 
         private void CleanTempFiles()
@@ -178,13 +181,12 @@ namespace WeCastConvertor.Converter
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond,
                 quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
-                //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
+            //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
                 Log(pres.CreateVideoStatus.ToString());
                 Thread.Sleep(2000);
             }
-            _cutter.OpenVideo();
             return fileName;
         }
 
@@ -415,7 +417,7 @@ namespace WeCastConvertor.Converter
                     Log(
                         $"{shape.Type} - {shape.MediaType} - {shape.MediaFormat.IsEmbedded} - {shape.MediaFormat.IsLinked}");
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log(e.Message);
                 }
@@ -580,9 +582,9 @@ namespace WeCastConvertor.Converter
             if (slide.HasNotesPage != MsoTriState.msoTrue) return;
             var notesPages = slide.NotesPage;
             foreach (var shape in from Shape shape in notesPages.Shapes
-                where shape.Type == msoPlaceholder
-                where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                select shape)
+                                  where shape.Type == msoPlaceholder
+                                  where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+                                  select shape)
             {
                 Log($"Slide[{slide.SlideIndex}] Notes: [{shape.TextFrame.TextRange.Text}]");
             }
@@ -598,9 +600,9 @@ namespace WeCastConvertor.Converter
                 if (slide.HasNotesPage == MsoTriState.msoTrue)
                 {
                     result.AddRange((from Shape shape in slide.NotesPage.Shapes
-                        where shape.Type == msoPlaceholder
-                        where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                        select shape).Select(shape => shape.TextFrame.TextRange.Text));
+                                     where shape.Type == msoPlaceholder
+                                     where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+                                     select shape).Select(shape => shape.TextFrame.TextRange.Text));
                 }
             }
             catch (Exception exception)

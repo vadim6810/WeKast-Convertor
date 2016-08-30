@@ -1,43 +1,50 @@
-﻿using AForge.Video.FFMPEG;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NReco.VideoInfo;
+using NReco.VideoConverter;
 
 namespace WeCastConvertor.Converter
 {
     class VideoCutter
     {
-        private readonly VideoFileReader _reader = new VideoFileReader();
-        string _path;
-        private int currentFrame { get; set; }
+        //private readonly VideoFileReader _reader = new VideoFileReader();
+        private FFMpegConverter FfMpeg { get; } = new FFMpegConverter();
+        private MediaInfo VideoInfo { get; set; }
+        private float FrameRate { get; set; }
 
-        public VideoCutter(string pathToVideo)
+        private string InputPath { get; }
+        //private int currentFrame { get; set; }
+
+        public VideoCutter(string inputPathToVideo)
         {
-            _path = pathToVideo;
+            InputPath = inputPathToVideo;
+            
         }
 
-        public void OpenVideo()
-        {
-            try
-            {
-                _reader.Open(_path);
-            }
-            catch (Exception)
-            {
 
-                throw;
-            }
-        }
+        //private void OpenVideo()
+        //{
+        //    try
+        //    {
+        //        //_reader.Open(_path);
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
 
         public void CloseVideo()
         {
             try
             {
-                _reader.Close();
+                //_reader.Close();
             }
             catch (Exception)
             {
@@ -48,63 +55,91 @@ namespace WeCastConvertor.Converter
 
         public void SkipFrames(int count)
         {
-            currentFrame += count;
+            //currentFrame += count;
         }
 
-        public bool CheckSum()
+        public bool CheckSum(int sum)
         {
-            Debug.WriteLine("current frame: "+currentFrame+"   FrameCount: "+_reader.FrameCount);
-            return currentFrame == _reader.FrameCount;
-        }
-
-        public void SaveAnimation(int count, int slideNumber, int animId, string pathToVideo, string pathToPicture)
-        {
-            //throw new NotImplementedException();
-            VideoFileWriter writer = new VideoFileWriter();
-            for (int i = 0; i < count; i++)
+            var videoInfo = GetVideoInfio();
+            Debug.WriteLine("VideoDuration: {0}", videoInfo.Duration.Duration());
+            MediaInfo.StreamInfo[] streams = videoInfo.Streams;
+            foreach (var stream in streams)
             {
-                Bitmap bmp = _reader.ReadVideoFrame();
+                Debug.WriteLine(stream + " frame rate: " + stream.FrameRate);
             }
+            var frameRate = streams[0].FrameRate;
+            //MediaInfo.StreamInfo = 
+            int frameCount = (int)(videoInfo.Duration.Duration().TotalMilliseconds * frameRate / 1000);
+            Debug.WriteLine("Frame count: {0}", frameCount);
+            Debug.WriteLine("Check sum: {0}", sum);
+            //Debug.WriteLine("current frame: "+currentFrame+"   FrameCount: "+_reader.FrameCount);
+            //return currentFrame == _reader.FrameCount;
+            return false;
         }
 
-        internal void SaveAnimation(int count, int slideNumber, int animId, string pathToVideo, string pathToPicture, bool hasFirstFrame, bool hasLastFrame)
+        internal void SaveAnimation(int fromFrame, int frameCount, int slideNumber, int animId, string pathToVideo, string pathToPicture)
         {
-            if (hasFirstFrame)
-                GetBitmap();
-            VideoFileWriter writer = new VideoFileWriter();
-            writer.Open(pathToVideo, _reader.Width, _reader.Height, _reader.FrameRate, VideoCodec.MPEG4,100);
-            for (int i = 0; i < count; i++)
+            if (VideoInfo == null)
             {
-                Bitmap bmp = GetBitmap();
-                writer.WriteVideoFrame(bmp);
-                if (!hasLastFrame && (i == count - 1))
+                VideoInfo = GetVideoInfio();
+                Debug.WriteLine("VideoDuration: {0}", VideoInfo.Duration.Duration());
+                var streams = VideoInfo.Streams;
+                foreach (var stream in streams)
                 {
-                    bmp.Save(pathToPicture);
+                    Debug.WriteLine(stream + " frame rate: " + stream.FrameRate);
                 }
+                FrameRate = streams[0].FrameRate;
             }
-            try
-            {
-                writer.Close();
-            }
-            catch (Exception)
-            {
-                
-                throw;
-            }
-            if (hasLastFrame)
-            {
-                var bmp = GetBitmap();
-                bmp.Save(pathToPicture);
+            Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
+            var settings = new ConvertSettings();
+            settings.VideoFrameRate = (int?) FrameRate;
+            settings.VideoCodec = Format.h264;
+            settings.Seek = fromFrame/FrameRate;
+            settings.VideoFrameCount = frameCount;
+            FfMpeg.ConvertMedia(InputPath, null, pathToVideo, null, settings);
+            //if (hasFirstFrame)
+            //    GetBitmap();
+            //VideoFileWriter writer = new VideoFileWriter();
+            //writer.Open(inputPathToVideo, _reader.Width, _reader.Height, _reader.FrameRate, VideoCodec.MPEG4,100);
+            //for (int i = 0; i < count; i++)
+            //{
+            //    Bitmap bmp = GetBitmap();
+            //    writer.WriteVideoFrame(bmp);
+            //    if (!hasLastFrame && (i == count - 1))
+            //    {
+            //        bmp.Save(pathToPicture);
+            //    }
+            //}
+            //try
+            //{
+            //    writer.Close();
+            //}
+            //catch (Exception)
+            //{
 
-            }
+            //    throw;
+            //}
+            //if (hasLastFrame)
+            //{
+            //    var bmp = GetBitmap();
+            //    bmp.Save(pathToPicture);
+
+            //}
 
 
         }
 
         private Bitmap GetBitmap()
         {
-            currentFrame++;
-            return _reader.ReadVideoFrame();
+            //currentFrame++;
+            //return _reader.ReadVideoFrame();
+            return null;
+        }
+
+        private MediaInfo GetVideoInfio()
+        {
+            var ffProbe = new FFProbe();
+            return ffProbe.GetMediaInfo(InputPath);
         }
     }
 }
