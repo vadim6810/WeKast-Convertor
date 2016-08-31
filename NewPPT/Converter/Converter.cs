@@ -18,9 +18,9 @@ namespace WeCastConvertor.Converter
 {
     internal class Converter
     {
-        private static readonly ILogger Logger = new DebugLogger();
-        private static readonly Application Pw = new Application();
-        private static readonly EventLogger El = new EventLogger(Logger, Pw);
+        private  readonly ILogger Logger = new DebugLogger();
+        private  readonly Application Pw = new Application();
+        //private  readonly EventLogger El = new EventLogger(Logger, Pw);
 
         //Path to windows TEMP dirrectory
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
@@ -51,12 +51,12 @@ namespace WeCastConvertor.Converter
 
         public string Convert()
         {
-            El.AttachEvents();
+            //El.AttachEvents();
             var pres = Pw.Presentations.Open(PathToPresentation, MsoTriState.msoFalse, MsoTriState.msoFalse, _showPp);
             ParseSlides(pres);
             CreateVideo(pres);
             GetDurations(pres);
-            El.DetachEvents();
+            //El.DetachEvents();
             _writer.Save();
             CleanTempFiles();
             var result = CreateEzs(pres);
@@ -679,7 +679,7 @@ namespace WeCastConvertor.Converter
             objSst.AdvanceTime = 0;
         }
 
-        private static void Log(string s) => Logger.AppendLog(DateTime.Now.ToString("hh:mm:ss") + ": " + s);
+        private void Log(string s) => Logger.AppendLog(DateTime.Now.ToString("hh:mm:ss") + ": " + s);
 
         public void SetShow(bool show)
         {

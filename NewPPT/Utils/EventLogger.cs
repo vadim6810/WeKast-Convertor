@@ -233,6 +233,6 @@ namespace WeCastConvertor.Utils
             GC.Collect();
         }
 
-        private static void Log(string s) => _frmMain.AppendLog(DateTime.Now.ToString("hh:mm:ss") + ": " + s);
+        private void Log(string s) => _frmMain.AppendLog(DateTime.Now.ToString("hh:mm:ss") + ": " + s);
     }
 }
