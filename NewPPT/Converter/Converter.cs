@@ -99,6 +99,7 @@ namespace WeCastConvertor.Converter
                     var numberOfFrames = (int)(30 * slide.SlideShowTransition.Duration + 2);
                     SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
                     Durations.AddLast(numberOfFrames);
+                    SavePicture(slide.SlideNumber, animId, Durations.Sum());
                 }
                 var isFirstAnimation = true;
                 //Slide before animation
@@ -115,14 +116,15 @@ namespace WeCastConvertor.Converter
                         //Durations.AddLast(2f / 30);
                         isFirstAnimation = false;
                     }
-                    SaveAnimation( slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
+                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
                     Durations.AddLast(numberOfFrames);
+                    SavePicture(slide.SlideNumber, animId, Durations.Sum());
                 }
-               
+
                 //If no animations on slide
                 if (isFirstAnimation)
                 {
-                    SavePicture(slide);
+                    //SavePicture(slide);
                     Durations.AddLast(1);
                 }
             }
@@ -132,11 +134,10 @@ namespace WeCastConvertor.Converter
             //Log($"Total : {Durations.Sum()}");
         }
 
-        private void SavePicture(_Slide slide)
+        private void SavePicture(int slideNumber, int animId, int fromFrame)
         {
-            _cutter.SkipFrames(2);
-            //string pathToPicture = $"slides/slide{slide.SlideNumber}.jpg";
-            //_writer.AddSlidePicture(slide.SlideNumber, pathToPicture);
+            string pictureName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.jpg";
+            _cutter.SaveAnimation(fromFrame - 1, animId, pictureName);
         }
 
         private void SaveAnimation(int slideNumber, int animId, int fromFrame, int frameCount)
@@ -146,7 +147,7 @@ namespace WeCastConvertor.Converter
             _writer.AddAnimation(slideNumber, animId, pathToVideo, pathToPicture);
             string videoName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.mp4";
             string pictureName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.jpg";
-            _cutter.SaveAnimation(fromFrame, frameCount, slideNumber, animId, videoName, pictureName);
+            _cutter.SaveAnimation(fromFrame, frameCount, slideNumber, animId, videoName);
         }
 
         private void CleanTempFiles()
@@ -213,7 +214,7 @@ namespace WeCastConvertor.Converter
 
         private void SavePreview(Slide slide)
         {
-            slide.Export($"{_ezsContent}\\preview.jpeg","jpg", 256, 192);
+            slide.Export($"{_ezsContent}\\preview.jpeg", "jpg", 256, 192);
         }
 
         private void ChangeMediaShapes(Slide slide)

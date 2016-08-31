@@ -7,8 +7,8 @@ namespace WeCastConvertor.Utils
 {
     internal class EventLogger
     {
-        private static Application _oPpt;
-        private static ILogger _frmMain;
+        private Application _oPpt;
+        private ILogger _frmMain;
 
         public EventLogger(ILogger frmMain, Application pw)
         {

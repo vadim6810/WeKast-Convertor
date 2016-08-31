@@ -23,7 +23,7 @@ namespace WeCastConvertor.Converter
         public VideoCutter(string inputPathToVideo)
         {
             InputPath = inputPathToVideo;
-            
+
         }
 
 
@@ -77,7 +77,7 @@ namespace WeCastConvertor.Converter
             return false;
         }
 
-        internal void SaveAnimation(int fromFrame, int frameCount, int slideNumber, int animId, string pathToVideo, string pathToPicture)
+        internal void SaveAnimation(int fromFrame, int frameCount, int slideNumber, int animId, string pathToVideo)
         {
             if (VideoInfo == null)
             {
@@ -92,9 +92,9 @@ namespace WeCastConvertor.Converter
             }
             Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
             var settings = new ConvertSettings();
-            settings.VideoFrameRate = (int?) FrameRate;
+            settings.VideoFrameRate = (int?)FrameRate;
             settings.VideoCodec = Format.h264;
-            settings.Seek = fromFrame/(int)FrameRate;
+            settings.Seek = fromFrame / (int)FrameRate;
             settings.VideoFrameCount = frameCount;
             FfMpeg.ConvertMedia(InputPath, null, pathToVideo, null, settings);
             //if (hasFirstFrame)
@@ -128,6 +128,11 @@ namespace WeCastConvertor.Converter
 
 
         }
+        internal void SaveAnimation(int fromFrame, int animId, string pictureName)
+        {
+            float? position = fromFrame / FrameRate;
+            FfMpeg.GetVideoThumbnail(InputPath, pictureName, position);
+        }
 
         private Bitmap GetBitmap()
         {
@@ -141,5 +146,7 @@ namespace WeCastConvertor.Converter
             var ffProbe = new FFProbe();
             return ffProbe.GetMediaInfo(InputPath);
         }
+
+
     }
 }
