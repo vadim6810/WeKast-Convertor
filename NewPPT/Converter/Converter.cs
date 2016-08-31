@@ -194,6 +194,8 @@ namespace WeCastConvertor.Converter
         {
             foreach (Slide slide in pres.Slides)
             {
+                if (slide.SlideNumber == 1)
+                    SavePreview(slide);
                 var outputFile = _slideFolder + "\\" + slide.SlideNumber + ".jpg";
                 _writer.AddSlide(slide.SlideNumber);
                 _writer.AddAttribute(slide.SlideNumber, "picture", new StringBuilder($"slides/{slide.SlideNumber}.jpg"));
@@ -207,6 +209,11 @@ namespace WeCastConvertor.Converter
                 }
                 ChangeMediaShapes(slide);
             }
+        }
+
+        private void SavePreview(Slide slide)
+        {
+            slide.Export($"{_ezsContent}\\preview.jpeg","jpg", 256, 192);
         }
 
         private void ChangeMediaShapes(Slide slide)
