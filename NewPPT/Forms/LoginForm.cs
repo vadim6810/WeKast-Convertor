@@ -20,20 +20,21 @@ namespace WeCastConvertor.Forms
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
 
         private async void SaveButton_Click(object sender, EventArgs e)
         {
 
-            var api = WeKastServerAPI.Instance;
+            var api = WeKastServerApi.Instance;
             api.Login = login_textbox.Text;
             api.Password = password_textbox.Text;
 
             Cursor = Cursors.WaitCursor;
-            login_group.Enabled = false;
+            LoginGroup.Enabled = false;
             var res = await api.Auth();
-            login_group.Enabled = true;
+            LoginGroup.Enabled = true;
 
             Cursor = Cursors.Default;
 
@@ -41,6 +42,7 @@ namespace WeCastConvertor.Forms
             if (res) {
                 SharedPreferences.Login = api.Login;
                 SharedPreferences.Password = api.Password;
+                DialogResult = DialogResult.OK;
                 Close();
             } else {
                 api.Login = SharedPreferences.Login;

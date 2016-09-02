@@ -64,6 +64,7 @@
             this.MinimumSize = new System.Drawing.Size(300, 300);
             this.Name = "AboutForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();

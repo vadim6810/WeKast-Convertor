@@ -32,7 +32,7 @@ namespace WeCastConvertor.Forms
             foreach (var file in files)
             {
                 // Пропускаем неподдерживаемые форматы
-                if (!Array.Exists(Wrapper.SupportedFormats, (string s) =>  s == Path.GetExtension(file))) continue;
+                if (!Array.Exists(Wrapper.SupportedFormats, s => s.Equals(Path.GetExtension(file)))) continue;
                 
                 Console.WriteLine(file);
                 AppendLog(file);
@@ -50,7 +50,7 @@ namespace WeCastConvertor.Forms
                 gridData.Add(presentation);
                 await Wrapper.ConvertAsync(presentation);
                 if (presentation.Convert != 100) return false;
-                return await WeKastServerAPI.Instance.Upload(presentation);
+                return await WeKastServerApi.Instance.Upload(presentation);
             }
             catch (Exception e)
             {
@@ -132,6 +132,39 @@ namespace WeCastConvertor.Forms
         private void ExitButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private async void MainForm_Load(object sender, EventArgs e)
+        {
+            if (!SharedPreferences.IsSet())
+            {
+                LoginDialogStartupOrExit();
+            }
+            else
+            {
+                Cursor = Cursors.WaitCursor;
+                AllowDrop = false;
+                GroupBox.Enabled = false;
+                var authResult = await WeKastServerApi.Instance.Auth();
+                GroupBox.Enabled = true;
+                Cursor = Cursors.Default;
+                AllowDrop = true;
+                if (!authResult)
+                {
+                    LoginDialogStartupOrExit(FormStartPosition.CenterParent);    
+                } 
+            }
+            
+        }
+
+        private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        {
+            var login = new LoginForm { StartPosition = startPosition};
+            var dialogResult = login.ShowDialog();
+            if (dialogResult == DialogResult.Cancel)
+            {
+                Application.Exit();
+            }
         }
     }
 

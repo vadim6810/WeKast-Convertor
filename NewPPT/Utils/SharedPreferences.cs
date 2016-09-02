@@ -1,21 +1,40 @@
-﻿using Microsoft.Win32;
+﻿using System;
+using Microsoft.Win32;
 
 namespace WeCastConvertor.Utils
 {
-    static class SharedPreferences
+    internal static class SharedPreferences
     {
-        private const string AppKeyPath = "HKEY_CURRENT_USER\\Software\\WeKast";
+        private const string AppKeyPath = @"HKEY_CURRENT_USER\Software\WeKast";
+
+        private const string LoginName = "Login";
+        private const string PasswordName = "Password";
 
         public static string Login
         {
-            get { return (string)Registry.GetValue(AppKeyPath, "Login", ""); }
-            set { Registry.SetValue(AppKeyPath, "Login", value); }
+            get { return GetValue(LoginName); }
+            set { SetValue(LoginName, value); }
         }
 
         public static string Password
         {
-            get { return (string)Registry.GetValue(AppKeyPath, "password", ""); }
-            set { Registry.SetValue(AppKeyPath, "password", value); }
+            get { return GetValue(PasswordName); }
+            set { SetValue(PasswordName, value); }
+        }
+
+        public static bool IsSet()
+        {
+            return !string.IsNullOrEmpty(Login) && !string.IsNullOrEmpty(Password);
+        }
+
+        private static string GetValue(string name)
+        {
+            return (string) Registry.GetValue(AppKeyPath, name, "");
+        }
+
+        private static void SetValue(string name, string value)
+        {
+            Registry.SetValue(AppKeyPath, name, value);
         }
     }
 }

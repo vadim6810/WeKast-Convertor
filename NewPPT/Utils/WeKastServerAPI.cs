@@ -10,7 +10,7 @@ using P = WeCastConvertor.Forms;
 
 namespace WeCastConvertor.Utils
 {
-    class WeKastServerAPI
+    internal class WeKastServerApi
     {
 
         [DataContract]
@@ -54,9 +54,9 @@ namespace WeCastConvertor.Utils
         }
 
 
-        private static readonly WeKastServerAPI Inst = new WeKastServerAPI();
+        private static readonly WeKastServerApi Inst = new WeKastServerApi();
 
-        public static WeKastServerAPI Instance
+        public static WeKastServerApi Instance
         {
             get
             {
@@ -72,7 +72,7 @@ namespace WeCastConvertor.Utils
         public string Login;
         public string Password;
 
-        protected WeKastServerAPI()
+        protected WeKastServerApi()
         {
             Login = SharedPreferences.Login;
             Password = SharedPreferences.Password;
@@ -89,6 +89,7 @@ namespace WeCastConvertor.Utils
         {
             using (var client = new HttpClient())
             {
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast Converter/1.0");
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
                 return await response.Content.ReadAsStringAsync();
@@ -102,7 +103,6 @@ namespace WeCastConvertor.Utils
                 { "login", Login },
                 { "password", Password }
             };
-
             var response = await PostRequest("/list", data);
             var json = new DataContractJsonSerializer(typeof(ListResponse));
             var listResponse = (ListResponse) json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
@@ -113,7 +113,7 @@ namespace WeCastConvertor.Utils
         {
             var path = presentation.EzsPath;
             var name = Path.GetFileName(path);
-            Console.WriteLine(@"Upload " + path);
+            Console.WriteLine(@"Uploading " + path);
             if (!File.Exists(path))
             {
                 Console.WriteLine($"Coudn't upload {path}: File not found");
@@ -127,12 +127,21 @@ namespace WeCastConvertor.Utils
                 content.Add(new StreamContent(file), "file", name);
 
                 var response = await PostRequest("/upload", content);
-                var json = new DataContractJsonSerializer(typeof(UploadResponse));
-                var uploadResponse = (UploadResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
-                Console.WriteLine(@"Presentation uploaded " + path);
-                if (uploadResponse.Status != 0) return false;
-                presentation.Upload = 100;
-                return true;
+                try
+                {
+                    var json = new DataContractJsonSerializer(typeof(UploadResponse));
+                    var uploadResponse = (UploadResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+                    Console.WriteLine(@"Presentation uploaded " + path);
+                    if (uploadResponse.Status != 0) return false;
+                    presentation.Upload = 100;
+                    return true;
+                }
+                catch (SerializationException)
+                {
+                    Console.WriteLine(@"Cound't parse answer");
+                    Console.WriteLine(response);
+                    return false;
+                }
             }      
         }
     }

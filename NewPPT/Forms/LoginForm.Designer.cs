@@ -34,8 +34,8 @@
             this.password_label = new System.Windows.Forms.Label();
             this.login_textbox = new System.Windows.Forms.TextBox();
             this.password_textbox = new System.Windows.Forms.TextBox();
-            this.login_group = new System.Windows.Forms.GroupBox();
-            this.login_group.SuspendLayout();
+            this.LoginGroup = new System.Windows.Forms.GroupBox();
+            this.LoginGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // SaveButton
@@ -91,27 +91,27 @@
             this.password_textbox.Size = new System.Drawing.Size(148, 22);
             this.password_textbox.TabIndex = 5;
             // 
-            // login_group
+            // LoginGroup
             // 
-            this.login_group.Controls.Add(this.login_label);
-            this.login_group.Controls.Add(this.password_textbox);
-            this.login_group.Controls.Add(this.SaveButton);
-            this.login_group.Controls.Add(this.login_textbox);
-            this.login_group.Controls.Add(this.cancel_button);
-            this.login_group.Controls.Add(this.password_label);
-            this.login_group.Location = new System.Drawing.Point(12, 12);
-            this.login_group.Name = "login_group";
-            this.login_group.Size = new System.Drawing.Size(258, 129);
-            this.login_group.TabIndex = 6;
-            this.login_group.TabStop = false;
-            this.login_group.Text = "Login";
+            this.LoginGroup.Controls.Add(this.login_label);
+            this.LoginGroup.Controls.Add(this.password_textbox);
+            this.LoginGroup.Controls.Add(this.SaveButton);
+            this.LoginGroup.Controls.Add(this.login_textbox);
+            this.LoginGroup.Controls.Add(this.cancel_button);
+            this.LoginGroup.Controls.Add(this.password_label);
+            this.LoginGroup.Location = new System.Drawing.Point(12, 12);
+            this.LoginGroup.Name = "LoginGroup";
+            this.LoginGroup.Size = new System.Drawing.Size(258, 129);
+            this.LoginGroup.TabIndex = 6;
+            this.LoginGroup.TabStop = false;
+            this.LoginGroup.Text = "Login";
             // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(282, 153);
-            this.Controls.Add(this.login_group);
+            this.Controls.Add(this.LoginGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(300, 200);
@@ -119,10 +119,11 @@
             this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name = "LoginForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "LoginForm";
             this.Load += new System.EventHandler(this.LoginForm_Load);
-            this.login_group.ResumeLayout(false);
-            this.login_group.PerformLayout();
+            this.LoginGroup.ResumeLayout(false);
+            this.LoginGroup.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -135,6 +136,6 @@
         private System.Windows.Forms.Label password_label;
         private System.Windows.Forms.TextBox login_textbox;
         private System.Windows.Forms.TextBox password_textbox;
-        private System.Windows.Forms.GroupBox login_group;
+        private System.Windows.Forms.GroupBox LoginGroup;
     }
 }
