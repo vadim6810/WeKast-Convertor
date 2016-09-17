@@ -18,7 +18,7 @@ namespace WeCastConvertor.Converter
         {
             _fileName = pathToXml;
             _doc = new XDocument();
-            _root = new XElement("_root");
+            _root = new XElement("presentation");
             _doc.Add(_root);
         }
 
@@ -65,6 +65,14 @@ namespace WeCastConvertor.Converter
                 _doc.Root?.Elements()
                     .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideNumber.ToString());
             slide?.Add(new XAttribute(attrName, value));
+        }
+
+        public void AddPresanpationAtribute(string attrName, StringBuilder value)
+        {
+            //var slide =
+                _doc.Root?.Add(new XAttribute(attrName, value));     //Elements()
+            //        .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideNumber.ToString());
+            //slide?.Add(new XAttribute(attrName, value));
         }
 
         public void Save()

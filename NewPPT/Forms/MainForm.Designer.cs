@@ -32,6 +32,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.LogWindow = new System.Windows.Forms.ListBox();
             this.grid = new System.Windows.Forms.DataGridView();
             this.SourcePath = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -51,11 +52,9 @@
             // LogWindow
             // 
             this.LogWindow.FormattingEnabled = true;
-            this.LogWindow.ItemHeight = 16;
-            this.LogWindow.Location = new System.Drawing.Point(6, 454);
-            this.LogWindow.Margin = new System.Windows.Forms.Padding(4);
+            this.LogWindow.Location = new System.Drawing.Point(4, 369);
             this.LogWindow.Name = "LogWindow";
-            this.LogWindow.Size = new System.Drawing.Size(845, 68);
+            this.LogWindow.Size = new System.Drawing.Size(635, 56);
             this.LogWindow.TabIndex = 2;
             // 
             // grid
@@ -81,12 +80,13 @@
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.grid.DefaultCellStyle = dataGridViewCellStyle2;
-            this.grid.Location = new System.Drawing.Point(6, 39);
+            this.grid.Location = new System.Drawing.Point(4, 32);
+            this.grid.Margin = new System.Windows.Forms.Padding(2);
             this.grid.Name = "grid";
             this.grid.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -98,7 +98,7 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.grid.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.grid.RowTemplate.Height = 24;
-            this.grid.Size = new System.Drawing.Size(845, 408);
+            this.grid.Size = new System.Drawing.Size(634, 332);
             this.grid.TabIndex = 4;
             // 
             // SourcePath
@@ -135,9 +135,10 @@
             // 
             // AddButton
             // 
-            this.AddButton.Location = new System.Drawing.Point(87, 10);
+            this.AddButton.Location = new System.Drawing.Point(65, 8);
+            this.AddButton.Margin = new System.Windows.Forms.Padding(2);
             this.AddButton.Name = "AddButton";
-            this.AddButton.Size = new System.Drawing.Size(75, 23);
+            this.AddButton.Size = new System.Drawing.Size(56, 19);
             this.AddButton.TabIndex = 5;
             this.AddButton.Text = "Add File";
             this.AddButton.UseVisualStyleBackColor = true;
@@ -145,9 +146,10 @@
             // 
             // LoginButton
             // 
-            this.LoginButton.Location = new System.Drawing.Point(6, 10);
+            this.LoginButton.Location = new System.Drawing.Point(4, 8);
+            this.LoginButton.Margin = new System.Windows.Forms.Padding(2);
             this.LoginButton.Name = "LoginButton";
-            this.LoginButton.Size = new System.Drawing.Size(75, 23);
+            this.LoginButton.Size = new System.Drawing.Size(56, 19);
             this.LoginButton.TabIndex = 6;
             this.LoginButton.Text = "Login";
             this.LoginButton.UseVisualStyleBackColor = true;
@@ -155,9 +157,10 @@
             // 
             // AboutButton
             // 
-            this.AboutButton.Location = new System.Drawing.Point(695, 10);
+            this.AboutButton.Location = new System.Drawing.Point(521, 8);
+            this.AboutButton.Margin = new System.Windows.Forms.Padding(2);
             this.AboutButton.Name = "AboutButton";
-            this.AboutButton.Size = new System.Drawing.Size(75, 23);
+            this.AboutButton.Size = new System.Drawing.Size(56, 19);
             this.AboutButton.TabIndex = 7;
             this.AboutButton.Text = "About";
             this.AboutButton.UseVisualStyleBackColor = true;
@@ -165,9 +168,10 @@
             // 
             // ExitButton
             // 
-            this.ExitButton.Location = new System.Drawing.Point(776, 10);
+            this.ExitButton.Location = new System.Drawing.Point(582, 8);
+            this.ExitButton.Margin = new System.Windows.Forms.Padding(2);
             this.ExitButton.Name = "ExitButton";
-            this.ExitButton.Size = new System.Drawing.Size(75, 23);
+            this.ExitButton.Size = new System.Drawing.Size(56, 19);
             this.ExitButton.TabIndex = 8;
             this.ExitButton.Text = "Exit";
             this.ExitButton.UseVisualStyleBackColor = true;
@@ -181,24 +185,30 @@
             this.GroupBox.Controls.Add(this.ExitButton);
             this.GroupBox.Controls.Add(this.AddButton);
             this.GroupBox.Controls.Add(this.AboutButton);
-            this.GroupBox.Location = new System.Drawing.Point(13, 12);
+            this.GroupBox.Location = new System.Drawing.Point(10, 10);
+            this.GroupBox.Margin = new System.Windows.Forms.Padding(2);
             this.GroupBox.Name = "GroupBox";
-            this.GroupBox.Size = new System.Drawing.Size(857, 529);
+            this.GroupBox.Padding = new System.Windows.Forms.Padding(2);
+            this.GroupBox.Size = new System.Drawing.Size(643, 430);
             this.GroupBox.TabIndex = 9;
             this.GroupBox.TabStop = false;
+            this.GroupBox.Visible = false;
             // 
             // MainForm
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
-            this.ClientSize = new System.Drawing.Size(882, 553);
+            this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.ClientSize = new System.Drawing.Size(679, 495);
             this.Controls.Add(this.GroupBox);
+            this.ForeColor = System.Drawing.SystemColors.Highlight;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(900, 600);
-            this.MinimumSize = new System.Drawing.Size(900, 600);
+            this.HelpButton = true;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(679, 495);
+            this.MinimumSize = new System.Drawing.Size(679, 495);
             this.Name = "MainForm";
             this.Text = "WeKast converter";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);

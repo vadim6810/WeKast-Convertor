@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using WeCastConvertor.Forms;
 
@@ -14,7 +15,12 @@ namespace WeCastConvertor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            //PictureBox logo = new PictureBox();
+            //logo.Image = new Bitmap(Properties.Resources.logo);
+            ////logo.Load((string) Properties.Resources.ResourceManager.GetObject("logo.jpg"));
+            //logo.Show();
+            //Application.Run(new LogoForm());
+            //Application.Run(new MainForm());
             //Application.Run(new LoginForm());
         }
     }

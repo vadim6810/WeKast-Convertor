@@ -67,6 +67,9 @@
   <PropertyGroup>
     <StartupObject>WeCastConvertor.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Images\logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accord">
       <HintPath>..\packages\Accord.3.0.2\lib\net45\Accord.dll</HintPath>
@@ -90,6 +93,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
@@ -102,6 +106,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\Converter.cs" />
+    <Compile Include="Converter\Encoder.cs" />
     <Compile Include="Converter\InfoWriter.cs" />
     <Compile Include="Converter\VideoCutter.cs" />
     <Compile Include="Converter\Wrapper.cs" />
@@ -116,6 +121,12 @@
     </Compile>
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LogoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LogoForm.Designer.cs">
+      <DependentUpon>LogoForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
@@ -135,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LogoForm.resx">
+      <DependentUpon>LogoForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -221,6 +235,10 @@
       <Project>{ECDC127F-8DEF-4F99-8300-72C13597339D}</Project>
       <Name>YoutubeExtractor</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\logo.ico" />
+    <Content Include="Images\logo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

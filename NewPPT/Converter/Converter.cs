@@ -76,7 +76,7 @@ namespace WeCastConvertor.Converter
             while (needToSave && tryCount < 10)
                 try
                 {
-                    ZipFile.CreateFromDirectory(startPath, zipPath);
+                    ZipFile.CreateFromDirectory(startPath, zipPath, CompressionLevel.Fastest, false, new Encoder());
                     needToSave = false;
                 }
                 catch (IOException)
@@ -214,7 +214,9 @@ namespace WeCastConvertor.Converter
 
         private void SavePreview(Slide slide)
         {
-            slide.Export($"{_ezsContent}\\preview.jpeg", "jpg", 256, 192);
+            string pathToPreview = $"{_ezsContent}\\preview.jpeg";
+            slide.Export(pathToPreview, "jpg", 256, 192);
+            _writer.AddPresanpationAtribute("preview", new StringBuilder(pathToPreview));
         }
 
         private void ChangeMediaShapes(Slide slide)
