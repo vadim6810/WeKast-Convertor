@@ -55,6 +55,7 @@ namespace WeCastConvertor.Converter
         {
             //El.AttachEvents();
             var pres = Pw.Presentations.Open(PathToPresentation, MsoTriState.msoFalse, MsoTriState.msoFalse, _showPp);
+            SaveOrder(pres.Slides.Count);
             ParseSlides(pres);
             CreateVideo(pres);
             GetDurations(pres);
@@ -213,6 +214,16 @@ namespace WeCastConvertor.Converter
                 }
                 ChangeMediaShapes(slide);
             }
+        }
+
+        private void SaveOrder(int slidesCount)
+        {
+            if (slidesCount<1)
+                throw new Exception("Order exception: wrong slides count");
+            StringBuilder builder = new StringBuilder("1");
+            for (int i = 2; i <= slidesCount; i++)
+                builder.Append(";" + i);
+            _writer.SaveOrder(builder.ToString());
         }
 
         private void SavePreview(Slide slide)

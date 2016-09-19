@@ -97,5 +97,10 @@ namespace WeCastConvertor.Converter
             slide?.Add(media);
             return media;
         }
+
+        internal void SaveOrder(string order)
+        {
+            _root.Add(new XElement("order", order));
+        }
     }
 }
