@@ -35,5 +35,10 @@ namespace WeCastConvertor.Forms
             mainForm.Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - mainForm.Width, 0);
             mainForm.Show();
         }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -183,13 +183,14 @@ namespace WeCastConvertor.Converter
             const int quality = 100;
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond,
                 quality);
-            while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
+            while (pres.CreateVideoStatus == PpMediaTaskStatus. ppMediaTaskStatusInProgress)
             //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
                 Log(pres.CreateVideoStatus.ToString());
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
             }
+            Thread.Sleep(100);
             return fileName;
         }
 
@@ -218,7 +219,7 @@ namespace WeCastConvertor.Converter
         {
             string pathToPreview = $"{_ezsContent}\\preview.jpeg";
             slide.Export(pathToPreview, "jpg", 256, 192);
-            _writer.AddPresanpationAtribute("preview", new StringBuilder(pathToPreview));
+            _writer.AddPresanpationAtribute("preview", new StringBuilder("preview.jpeg"));
         }
 
         private void ChangeMediaShapes(Slide slide)
