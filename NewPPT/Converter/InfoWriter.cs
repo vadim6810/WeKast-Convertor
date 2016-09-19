@@ -13,6 +13,7 @@ namespace WeCastConvertor.Converter
         private readonly XDocument _doc;
         private readonly string _fileName;
         private readonly XElement _root;
+        private readonly XElement _slides;
 
         public InfoWriter(string pathToXml)
         {
@@ -20,6 +21,8 @@ namespace WeCastConvertor.Converter
             _doc = new XDocument();
             _root = new XElement("presentation");
             _doc.Add(_root);
+            _slides = new XElement("slides");
+            _root.Add(_slides);
         }
 
         public XElement AddSlide(int slideId)
@@ -28,7 +31,7 @@ namespace WeCastConvertor.Converter
             if (slide != null) return slide;
             slide = new XElement("slide",
                 new XAttribute("id", slideId));
-            _root.Add(slide);
+            _slides.Add(slide);
             return slide;
         }
 
@@ -36,7 +39,7 @@ namespace WeCastConvertor.Converter
         {
             try
             {
-                return _doc.Root?.Elements()
+                return _slides.Elements()
                             .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideId.ToString());
             }
             catch (Exception)

@@ -192,7 +192,6 @@
             this.GroupBox.Size = new System.Drawing.Size(643, 430);
             this.GroupBox.TabIndex = 9;
             this.GroupBox.TabStop = false;
-            this.GroupBox.Visible = false;
             // 
             // MainForm
             // 
@@ -202,10 +201,9 @@
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.ClientSize = new System.Drawing.Size(679, 495);
-            this.ControlBox = false;
             this.Controls.Add(this.GroupBox);
             this.ForeColor = System.Drawing.SystemColors.Highlight;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.HelpButton = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(679, 495);
