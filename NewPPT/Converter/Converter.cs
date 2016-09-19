@@ -18,13 +18,14 @@ namespace WeCastConvertor.Converter
 {
     internal class Converter
     {
-        private  readonly ILogger Logger = new DebugLogger();
-        private  readonly Application Pw = new Application();
+        private readonly ILogger Logger = new DebugLogger();
+        private readonly Application Pw = new Application();
         //private  readonly EventLogger El = new EventLogger(Logger, Pw);
 
         //Path to windows TEMP dirrectory
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
         private readonly LinkedList<int> Durations = new LinkedList<int>();
+        private readonly List<Animation> Animations = new List<Animation>();
         private string _animFolder;
         private string _audioFolder;
         private string _slideFolder;
@@ -38,6 +39,7 @@ namespace WeCastConvertor.Converter
         private string _tempVideo;
         private string _videosFolder;
         private InfoWriter _writer;
+        private int SlideCounter;
 
         public Converter(string pathToPresentation)
         {
@@ -68,7 +70,7 @@ namespace WeCastConvertor.Converter
         private string CreateEzs(Presentation pres)
         {
             var startPath = _ezsContent;
-            var path = _ezsTemp; //Path.GetFullPath(pres.Path);
+            var path = _ezsTemp;
             var name = Path.GetFileNameWithoutExtension(pres.Name);
             var zipPath = path + $"\\{name}.ezs";
             var tryCount = 0;
@@ -201,7 +203,7 @@ namespace WeCastConvertor.Converter
                 _writer.AddSlide(slide.SlideNumber);
                 _writer.AddAttribute(slide.SlideNumber, "picture", new StringBuilder($"slides/{slide.SlideNumber}.jpg"));
                 slide.Export(outputFile, "jpg", 1440, 1080);
-                ExtractAndSaveComments(slide);
+                var comments = ExtractAndSaveComments(slide);
                 ParseShapes(slide);
                 if (ExistEmbeddedMedia(slide))
                 {
@@ -303,14 +305,15 @@ namespace WeCastConvertor.Converter
             return TempFolderPath + @"\EZS_" + s + @"\content";
         }
 
-        private void ExtractAndSaveComments(Slide slide)
+        private string ExtractAndSaveComments(Slide slide)
         {
             var text = new StringBuilder();
             foreach (var comment in GetAllCommentsAndNodes(slide))
             {
                 text.Append(comment);
             }
-            _writer.AddAttribute(slide.SlideNumber, "comment", text);
+            //_writer.AddAttribute(slide.SlideNumber, "comment", text);
+            return text.ToString();
         }
 
         private static IEnumerable<VideoInfo> GetAllYoutubeLinks(_Slide slide)
@@ -578,27 +581,27 @@ namespace WeCastConvertor.Converter
             }
         }
 
-        private static string RemoveIllegalPathCharacters(string path)
-        {
-            var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
-            var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
-            return r.Replace(path, "");
-        }
+        //private static string RemoveIllegalPathCharacters(string path)
+        //{
+        //    var regexSearch = new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars());
+        //    var r = new Regex(string.Format("[{0}]", Regex.Escape(regexSearch)));
+        //    return r.Replace(path, "");
+        //}
 
         // Shows all notes on logger
         // Not used
-        private void ShowAllNotes(Slide slide)
-        {
-            if (slide.HasNotesPage != MsoTriState.msoTrue) return;
-            var notesPages = slide.NotesPage;
-            foreach (var shape in from Shape shape in notesPages.Shapes
-                                  where shape.Type == msoPlaceholder
-                                  where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
-                                  select shape)
-            {
-                Log($"Slide[{slide.SlideIndex}] Notes: [{shape.TextFrame.TextRange.Text}]");
-            }
-        }
+        //private void ShowAllNotes(Slide slide)
+        //{
+        //    if (slide.HasNotesPage != MsoTriState.msoTrue) return;
+        //    var notesPages = slide.NotesPage;
+        //    foreach (var shape in from Shape shape in notesPages.Shapes
+        //                          where shape.Type == msoPlaceholder
+        //                          where shape.PlaceholderFormat.Type == PpPlaceholderType.ppPlaceholderBody
+        //                          select shape)
+        //    {
+        //        Log($"Slide[{slide.SlideIndex}] Notes: [{shape.TextFrame.TextRange.Text}]");
+        //    }
+        //}
 
         // Returns list of all notes and comments on slide
         private List<string> GetAllCommentsAndNodes(_Slide slide)

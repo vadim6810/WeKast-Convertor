@@ -20,7 +20,7 @@ namespace WeCastConvertor
             ////logo.Load((string) Properties.Resources.ResourceManager.GetObject("logo.jpg"));
             //logo.Show();
             //Application.Run(new LogoForm());
-            //Application.Run(new MainForm());
+            Application.Run(new MainForm());
             //Application.Run(new LoginForm());
         }
     }

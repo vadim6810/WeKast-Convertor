@@ -69,10 +69,7 @@ namespace WeCastConvertor.Converter
 
         public void AddPresanpationAtribute(string attrName, StringBuilder value)
         {
-            //var slide =
-                _doc.Root?.Add(new XAttribute(attrName, value));     //Elements()
-            //        .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideNumber.ToString());
-            //slide?.Add(new XAttribute(attrName, value));
+            _doc.Root?.Add(new XAttribute(attrName, value)); 
         }
 
         public void Save()

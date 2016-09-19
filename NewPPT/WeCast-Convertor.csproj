@@ -105,6 +105,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\Animation.cs" />
     <Compile Include="Converter\Converter.cs" />
     <Compile Include="Converter\Encoder.cs" />
     <Compile Include="Converter\InfoWriter.cs" />

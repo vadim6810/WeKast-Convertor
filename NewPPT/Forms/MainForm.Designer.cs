@@ -192,7 +192,6 @@
             this.GroupBox.Size = new System.Drawing.Size(643, 430);
             this.GroupBox.TabIndex = 9;
             this.GroupBox.TabStop = false;
-            this.GroupBox.Visible = false;
             // 
             // MainForm
             // 
@@ -201,7 +200,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnablePreventFocusChange;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(679, 495);
+            this.ClientSize = new System.Drawing.Size(663, 457);
             this.Controls.Add(this.GroupBox);
             this.ForeColor = System.Drawing.SystemColors.Highlight;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
