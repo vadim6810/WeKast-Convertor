@@ -65,7 +65,7 @@ namespace WeCastConvertor.Converter
         public void AddAttribute(int slideNumber, string attrName, StringBuilder value)
         {
             var slide =
-                _doc.Root?.Elements()
+                _slides.Elements()
                     .FirstOrDefault(node => node.Name == "slide" && node.Attribute("id").Value == slideNumber.ToString());
             slide?.Add(new XAttribute(attrName, value));
         }

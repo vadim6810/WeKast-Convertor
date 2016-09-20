@@ -324,7 +324,7 @@ namespace WeCastConvertor.Converter
             {
                 text.Append(comment);
             }
-            //_writer.AddAttribute(slide.SlideNumber, "comment", text);
+            _writer.AddAttribute(slide.SlideNumber, "comment", text);
             return text.ToString();
         }
 
