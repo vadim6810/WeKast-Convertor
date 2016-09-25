@@ -15,12 +15,8 @@ namespace WeCastConvertor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //PictureBox logo = new PictureBox();
-            //logo.Image = new Bitmap(Properties.Resources.logo);
-            ////logo.Load((string) Properties.Resources.ResourceManager.GetObject("logo.jpg"));
-            //logo.Show();
-            //Application.Run(new LogoForm());
-            Application.Run(new MainForm());
+            Application.Run(new LogoForm());
+            //Application.Run(new MainForm());
             //Application.Run(new LoginForm());
         }
     }
