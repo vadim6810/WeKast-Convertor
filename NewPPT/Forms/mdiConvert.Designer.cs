@@ -64,6 +64,7 @@
             // 
             // pnlDragDrop
             // 
+            this.pnlDragDrop.AllowDrop = true;
             this.pnlDragDrop.Controls.Add(this.pctSelectFiles);
             this.pnlDragDrop.Controls.Add(this.label3);
             this.pnlDragDrop.Controls.Add(this.label2);
@@ -71,6 +72,8 @@
             this.pnlDragDrop.Name = "pnlDragDrop";
             this.pnlDragDrop.Size = new System.Drawing.Size(420, 180);
             this.pnlDragDrop.TabIndex = 4;
+            this.pnlDragDrop.DragDrop += new System.Windows.Forms.DragEventHandler(this.pnlDrop_DragDrop);
+            this.pnlDragDrop.DragEnter += new System.Windows.Forms.DragEventHandler(this.pnlDrop_DragEnter);
             this.pnlDragDrop.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // pctSelectFiles
@@ -82,6 +85,7 @@
             this.pctSelectFiles.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pctSelectFiles.TabIndex = 2;
             this.pctSelectFiles.TabStop = false;
+            this.pctSelectFiles.Click += new System.EventHandler(this.pctSelectFiles_Click);
             this.pctSelectFiles.Paint += new System.Windows.Forms.PaintEventHandler(this.pctSelectFiles_Paint);
             this.pctSelectFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctSelectFiles_MouseDown);
             this.pctSelectFiles.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
@@ -149,16 +153,17 @@
             this.lblStatusMessage.ForeColor = System.Drawing.Color.Gold;
             this.lblStatusMessage.Location = new System.Drawing.Point(3, 0);
             this.lblStatusMessage.Name = "lblStatusMessage";
-            this.lblStatusMessage.Size = new System.Drawing.Size(193, 27);
+            this.lblStatusMessage.Size = new System.Drawing.Size(192, 27);
             this.lblStatusMessage.TabIndex = 5;
             this.lblStatusMessage.Text = "We currently dont support this formats";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pgsStatusProgress
             // 
-            this.pgsStatusProgress.Location = new System.Drawing.Point(281, 3);
+            this.pgsStatusProgress.Location = new System.Drawing.Point(280, 3);
             this.pgsStatusProgress.Name = "pgsStatusProgress";
             this.pgsStatusProgress.Size = new System.Drawing.Size(112, 21);
+            this.pgsStatusProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.pgsStatusProgress.TabIndex = 6;
             this.pgsStatusProgress.Value = 20;
             // 
@@ -168,7 +173,7 @@
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 21F));
+            this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 23F));
             this.pnlStatus.Controls.Add(this.pgsStatusProgress, 2, 0);
             this.pnlStatus.Controls.Add(this.lblStatusMessage, 0, 0);
             this.pnlStatus.Controls.Add(this.lblStatusSize, 1, 0);
@@ -179,7 +184,6 @@
             this.pnlStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.pnlStatus.Size = new System.Drawing.Size(420, 27);
             this.pnlStatus.TabIndex = 5;
-            this.pnlStatus.Visible = false;
             // 
             // lblStatusSize
             // 
@@ -187,7 +191,7 @@
             this.lblStatusSize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblStatusSize.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblStatusSize.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lblStatusSize.Location = new System.Drawing.Point(202, 0);
+            this.lblStatusSize.Location = new System.Drawing.Point(201, 0);
             this.lblStatusSize.Name = "lblStatusSize";
             this.lblStatusSize.Size = new System.Drawing.Size(73, 27);
             this.lblStatusSize.TabIndex = 7;
@@ -202,10 +206,10 @@
             this.pctProgressCancel.BackgroundImage = global::WeCastConvertor.Properties.Resources.exit;
             this.pctProgressCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pctProgressCancel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pctProgressCancel.Location = new System.Drawing.Point(397, 0);
+            this.pctProgressCancel.Location = new System.Drawing.Point(396, 0);
             this.pctProgressCancel.Margin = new System.Windows.Forms.Padding(0);
             this.pctProgressCancel.Name = "pctProgressCancel";
-            this.pctProgressCancel.Size = new System.Drawing.Size(23, 27);
+            this.pctProgressCancel.Size = new System.Drawing.Size(24, 27);
             this.pctProgressCancel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pctProgressCancel.TabIndex = 8;
             this.pctProgressCancel.TabStop = false;
