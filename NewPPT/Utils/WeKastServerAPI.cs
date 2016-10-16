@@ -10,7 +10,7 @@ using P = WeCastConvertor.Forms;
 
 namespace WeCastConvertor.Utils
 {
-    internal class WeKastServerApi
+    public class WeKastServerApi
     {
 
         [DataContract]

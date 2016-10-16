@@ -39,7 +39,7 @@ namespace WeCastConvertor.Converter
         private string _tempVideo;
         private string _videosFolder;
         private InfoWriter _writer;
-        private int SlideCounter;
+        //private int SlideCounter;
 
         public Converter(string pathToPresentation)
         {

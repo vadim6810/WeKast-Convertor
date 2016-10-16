@@ -153,5 +153,17 @@ namespace WeCastConvertor.Forms
             var presentation = new Presentation() { SourcePath = openFileDialog.FileName };
             await Convert(presentation);
         }
+
+        private void pctSettings_Click(object sender, EventArgs e)
+        {
+            var settingsForm = new LoginForm();
+            settingsForm.Show();
+        }
+
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            var filesForm = new FilesForm();
+            filesForm.Show();
+        }
     }
 }
