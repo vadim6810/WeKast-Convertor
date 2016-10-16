@@ -6,8 +6,8 @@
     <ProjectGuid>{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTestProject1</RootNamespace>
-    <AssemblyName>UnitTestProject1</AssemblyName>
+    <RootNamespace>WeCastTests</RootNamespace>
+    <AssemblyName>WeCastTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -56,7 +56,7 @@
     <Compile Include="Utils\ServerApiTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NewPPT\WeCast-Convertor.csproj">
+    <ProjectReference Include="..\NewPPT\WeCastConvertor.csproj">
       <Project>{1898602c-e29e-471f-9b9d-b1e9c47ccacc}</Project>
       <Name>WeCast-Convertor</Name>
     </ProjectReference>

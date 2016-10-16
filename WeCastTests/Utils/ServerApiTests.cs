@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WeCastConvertor.Utils;
 
-namespace WeCastConvertor.Utils.Tests
+namespace WeCastTests.Utils
 {
     [TestClass]
     public class ServerApiTests
     {
-        private static readonly WeKastServerApi api = WeKastServerApi.Instance;
-        private readonly string DEFAULT_LOGIN = "972543928489";
-        private readonly string DEFAULT_PASSWORD = "0iFU54C0";
+        private static readonly WeKastServerApi Api = WeKastServerApi.Instance;
+        private const string DefaultLogin = "972543928489";
+        private const string DefaultPassword = "0iFU54C0";
 
         //[AssemblyInitialize()]
         //public static void AssemblyInit(TestContext context)
@@ -57,8 +57,8 @@ namespace WeCastConvertor.Utils.Tests
         public void TestAuth()
         {
             // arrange
-            api.Login = DEFAULT_LOGIN;
-            api.Password = DEFAULT_PASSWORD;
+            Api.Login = DefaultLogin;
+            Api.Password = DefaultPassword;
             // act
             var authResult = WeKastServerApi.Instance.Auth();
             // assert
@@ -69,8 +69,8 @@ namespace WeCastConvertor.Utils.Tests
         public void TestList()
         {
             // arrange
-            api.Login = DEFAULT_LOGIN;
-            api.Password = DEFAULT_PASSWORD;
+            Api.Login = DefaultLogin;
+            Api.Password = DefaultPassword;
             // act
             var authResult = WeKastServerApi.Instance.Auth();
             // assert
