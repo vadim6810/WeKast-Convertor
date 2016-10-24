@@ -170,7 +170,7 @@ namespace WeCastConvertor.Converter
 
         private string CreateVideo(Presentation pres)
         {
-            //The name of the video file to create.
+            //The Name of the video file to create.
             var fileName = _tempVideo; //$"{_ezsContent}\\_tempVideo.mp4";
             //Indicates whether to use timings and narrations.
             const bool useTimingsAndNarrations = true;
@@ -230,7 +230,7 @@ namespace WeCastConvertor.Converter
         {
             string pathToPreview = $"{_ezsContent}\\preview.jpeg";
             slide.Export(pathToPreview, "jpg", 256, 192);
-            _writer.AddPresanpationAtribute("preview", new StringBuilder("preview.jpeg"));
+            _writer.AddPresanpationAtribute("Preview", new StringBuilder("Preview.jpeg"));
         }
 
         private void ChangeMediaShapes(Slide slide)
@@ -300,6 +300,7 @@ namespace WeCastConvertor.Converter
             if (!Directory.Exists(_slideFolder))
                 Directory.CreateDirectory(_slideFolder);
             _writer = new InfoWriter(Path.Combine(_ezsContent, "info.xml"));
+            _writer.AddPresanpationAtribute("type", new StringBuilder("ppt"));
             _cutter = new VideoCutter(_tempVideo);
         }
 
@@ -666,7 +667,7 @@ namespace WeCastConvertor.Converter
                 Log("Temp path is " + strPath);
                 //Environment.GetFolderPath("Temp");
                 var nFile = Path.GetFileNameWithoutExtension(pres.Name) + ".mp4";
-                Log("Presentation name is " + nFile);
+                Log("Presentation Name is " + nFile);
                 var strVideoFile = Path.Combine(strPath, nFile);
                 pres.SaveAs(strVideoFile, PpSaveAsFileType.ppSaveAsMP4, MsoTriState.msoTrue);
                 while (Pw.ActivePresentation.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress ||

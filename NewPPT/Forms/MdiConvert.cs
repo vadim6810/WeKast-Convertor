@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeCastConvertor.Converter;
+using WeCastConvertor.Properties;
 using WeCastConvertor.Utils;
 
 namespace WeCastConvertor.Forms
@@ -12,9 +14,11 @@ namespace WeCastConvertor.Forms
     public partial class MdiConvert : Form
     {
         private readonly LogoForm _parentForm;
+        private readonly FilesForm _filesForm;
 
         public MdiConvert()
         {
+            _filesForm = new FilesForm(this);
             InitializeComponent();
         }
 
@@ -22,6 +26,7 @@ namespace WeCastConvertor.Forms
         {
             InitializeComponent();
             _parentForm = logoForm;
+            _filesForm = new FilesForm(this);
         }
 
         private void MdiConvert_Load(object sender, EventArgs e)
@@ -162,8 +167,17 @@ namespace WeCastConvertor.Forms
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            var filesForm = new FilesForm();
-            filesForm.Show();
+            Debug.WriteLine("this: {0}", this);
+            if (_filesForm.Visible==false)
+            {
+                _filesForm.Show();
+                pictureBox1.Image = Resources.hide;
+            }
+            else
+            {
+                _filesForm.Hide();
+                pictureBox1.Image = Resources.show;
+            }
         }
     }
 }

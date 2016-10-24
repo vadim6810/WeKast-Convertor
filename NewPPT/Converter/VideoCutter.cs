@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using NReco.VideoInfo;
 using NReco.VideoConverter;
@@ -144,9 +146,25 @@ namespace WeCastConvertor.Converter
         private MediaInfo GetVideoInfio()
         {
             var ffProbe = new FFProbe();
+            while (IsFileLocked(InputPath))
+                Thread.Sleep(100);
             return ffProbe.GetMediaInfo(InputPath);
         }
 
-
+        private bool IsFileLocked(String filename)
+        {
+            var result = false;
+            var fileinfo = new FileInfo(filename);
+            try
+            {
+                Stream stream = fileinfo.Open(FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                stream.Dispose();
+            }
+            catch (IOException)
+            {
+                result = true;
+            }
+            return result;
+        }
     }
 }

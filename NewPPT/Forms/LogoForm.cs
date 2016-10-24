@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,10 +21,15 @@ namespace WeCastConvertor.Forms
             InitializeComponent();
         }
 
-        private void LogoForm_Load(object sender, EventArgs e)
+        private async void LogoForm_Load(object sender, EventArgs e)
         {
             Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - this.Width, 0);
+            var authResult = await WeKastServerApi.Instance.Auth();
+            if (!authResult)
+            {
+               Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 
+            }
 
             //Form newMDIChild = new Form();
             //// Set the Parent Form of the Child window.

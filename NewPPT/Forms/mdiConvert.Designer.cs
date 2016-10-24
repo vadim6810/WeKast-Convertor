@@ -28,25 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MdiConvert));
             this.label1 = new System.Windows.Forms.Label();
             this.pnlDragDrop = new System.Windows.Forms.Panel();
+            this.pctSelectFiles = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.pgsStatusProgress = new System.Windows.Forms.ProgressBar();
             this.pnlStatus = new System.Windows.Forms.TableLayoutPanel();
             this.lblStatusSize = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pctProgressCancel = new System.Windows.Forms.PictureBox();
-            this.pctSelectFiles = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pctExit = new System.Windows.Forms.PictureBox();
             this.pctSettings = new System.Windows.Forms.PictureBox();
             this.pctLogo = new System.Windows.Forms.PictureBox();
             this.pnlDragDrop.SuspendLayout();
-            this.pnlStatus.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pctProgressCancel)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctSelectFiles)).BeginInit();
+            this.pnlStatus.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pctProgressCancel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctExit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctSettings)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).BeginInit();
@@ -78,6 +79,20 @@
             this.pnlDragDrop.DragEnter += new System.Windows.Forms.DragEventHandler(this.pnlDrop_DragEnter);
             this.pnlDragDrop.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
+            // pctSelectFiles
+            // 
+            this.pctSelectFiles.Image = global::WeCastConvertor.Properties.Resources.SelectButton;
+            this.pctSelectFiles.Location = new System.Drawing.Point(160, 85);
+            this.pctSelectFiles.Name = "pctSelectFiles";
+            this.pctSelectFiles.Size = new System.Drawing.Size(100, 30);
+            this.pctSelectFiles.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pctSelectFiles.TabIndex = 2;
+            this.pctSelectFiles.TabStop = false;
+            this.pctSelectFiles.Click += new System.EventHandler(this.pctSelectFiles_Click);
+            this.pctSelectFiles.Paint += new System.Windows.Forms.PaintEventHandler(this.pctSelectFiles_Paint);
+            this.pctSelectFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctSelectFiles_MouseDown);
+            this.pctSelectFiles.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
+            // 
             // label3
             // 
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -107,16 +122,16 @@
             this.lblStatusMessage.ForeColor = System.Drawing.Color.Gold;
             this.lblStatusMessage.Location = new System.Drawing.Point(3, 0);
             this.lblStatusMessage.Name = "lblStatusMessage";
-            this.lblStatusMessage.Size = new System.Drawing.Size(191, 27);
+            this.lblStatusMessage.Size = new System.Drawing.Size(189, 27);
             this.lblStatusMessage.TabIndex = 5;
             this.lblStatusMessage.Text = "Status...";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // pgsStatusProgress
             // 
-            this.pgsStatusProgress.Location = new System.Drawing.Point(278, 3);
+            this.pgsStatusProgress.Location = new System.Drawing.Point(276, 3);
             this.pgsStatusProgress.Name = "pgsStatusProgress";
-            this.pgsStatusProgress.Size = new System.Drawing.Size(112, 21);
+            this.pgsStatusProgress.Size = new System.Drawing.Size(111, 21);
             this.pgsStatusProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.pgsStatusProgress.TabIndex = 6;
             this.pgsStatusProgress.Value = 20;
@@ -128,7 +143,7 @@
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 29F));
             this.pnlStatus.Controls.Add(this.pgsStatusProgress, 2, 0);
             this.pnlStatus.Controls.Add(this.lblStatusMessage, 0, 0);
             this.pnlStatus.Controls.Add(this.lblStatusSize, 1, 0);
@@ -146,26 +161,13 @@
             this.lblStatusSize.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblStatusSize.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblStatusSize.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lblStatusSize.Location = new System.Drawing.Point(200, 0);
+            this.lblStatusSize.Location = new System.Drawing.Point(198, 0);
             this.lblStatusSize.Name = "lblStatusSize";
             this.lblStatusSize.Size = new System.Drawing.Size(72, 27);
             this.lblStatusSize.TabIndex = 7;
             this.lblStatusSize.Text = "label5";
             this.lblStatusSize.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblStatusSize.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Image = global::WeCastConvertor.Properties.Resources.more;
-            this.pictureBox1.Location = new System.Drawing.Point(205, 288);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(30, 10);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 6;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // pctProgressCancel
             // 
@@ -175,28 +177,27 @@
             this.pctProgressCancel.BackgroundImage = global::WeCastConvertor.Properties.Resources.exit;
             this.pctProgressCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pctProgressCancel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pctProgressCancel.Location = new System.Drawing.Point(393, 0);
+            this.pctProgressCancel.Location = new System.Drawing.Point(390, 0);
             this.pctProgressCancel.Margin = new System.Windows.Forms.Padding(0);
             this.pctProgressCancel.Name = "pctProgressCancel";
-            this.pctProgressCancel.Size = new System.Drawing.Size(27, 27);
+            this.pctProgressCancel.Size = new System.Drawing.Size(30, 27);
             this.pctProgressCancel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pctProgressCancel.TabIndex = 8;
             this.pctProgressCancel.TabStop = false;
             this.pctProgressCancel.Visible = false;
             // 
-            // pctSelectFiles
+            // pictureBox1
             // 
-            this.pctSelectFiles.Image = global::WeCastConvertor.Properties.Resources.SelectButton;
-            this.pctSelectFiles.Location = new System.Drawing.Point(160, 85);
-            this.pctSelectFiles.Name = "pctSelectFiles";
-            this.pctSelectFiles.Size = new System.Drawing.Size(100, 30);
-            this.pctSelectFiles.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pctSelectFiles.TabIndex = 2;
-            this.pctSelectFiles.TabStop = false;
-            this.pctSelectFiles.Click += new System.EventHandler(this.pctSelectFiles_Click);
-            this.pctSelectFiles.Paint += new System.Windows.Forms.PaintEventHandler(this.pctSelectFiles_Paint);
-            this.pctSelectFiles.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pctSelectFiles_MouseDown);
-            this.pctSelectFiles.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
+            this.pictureBox1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(0, 287);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(440, 30);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pictureBox1.TabIndex = 6;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // pctExit
             // 
@@ -238,7 +239,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.ClientSize = new System.Drawing.Size(440, 300);
+            this.ClientSize = new System.Drawing.Size(440, 317);
             this.ControlBox = false;
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pnlStatus);
@@ -253,11 +254,11 @@
             this.Text = "mdiConvert";
             this.Load += new System.EventHandler(this.MdiConvert_Load);
             this.pnlDragDrop.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pctSelectFiles)).EndInit();
             this.pnlStatus.ResumeLayout(false);
             this.pnlStatus.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctProgressCancel)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pctSelectFiles)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctExit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctSettings)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctLogo)).EndInit();
