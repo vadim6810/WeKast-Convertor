@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeExtractor", "Youtube
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeCastTests", "WeCastTests\WeCastTests.csproj", "{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WeCastInstaller", "WeCastInstaller\WeCastInstaller.vdproj", "{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,14 @@ Global
 		{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}.Release|x64.Build.0 = Release|Any CPU
 		{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}.Release|x86.ActiveCfg = Release|Any CPU
 		{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}.Release|x86.Build.0 = Release|Any CPU
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Debug|Any CPU.ActiveCfg = Debug
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Debug|ARM.ActiveCfg = Debug
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Debug|x64.ActiveCfg = Debug
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Debug|x86.ActiveCfg = Debug
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Release|Any CPU.ActiveCfg = Release
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Release|ARM.ActiveCfg = Release
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Release|x64.ActiveCfg = Release
+		{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

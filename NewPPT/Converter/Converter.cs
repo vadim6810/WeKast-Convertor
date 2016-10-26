@@ -230,7 +230,7 @@ namespace WeCastConvertor.Converter
         {
             string pathToPreview = $"{_ezsContent}\\preview.jpeg";
             slide.Export(pathToPreview, "jpg", 256, 192);
-            _writer.AddPresanpationAtribute("Preview", new StringBuilder("Preview.jpeg"));
+            _writer.AddPresanpationAtribute("preview", new StringBuilder("preview.jpeg"));
         }
 
         private void ChangeMediaShapes(Slide slide)

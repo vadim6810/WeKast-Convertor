@@ -74,12 +74,12 @@ namespace WeCastConvertor.Utils
             }
         }
 
-        private static Exception GetErrorMessage(Task<string> errorAnswer)
+        private static string GetErrorMessage(string response)
         {
             var json = new DataContractJsonSerializer(typeof(ErrorAnswer));
-            var listResponse =
-                (ErrorAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(errorAnswer.Result)));
-            throw new Exception(listResponse.Error);
+            var errorAnswer =
+                (ErrorAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+            return errorAnswer.Error;
         }
 
         public async Task<bool> Auth()
@@ -90,8 +90,11 @@ namespace WeCastConvertor.Utils
                 {"password", Password}
             };
             var response = await PostRequest("/list", data);
+            Debug.WriteLine($"response: {response}");
             var json = new DataContractJsonSerializer(typeof(ListResponse));
             var listResponse = (ListResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+            if (listResponse.Status != 0)
+                MessageBox.Show(GetErrorMessage(response));
             return listResponse.Status == 0;
         }
 

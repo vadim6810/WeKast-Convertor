@@ -24,24 +24,30 @@ namespace WeCastConvertor.Forms
         private async void LogoForm_Load(object sender, EventArgs e)
         {
             Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - this.Width, 0);
-            var authResult = await WeKastServerApi.Instance.Auth();
-            if (!authResult)
+            if (!SharedPreferences.IsSet())
             {
-               Debug.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-
+                LoginDialogStartupOrExit();
             }
+            else
+            {
+                Cursor = Cursors.WaitCursor;
+                var authResult = await WeKastServerApi.Instance.Auth();
+                Cursor = Cursors.Default;
+                if (!authResult)
+                {
+                    LoginDialogStartupOrExit(FormStartPosition.CenterParent);
+                }
+            }
+        }
 
-            //Form newMDIChild = new Form();
-            //// Set the Parent Form of the Child window.
-            //newMDIChild.MdiParent = this;
-            //// Display the new form.
-            //newMDIChild.Show();
-            //PictureBox newPicture = new PictureBox();
-            //newPicture.Image = WeCastConvertor.Properties.Resources.logo;
-            //newPicture.Click += pctLogo_Click;
-            //Bitmap image = new Bitmap(WeCastConvertor.Properties.Resources.logo, true);
-            //Graphics g = this.CreateGraphics();
-            //g.DrawImage(image, new Point(5, 5));
+        private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        {
+            var login = new LoginForm { StartPosition = startPosition };
+            var dialogResult = login.ShowDialog();
+            if (dialogResult == DialogResult.Cancel)
+            {
+                Application.Exit();
+            }
         }
 
         private void pctLogo_Click(object sender, EventArgs e)

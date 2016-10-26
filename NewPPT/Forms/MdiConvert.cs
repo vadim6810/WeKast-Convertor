@@ -16,10 +16,14 @@ namespace WeCastConvertor.Forms
         private readonly LogoForm _parentForm;
         private readonly FilesForm _filesForm;
 
+        public int InProgress { get; set; }
+
         public MdiConvert()
         {
             _filesForm = new FilesForm(this);
+            InProgress = 0;
             InitializeComponent();
+            CheckLogin();
         }
 
         public MdiConvert(LogoForm logoForm)
@@ -114,7 +118,7 @@ namespace WeCastConvertor.Forms
         {
             try
             {
-                //InProgress++;
+                InProgress++;
                 //gridData.Add(presentation);
                 await Wrapper.ConvertAsync(presentation);
                 if (presentation.Convert != 100) return false;
@@ -127,7 +131,7 @@ namespace WeCastConvertor.Forms
             }
             finally
             {
-                //InProgress--;
+                InProgress--;
             }
         }
 
@@ -163,6 +167,12 @@ namespace WeCastConvertor.Forms
         {
             var settingsForm = new LoginForm();
             settingsForm.Show();
+        }
+
+        private void CheckLogin()
+        {
+            var login = new LoginForm { StartPosition = FormStartPosition.CenterParent };
+            login.ShowDialog();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
