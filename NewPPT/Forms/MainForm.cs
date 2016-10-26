@@ -149,7 +149,7 @@ namespace WeCastConvertor.Forms
                 GroupBox.Enabled = true;
                 Cursor = Cursors.Default;
                 AllowDrop = true;
-                if (!authResult)
+                if (authResult.Status!=0)
                 {
                     LoginDialogStartupOrExit(FormStartPosition.CenterParent);    
                 } 

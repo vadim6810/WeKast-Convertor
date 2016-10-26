@@ -33,16 +33,18 @@ namespace WeCastConvertor.Forms
                 Cursor = Cursors.WaitCursor;
                 var authResult = await WeKastServerApi.Instance.Auth();
                 Cursor = Cursors.Default;
-                if (!authResult)
+                if (authResult.Status!=0)
                 {
-                    LoginDialogStartupOrExit(FormStartPosition.CenterParent);
+                    LoginDialogStartupOrExit(FormStartPosition.CenterParent, authResult.Message);
                 }
             }
         }
 
-        private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen)
+        private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen, string message = null)
         {
             var login = new LoginForm { StartPosition = startPosition };
+            if (message != null)
+                login.SetMessage(message);
             var dialogResult = login.ShowDialog();
             if (dialogResult == DialogResult.Cancel)
             {

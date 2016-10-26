@@ -67,7 +67,7 @@ namespace WeCastTests.Utils
             // act
             var authResult = WeKastServerApi.Instance.Auth();
             // assert
-            Assert.IsTrue(authResult.Result);
+            Assert.IsTrue(authResult.Result.Status==0);
         }
 
         [TestMethod]

@@ -74,15 +74,9 @@ namespace WeCastConvertor.Utils
             }
         }
 
-        private static string GetErrorMessage(string response)
-        {
-            var json = new DataContractJsonSerializer(typeof(ErrorAnswer));
-            var errorAnswer =
-                (ErrorAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
-            return errorAnswer.Error;
-        }
+       
 
-        public async Task<bool> Auth()
+        public async Task<AuthResult> Auth()
         {
             var data = new Dictionary<string, string>
             {
@@ -93,9 +87,29 @@ namespace WeCastConvertor.Utils
             Debug.WriteLine($"response: {response}");
             var json = new DataContractJsonSerializer(typeof(ListResponse));
             var listResponse = (ListResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
-            if (listResponse.Status != 0)
-                MessageBox.Show(GetErrorMessage(response));
-            return listResponse.Status == 0;
+            AuthResult result = null;
+            if (listResponse.Status == 0)
+                result = new AuthResult(0, null);
+            else
+                result = GetError(response);
+            return result;
+        }
+
+        private static string GetErrorMessage(string response)
+        {
+            var json = new DataContractJsonSerializer(typeof(ErrorAnswer));
+            var errorAnswer =
+                (ErrorAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+            return errorAnswer.Error;
+        }
+
+        private static AuthResult GetError(string response)
+        {
+            var json = new DataContractJsonSerializer(typeof(ErrorAnswer));
+            var errorAnswer =
+                (ErrorAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+            var result = new AuthResult(errorAnswer.Status, errorAnswer.Error);
+            return result;
         }
 
         public async Task<bool> Upload(P.Presentation presentation)
@@ -164,7 +178,7 @@ namespace WeCastConvertor.Utils
                 {"password", Password}
             };
             var content = new FormUrlEncodedContent(data);
-            var stream= await PostRequestStream($"/preview/{id}", content);
+            var stream = await PostRequestStream($"/preview/{id}", content);
             //= await PostRequestStream(, data);
             try
             {
@@ -204,7 +218,7 @@ namespace WeCastConvertor.Utils
             Debug.WriteLine("==============================");
             try
             {
-                var resp = client.PostAsync(requestUri,content);
+                var resp = client.PostAsync(requestUri, content);
                 Debug.WriteLine("==============================");
                 //resp.GetAwaiter().GetResult().
                 //Stream stream2 = await client.GetStreamAsync(requestUri.ToString, content);
@@ -273,4 +287,15 @@ namespace WeCastConvertor.Utils
 
     }
 
+    public class AuthResult
+    {
+        public int Status { get; }
+        public string Message { get; }
+
+        public AuthResult(int status, string message)
+        {
+            Status = status;
+            Message = message;
+        }
+    }
 }

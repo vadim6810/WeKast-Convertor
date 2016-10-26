@@ -39,16 +39,22 @@ namespace WeCastConvertor.Forms
             Cursor = Cursors.Default;
 
 
-            if (res) {
+            if (res.Status==0) {
                 SharedPreferences.Login = api.Login;
                 SharedPreferences.Password = api.Password;
                 DialogResult = DialogResult.OK;
                 Close();
             } else {
+                SetMessage(res.Message);
                 api.Login = SharedPreferences.Login;
                 api.Password = SharedPreferences.Password;
                 MessageBox.Show(@"Please check login and password", @"Auth faild", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+        }
+
+        internal void SetMessage(string message)
+        {
+            throw new NotImplementedException();
         }
     }
 }
