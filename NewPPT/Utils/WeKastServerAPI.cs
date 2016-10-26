@@ -252,6 +252,15 @@ namespace WeCastConvertor.Utils
 
             [DataMember(Name = "hash")]
             public string Hash { get; set; }
+
+            [DataMember(Name = "size")]
+            public int Size { get; set; }
+
+            [DataMember(Name = "type")]
+            public string Type { get; set; }
+
+            [DataMember(Name = "updated_at")]
+            public DateTime Date { get; set; }
         }
 
         [DataContract]
