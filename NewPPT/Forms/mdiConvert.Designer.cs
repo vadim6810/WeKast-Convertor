@@ -143,7 +143,7 @@
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
             this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 29F));
+            this.pnlStatus.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.pnlStatus.Controls.Add(this.pgsStatusProgress, 2, 0);
             this.pnlStatus.Controls.Add(this.lblStatusMessage, 0, 0);
             this.pnlStatus.Controls.Add(this.lblStatusSize, 1, 0);
@@ -251,6 +251,7 @@
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MdiConvert";
+            this.ShowInTaskbar = false;
             this.Text = "mdiConvert";
             this.Load += new System.EventHandler(this.MdiConvert_Load);
             this.pnlDragDrop.ResumeLayout(false);

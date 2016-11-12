@@ -258,9 +258,9 @@ namespace WeCastConvertor.Utils
 
             [DataMember(Name = "type")]
             public string Type { get; set; }
-
+            
             [DataMember(Name = "updated_at")]
-            public DateTime Date { get; set; }
+            public string Date { get; set; }
         }
 
         [DataContract]

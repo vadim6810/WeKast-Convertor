@@ -141,6 +141,7 @@
             this.ForeColor = System.Drawing.Color.Gold;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FilesForm";
+            this.ShowInTaskbar = false;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.FilesForm_Load);
             this.tblTopMenu.ResumeLayout(false);

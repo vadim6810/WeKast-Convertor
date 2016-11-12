@@ -68,7 +68,6 @@
             this.Controls.Add(this.pctExit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LogoForm";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "LogoForm";
             this.TransparencyKey = System.Drawing.SystemColors.GradientActiveCaption;
