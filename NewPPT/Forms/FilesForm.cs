@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using WeCastConvertor.Properties;
 using WeCastConvertor.Utils;
@@ -41,7 +42,8 @@ namespace WeCastConvertor.Forms
             Presantations.Clear();
             foreach (var pres in serverPresantations.Answer)
             {
-                Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash));
+                DateTime date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); 
+                Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash, pres.Type, pres.Size, date));
                 if (!Previews.ContainsKey(pres.Hash))
                 {
                     Previews[pres.Hash] = await WeKastServerApi.Instance.Preview(pres.Id);
@@ -108,11 +110,23 @@ namespace WeCastConvertor.Forms
             label.Dock = DockStyle.Left;
             label.TextAlign = ContentAlignment.MiddleLeft;
             result.SetColumnSpan(label, 3);
-            result.Controls.Add(GetNewLabel("ppt"), 0, 1);
-            result.Controls.Add(GetNewLabel("100M"), 1, 1);
-            result.Controls.Add(GetNewLabel(DateTime.Now.ToShortDateString()), 2, 1);
+            result.Controls.Add(GetNewLabel(pres.Type), 0, 1);
+            result.Controls.Add(GetNewLabel(GetFileSize(pres.Size)), 1, 1);
+            result.Controls.Add(GetNewLabel(pres.Date.ToShortDateString()), 2, 1);
             result.Dock = DockStyle.Fill;
             return result;
+        }
+
+        private string GetFileSize(int size)
+        {
+            var len = size;
+            string[] sizes = { "", "K", "M", "G" };
+            var order = 0;
+            while (len >= 1024 && ++order < sizes.Length)
+            {
+                len = len / 1024;
+            }
+            return $"{len}{sizes[order]}";
         }
 
         private Label GetNewLabel(string name)
@@ -151,18 +165,25 @@ namespace WeCastConvertor.Forms
 
     internal class PresantationTamplate
     {
-        public PresantationTamplate(int id, string name, string hash)
+        public PresantationTamplate(int id, string name, string hash, string type, int size, DateTime date)
         {
             Id = id;
             Name = name;
             Hash = hash;
+            Type = type.Equals("unknown")?"unk":type;
+            Size = size;
+            Date = date;
         }
+
+        public int Size { get; }
+
+        public string Type { get;}
 
         public int Id { get; }
 
         public string Name { get; }
 
         public string Hash { get; }
-
+        public DateTime Date { get; }
     }
 }
