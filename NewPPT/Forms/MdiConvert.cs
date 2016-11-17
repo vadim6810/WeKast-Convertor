@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -13,6 +14,7 @@ namespace WeCastConvertor.Forms
 {
     public partial class MdiConvert : Form
     {
+       
         private readonly LogoForm _parentForm;
         private readonly FilesForm _filesForm;
 

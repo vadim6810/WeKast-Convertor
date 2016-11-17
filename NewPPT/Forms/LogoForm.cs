@@ -38,8 +38,6 @@ namespace WeCastConvertor.Forms
                     LoginDialogStartupOrExit(FormStartPosition.CenterParent, authResult.Message);
                 }
             }
-            PdfConverter converter = new PdfConverter();
-            converter.Convert(@"d:/access.pdf");
         }
 
         private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen, string message = null)
