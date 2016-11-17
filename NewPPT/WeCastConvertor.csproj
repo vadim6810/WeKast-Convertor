@@ -103,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter\Animation.cs" />
+    <Compile Include="Converter\EZSWorker.cs" />
     <Compile Include="Converter\PptConverter.cs" />
     <Compile Include="Converter\Encoder.cs" />
     <Compile Include="Converter\IConverter.cs" />
