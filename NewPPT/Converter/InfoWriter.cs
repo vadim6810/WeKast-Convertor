@@ -93,7 +93,8 @@ namespace WeCastConvertor.Converter
             var media = new XElement("media",
                 //new XAttribute("id", animId),
                 new XAttribute("type", type),
-                new XAttribute("path", pathToMedia));
+                new XAttribute("path", pathToMedia),
+                new XAttribute("id", 100));
             slide?.Add(media);
             return media;
         }

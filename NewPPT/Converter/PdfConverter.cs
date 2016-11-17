@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Ghostscript.NET;
 using Ghostscript.NET.Rasterizer;
 
 namespace WeCastConvertor.Converter
@@ -27,7 +29,8 @@ namespace WeCastConvertor.Converter
             var result = new LinkedList<Bitmap>();
             using (var rasterizer = new GhostscriptRasterizer())
             {
-                rasterizer.Open(file);
+                GhostscriptVersionInfo gvInfo = new GhostscriptVersionInfo("gsdll32.dll");
+                rasterizer.Open(file);//, gvInfo,false);//, GhostscriptVersionInfo.GetLastInstalledVersion(GhostscriptLicense.AFPL|GhostscriptLicense.GPL|GhostscriptLicense.Artifex),false);
                 for (var pageNumber = 1; pageNumber <= rasterizer.PageCount; pageNumber++)
                 {
                     result.AddLast(new Bitmap(rasterizer.GetPage(DpiDefault, DpiDefault, pageNumber)));

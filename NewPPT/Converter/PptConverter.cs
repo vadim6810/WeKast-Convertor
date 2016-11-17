@@ -41,18 +41,14 @@ namespace WeCastConvertor.Converter
         private InfoWriter _writer;
         //private int SlideCounter;
 
-        public PptConverter()//string pathToPresentation)
-        {
-            //PathToPresentation = pathToPresentation;
-            //var presName = Path.GetFileName(pathToPresentation);
-            //CreateDirrectories(presName);
-        }
-
-        public string PathToPresentation { get; }
+        private string PathToPresentation { get; set; }
         private string TempCopy { get; set; }
 
         public string Convert(string file)
         {
+            PathToPresentation = file;
+            var presName = Path.GetFileName(file);
+            CreateDirrectories(presName);
             //El.AttachEvents();
             var pres = Pw.Presentations.Open(PathToPresentation, MsoTriState.msoFalse, MsoTriState.msoFalse, _showPp);
             SaveOrder(pres.Slides.Count);
@@ -466,7 +462,7 @@ namespace WeCastConvertor.Converter
         {
             if (!File.Exists(TempCopy))
                 DoPresantationCopy(slide.Parent);
-            using (var archive = ZipFile.OpenRead(TempCopy))
+            using (ZipArchive archive = ZipFile.OpenRead(TempCopy))
             {
                 string xmlPath = $"ppt/slides/_rels/slide{slide.SlideNumber}.xml.rels";
                 var zipSlideXml = archive.GetEntry(xmlPath);

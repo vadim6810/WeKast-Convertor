@@ -11,8 +11,8 @@ namespace WeCastConvertor.Converter
     {
         static Dictionary<string, IConverter> converters = new Dictionary<string, IConverter>()
         {
-            {".ppt",new PptConverter("")},
-            {".pptx",new PptConverter("")},
+            {".ppt",new PptConverter()},
+            {".pptx",new PptConverter()},
             {".pdf",new PdfConverter()}
         };
 

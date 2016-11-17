@@ -35,7 +35,7 @@ namespace WeCastConvertor.Converter
         public string PathToPresentation { get; }
         private string TempCopy { get; set; }
         private string _tempVideo;
-        private VideoCutter _cutter;
+//        private VideoCutter _cutter;
         private InfoWriter _writer;
 
         LinkedList<Image> slides = new LinkedList<Image>();
@@ -68,6 +68,8 @@ namespace WeCastConvertor.Converter
         //Function converts content folder to {name}.ezs in exsTemp folder
         public string Save()
         {
+            SaveOrder(slides.Count);
+            _writer.Save();
             string name = System.IO.Path.GetFileNameWithoutExtension(PathToPresentation);
             var startPath = _ezsContent;
             var path = _ezsTemp;
@@ -89,6 +91,8 @@ namespace WeCastConvertor.Converter
             return zipPath;
         }
 
+
+
         private void SaveAnimation(int slideNumber, int animId, int fromFrame, int frameCount)
         {
             string pathToVideo = $"animations/slide{slideNumber}_animation{animId}.mp4";
@@ -96,7 +100,7 @@ namespace WeCastConvertor.Converter
             _writer.AddAnimation(slideNumber, animId, pathToVideo, pathToPicture);
             string videoName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.mp4";
             string pictureName = $"{_animFolder}\\slide{slideNumber}_animation{animId}.jpg";
-            _cutter.SaveAnimation(fromFrame, frameCount, slideNumber, animId, videoName);
+            //_cutter.SaveAnimation(fromFrame, frameCount, slideNumber, animId, videoName);
         }
 
 
@@ -137,8 +141,11 @@ namespace WeCastConvertor.Converter
             CreateDirectory(_audioFolder);
             CreateDirectory(_slideFolder);
             _writer = new InfoWriter(Path.Combine(_ezsContent, "info.xml"));
-            _writer.AddPresanpationAtribute("type", new StringBuilder("ppt"));
-            _cutter = new VideoCutter(_tempVideo);
+            var extension = Path.GetExtension(PathToPresentation);
+            if (extension == null) return;
+            var type = extension.Remove(0, 1);
+            _writer.AddPresanpationAtribute("type", new StringBuilder(type));
+            //_cutter = new VideoCutter(_tempVideo);
         }
 
         private void CreateDirectory(string directoryName)
