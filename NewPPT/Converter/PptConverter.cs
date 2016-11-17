@@ -381,7 +381,7 @@ namespace WeCastConvertor.Converter
              * For GUI applications note, that this method runs synchronously.
              */
             videoDownloader.Execute();
-            _writer.AddSlideMedia(slideNumber, $"video/v{slideNumber}{video.VideoExtension}", "video");
+            _writer.AddSlideMedia(slideNumber, $"video/v{slideNumber}{video.VideoExtension}", "video", slideNumber*100);
             return savePath;
         }
 
@@ -498,8 +498,9 @@ namespace WeCastConvertor.Converter
                                 : $"{_ezsContent}\\video\\v{slide.SlideNumber}_{tryCount}{Path.GetExtension(pathMedia)}";
                         }
                     var typeForInfoWriter = type.Contains("audio") ? "audio" : "video";
+                    tryCount = type.Contains("audio") ? tryCount+10: tryCount;
                     var pathForInfoWriter = $"{typeForInfoWriter}/{Path.GetFileName(pathToUnzip)}";
-                    _writer.AddSlideMedia(slide.SlideNumber, pathForInfoWriter, typeForInfoWriter);
+                    _writer.AddSlideMedia(slide.SlideNumber, pathForInfoWriter, typeForInfoWriter, 100*slide.SlideNumber+tryCount);
                 }
                 //slideXml.
                 //archive.
@@ -554,7 +555,7 @@ namespace WeCastConvertor.Converter
             if (!File.Exists(sourcePath))
                 throw new FileNotFoundException($"File {sourcePath} not found");
             SaveFile(sourcePath, destPath);
-            _writer.AddSlideMedia(slideNumber, internalPath, type);
+            _writer.AddSlideMedia(slideNumber, internalPath, type, slideNumber*100);
         }
 
         private static string SaveFile(string sourcePath, string destPath)

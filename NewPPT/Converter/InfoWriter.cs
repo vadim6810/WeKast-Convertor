@@ -72,7 +72,7 @@ namespace WeCastConvertor.Converter
 
         public void AddPresanpationAtribute(string attrName, StringBuilder value)
         {
-            _doc.Root?.Add(new XAttribute(attrName, value)); 
+            _doc.Root?.Add(new XAttribute(attrName, value));
         }
 
         public void Save()
@@ -87,14 +87,14 @@ namespace WeCastConvertor.Converter
             }
         }
 
-        public XElement AddSlideMedia(int slideNumber, string pathToMedia, string type)
+        public XElement AddSlideMedia(int slideNumber, string pathToMedia, string type, int mediaId)
         {
             var slide = AddSlide(slideNumber);
             var media = new XElement("media",
-                //new XAttribute("id", animId),
+                new XAttribute("id", mediaId),
+                //new XAttribute("id", 100),
                 new XAttribute("type", type),
-                new XAttribute("path", pathToMedia),
-                new XAttribute("id", 100));
+                new XAttribute("path", pathToMedia));
             slide?.Add(media);
             return media;
         }
