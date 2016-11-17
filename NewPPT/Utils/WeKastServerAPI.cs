@@ -49,7 +49,7 @@ namespace WeCastConvertor.Utils
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast Converter/1.0");
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast PptConverter/1.0");
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
                 return await response.Content.ReadAsStringAsync();
@@ -66,7 +66,7 @@ namespace WeCastConvertor.Utils
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast Converter/1.0");
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast PptConverter/1.0");
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
                 //Debug.WriteLine("Responce status: {0}",response.StatusCode);
@@ -212,7 +212,7 @@ namespace WeCastConvertor.Utils
             var content = new FormUrlEncodedContent(data);
             var client = new HttpClient();
             Debug.WriteLine("==============================");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast Converter/1.0");
+            client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast PptConverter/1.0");
             Debug.WriteLine("==============================");
             var requestUri = ServerUrl + "/preview/{3}";
             Debug.WriteLine("==============================");
