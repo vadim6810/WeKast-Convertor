@@ -42,7 +42,7 @@ namespace WeCastConvertor.Forms
             Presantations.Clear();
             foreach (var pres in serverPresantations.Answer)
             {
-                DateTime date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); 
+                DateTime date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash, pres.Type, pres.Size, date));
                 if (!Previews.ContainsKey(pres.Hash))
                 {
@@ -85,11 +85,20 @@ namespace WeCastConvertor.Forms
             result.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             result.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             result.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            result.Controls.Add(getPictureBox(Resources.show), 0, 0);
+            PictureBox showing = getPictureBox(Resources.show);
+            showing.Click += ShowHideAdditionalPanel;
+            result.Controls.Add(showing, 0, 0);
             result.Controls.Add(getPictureBox(Resources.favorite_passiv), 1, 0);
             result.Controls.Add(getPictureBox(Resources.menu), 2, 0);
             result.Dock = DockStyle.Fill;
             return result;
+        }
+
+        private void ShowHideAdditionalPanel(object sender, EventArgs e)
+        {
+            var senderPicture = (PictureBox)sender;
+            Debug.WriteLine(sender.ToString());
+            throw new NotImplementedException();
         }
 
         private Control GetPresLayout(PresantationTamplate pres)
@@ -170,14 +179,14 @@ namespace WeCastConvertor.Forms
             Id = id;
             Name = name;
             Hash = hash;
-            Type = type.Equals("unknown")?"unk":type;
+            Type = type.Equals("unknown") ? "unk" : type;
             Size = size;
             Date = date;
         }
 
         public int Size { get; }
 
-        public string Type { get;}
+        public string Type { get; }
 
         public int Id { get; }
 
