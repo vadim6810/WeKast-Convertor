@@ -49,12 +49,20 @@ namespace WeCastConvertor.Converter
             CreateDirrectories(); //presName);
         }
 
-        public void AddSlide(Image image)
+        public void AddSlide(Bitmap image)
         {
             slides.AddLast(image);
             image.Save(_slideFolder + "\\" + slides.Count + ".jpg", ImageFormat.Jpeg);
             _writer.AddSlide(slides.Count);
             _writer.AddAttribute(slides.Count, "picture", new StringBuilder($"slides/{slides.Count}.jpg"));
+        }
+
+        public void AddPrewew(Bitmap image)
+        {
+            var preview = new Bitmap(image, new Size(256,192));
+            string pathToPreview = $"{_ezsContent}\\preview.jpeg";
+            preview.Save(pathToPreview, ImageFormat.Jpeg);
+            _writer.AddPresanpationAtribute("preview", new StringBuilder("preview.jpeg"));
         }
 
         //Function converts content folder to {name}.ezs in exsTemp folder

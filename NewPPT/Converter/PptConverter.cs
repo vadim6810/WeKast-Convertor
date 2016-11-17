@@ -41,11 +41,11 @@ namespace WeCastConvertor.Converter
         private InfoWriter _writer;
         //private int SlideCounter;
 
-        public PptConverter(string pathToPresentation)
+        public PptConverter()//string pathToPresentation)
         {
-            PathToPresentation = pathToPresentation;
-            var presName = Path.GetFileName(pathToPresentation);
-            CreateDirrectories(presName);
+            //PathToPresentation = pathToPresentation;
+            //var presName = Path.GetFileName(pathToPresentation);
+            //CreateDirrectories(presName);
         }
 
         public string PathToPresentation { get; }

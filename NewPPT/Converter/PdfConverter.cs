@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Ghostscript.NET.Rasterizer;
 
 namespace WeCastConvertor.Converter
@@ -12,23 +13,24 @@ namespace WeCastConvertor.Converter
         {
             var ezsWorker = new EzsWorker(file);
             var images = GetImages(file);
-            ezsWorker.
-            foreach (var image in images)
+            var bitmaps = images as IList<Bitmap> ?? images.ToList();
+            ezsWorker.AddPrewew(bitmaps.First());
+            foreach (var bitmap in bitmaps)
             {
-                ezsWorker.AddSlide(image);
+                ezsWorker.AddSlide(bitmap);
             }
             return ezsWorker.Save();
         }
 
-        private static IEnumerable<Image> GetImages(string file)
+        private static IEnumerable<Bitmap> GetImages(string file)
         {
-            var result = new LinkedList<Image>();
+            var result = new LinkedList<Bitmap>();
             using (var rasterizer = new GhostscriptRasterizer())
             {
                 rasterizer.Open(file);
                 for (var pageNumber = 1; pageNumber <= rasterizer.PageCount; pageNumber++)
                 {
-                    result.AddLast(rasterizer.GetPage(DpiDefault, DpiDefault, pageNumber));
+                    result.AddLast(new Bitmap(rasterizer.GetPage(DpiDefault, DpiDefault, pageNumber)));
                 }
             }
             return result;
