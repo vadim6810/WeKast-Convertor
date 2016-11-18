@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Ghostscript.NET;
 using Ghostscript.NET.Rasterizer;
+using WeCastConvertor.Properties;
+using static System.IO.Directory;
 
 namespace WeCastConvertor.Converter
 {
@@ -29,12 +32,15 @@ namespace WeCastConvertor.Converter
         private static IEnumerable<Bitmap> GetImages(string file)
         {
             var result = new LinkedList<Bitmap>();
+            Debug.WriteLine(GetCurrentDirectory());
+            Debug.WriteLine(Environment.CurrentDirectory);
             var path = Path.GetFullPath(file);
             Stream fileStream = new FileStream(file, FileMode.Open);
             using (var rasterizer = new GhostscriptRasterizer())
             {
-                GhostscriptVersionInfo gvInfo = new GhostscriptVersionInfo("gsdll32.dll");
-                rasterizer.Open(fileStream);//, gvInfo,false);//, GhostscriptVersionInfo.GetLastInstalledVersion(GhostscriptLicense.AFPL|GhostscriptLicense.GPL|GhostscriptLicense.Artifex),false);
+                var gvi = new GhostscriptVersionInfo(new Version(0, 0, 0),
+                    @"gsdll32.dll", string.Empty, GhostscriptLicense.GPL);
+                rasterizer.Open(fileStream, gvi, false);
                 for (var pageNumber = 1; pageNumber <= rasterizer.PageCount; pageNumber++)
                 {
                     result.AddLast(new Bitmap(rasterizer.GetPage(DpiDefault, DpiDefault, pageNumber)));
