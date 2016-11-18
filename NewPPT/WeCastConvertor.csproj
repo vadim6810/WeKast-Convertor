@@ -281,10 +281,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dlls\gsdll32.dll" />
+    <None Include="Images\delete.jpg" />
+    <None Include="Images\edit.jpg" />
     <Content Include="Images\exit.png" />
     <Content Include="Images\favorite.jpg" />
     <None Include="Images\hide.jpg" />
     <None Include="Images\favorite_passiv.jpg" />
+    <None Include="Images\folder.jpg" />
     <Content Include="Images\logo.ico" />
     <Content Include="Images\logo.jpg" />
     <Content Include="Images\menu.jpg" />

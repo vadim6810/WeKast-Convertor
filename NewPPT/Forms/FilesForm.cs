@@ -46,6 +46,7 @@ namespace WeCastConvertor.Forms
                 Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash, pres.Type, pres.Size, date));
                 if (!Previews.ContainsKey(pres.Hash))
                 {
+                    //TODO throws exception
                     Previews[pres.Hash] = await WeKastServerApi.Instance.Preview(pres.Id);
                 }
             }
@@ -98,7 +99,40 @@ namespace WeCastConvertor.Forms
         {
             var senderPicture = (PictureBox)sender;
             Debug.WriteLine(sender.ToString());
-            throw new NotImplementedException();
+            TableLayoutPanel parentPanel = (TableLayoutPanel) senderPicture.Parent;
+            Debug.WriteLine(parentPanel.ToString());
+            if (parentPanel.RowCount == 1)
+            {
+                ShowAdditionalPanel(parentPanel);
+                senderPicture.Image = Resources.hide;
+            }
+            else
+            {
+                HideAdditionalPanel(parentPanel);
+                senderPicture.Image = Resources.show;
+            }
+        }
+
+        private void HideAdditionalPanel(TableLayoutPanel panel)
+        {
+            for (var i = 0; i < panel.ColumnCount; i++)
+            {
+                var control = panel.GetControlFromPosition(i, 1);
+                panel.Controls.Remove(control);
+                control.Dispose();
+            }
+            panel.RowCount = 1;
+        }
+
+        private void ShowAdditionalPanel(TableLayoutPanel panel)
+        {
+            panel.RowCount = 2;
+            panel.RowStyles.Clear();
+            panel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            panel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
+            panel.Controls.Add(getPictureBox(Resources.folder), 0, 1);
+            panel.Controls.Add(getPictureBox(Resources.edit), 1, 1);
+            panel.Controls.Add(getPictureBox(Resources.delete), 2, 1);
         }
 
         private Control GetPresLayout(PresantationTamplate pres)
@@ -141,7 +175,7 @@ namespace WeCastConvertor.Forms
         private Label GetNewLabel(string name)
         {
             var result = new Label { Text = name, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, AutoSize = true };
-            result.Click += tableLayoutPanel2_Click;
+            //result.Click += tableLayoutPanel2_Click;
             return result;
         }
 

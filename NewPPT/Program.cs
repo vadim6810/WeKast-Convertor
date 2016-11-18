@@ -15,10 +15,10 @@ namespace WeCastConvertor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new LogoForm());
+            Application.Run(new LogoForm());
             //Application.Run(new MainForm());
             //Application.Run(new LoginForm());
-            Application.Run(new Form1());
+            //Application.Run(new Form1());
         }
     }
 }
