@@ -74,7 +74,7 @@ namespace WeCastConvertor.Utils
             }
         }
 
-       
+
 
         public async Task<AuthResult> Auth()
         {
@@ -232,7 +232,7 @@ namespace WeCastConvertor.Utils
             }
         }
 
-        public async Task<ResponseAnswer> Delete(int presId)
+        public async Task<bool> Delete(int presId)
         {
             var data = new Dictionary<string, string>
             {
@@ -241,12 +241,15 @@ namespace WeCastConvertor.Utils
             };
             var response = await PostRequest($"/delete/{presId}", data);
             Debug.WriteLine($"response: {response}");
-            var json = new DataContractJsonSerializer(typeof(ListResponse));
-            var deleteResponse = (ResponseAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
-           
+            var json = new DataContractJsonSerializer(typeof(DeleteResponse));
+            var deleteResponse = (DeleteResponse)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+
             if (deleteResponse.Status != 0)
-               GetError(response);
-            return deleteResponse;
+            {
+                GetError(response);
+                return false;
+            }
+            return true;
         }
 
         [DataContract]
@@ -296,7 +299,7 @@ namespace WeCastConvertor.Utils
 
             [DataMember(Name = "type")]
             public string Type { get; set; }
-            
+
             [DataMember(Name = "updated_at")]
             public string Date { get; set; }
         }
@@ -332,7 +335,7 @@ namespace WeCastConvertor.Utils
             public string Error { get; set; }
         }
 
-       
+
     }
 
     public class AuthResult

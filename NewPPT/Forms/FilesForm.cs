@@ -99,7 +99,7 @@ namespace WeCastConvertor.Forms
         {
             var senderPicture = (PictureBox)sender;
             Debug.WriteLine(sender.ToString());
-            TableLayoutPanel parentPanel = (TableLayoutPanel) senderPicture.Parent;
+            TableLayoutPanel parentPanel = (TableLayoutPanel)senderPicture.Parent;
             Debug.WriteLine(parentPanel.ToString());
             if (parentPanel.RowCount == 1)
             {
@@ -139,21 +139,22 @@ namespace WeCastConvertor.Forms
 
         private async void DeletePresantation(object sender, EventArgs e)
         {
-            var senderPicture = (PictureBox) sender;
+            var senderPicture = (PictureBox)sender;
             var presId = GetPresId(senderPicture);
-            Debug.WriteLine("Presentation Id = "+presId);
+            Debug.WriteLine("Presentation Id = " + presId);
             var responce = await WeKastServerApi.Instance.Delete(presId);
             //responce.Wait();
-            LoadPresantationList();
+            if (responce)
+                LoadPresantationList();
         }
 
         private int GetPresId(PictureBox senderPicture)
         {
-            var panelIcons = (TableLayoutPanel) senderPicture.Parent;
-            var filesPanel = (TableLayoutPanel) panelIcons.Parent;
+            var panelIcons = (TableLayoutPanel)senderPicture.Parent;
+            var filesPanel = (TableLayoutPanel)panelIcons.Parent;
             var raw = filesPanel.GetRow(panelIcons);
-            Debug.WriteLine("raw = "+raw);
-            return ((PresantationTamplate) Presantations[raw-1]).Id;
+            Debug.WriteLine("raw = " + raw);
+            return ((PresantationTamplate)Presantations[raw - 1]).Id;
         }
 
         private Control GetPresLayout(PresantationTamplate pres)
