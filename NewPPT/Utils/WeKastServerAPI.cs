@@ -127,9 +127,10 @@ namespace WeCastConvertor.Utils
             {
                 content.Add(new StringContent(Login), "login");
                 content.Add(new StringContent(Password), "password");
-                content.Add(new StreamContent(file), "file", name);
-
+                var stream = new StreamContent(file);
+                content.Add(stream, "file", name);
                 var response = await PostRequest("/upload", content);
+                Debug.WriteLine($"response: {response}");
                 try
                 {
                     var json = new DataContractJsonSerializer(typeof(UploadResponse));
@@ -231,6 +232,43 @@ namespace WeCastConvertor.Utils
             }
         }
 
+        public async Task<ResponseAnswer> Delete(int presId)
+        {
+            var data = new Dictionary<string, string>
+            {
+                {"login", Login},
+                {"password", Password}
+            };
+            var response = await PostRequest($"/delete/{presId}", data);
+            Debug.WriteLine($"response: {response}");
+            var json = new DataContractJsonSerializer(typeof(ListResponse));
+            var deleteResponse = (ResponseAnswer)json.ReadObject(new MemoryStream(Encoding.Unicode.GetBytes(response)));
+           
+            if (deleteResponse.Status != 0)
+               GetError(response);
+            return deleteResponse;
+        }
+
+        [DataContract]
+        public class ResponseAnswer
+        {
+            [DataMember(Name = "status")]
+            public int Status { get; set; }
+
+            [DataMember(Name = "answer")]
+            public object Answer { get; set; }
+        }
+
+        [DataContract]
+        public class DeleteResponse
+        {
+            [DataMember(Name = "status")]
+            public int Status { get; set; }
+
+            [DataMember(Name = "answer")]
+            public int Answer { get; set; }
+        }
+
         [DataContract]
         public class ListResponse
         {
@@ -294,6 +332,7 @@ namespace WeCastConvertor.Utils
             public string Error { get; set; }
         }
 
+       
     }
 
     public class AuthResult

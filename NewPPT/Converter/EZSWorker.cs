@@ -88,6 +88,7 @@ namespace WeCastConvertor.Converter
                     tryCount++;
                     zipPath = path + $"{name} ({tryCount}).ezs";
                 }
+
             return zipPath;
         }
 

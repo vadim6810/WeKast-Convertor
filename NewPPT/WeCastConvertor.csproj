@@ -272,6 +272,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="dlls\gsdll32.dll" />
+    <None Include="Resources\delete_active.jpg" />
+    <None Include="Images\show_active.jpg" />
     <None Include="Images\delete.jpg" />
     <None Include="Images\edit.jpg" />
     <Content Include="Images\exit.png" />

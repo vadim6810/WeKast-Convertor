@@ -86,7 +86,7 @@ namespace WeCastConvertor.Forms
             result.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             result.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
             result.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33));
-            PictureBox showing = getPictureBox(Resources.show);
+            PictureBox showing = getPictureBox(Resources.show_active);
             showing.Click += ShowHideAdditionalPanel;
             result.Controls.Add(showing, 0, 0);
             result.Controls.Add(getPictureBox(Resources.favorite_passiv), 1, 0);
@@ -109,7 +109,7 @@ namespace WeCastConvertor.Forms
             else
             {
                 HideAdditionalPanel(parentPanel);
-                senderPicture.Image = Resources.show;
+                senderPicture.Image = Resources.show_active;
             }
         }
 
@@ -132,7 +132,28 @@ namespace WeCastConvertor.Forms
             panel.RowStyles.Add(new RowStyle(SizeType.Percent, 50));
             panel.Controls.Add(getPictureBox(Resources.folder), 0, 1);
             panel.Controls.Add(getPictureBox(Resources.edit), 1, 1);
-            panel.Controls.Add(getPictureBox(Resources.delete), 2, 1);
+            var deletePicture = getPictureBox(Resources.delete_active);
+            deletePicture.Click += DeletePresantation;
+            panel.Controls.Add(deletePicture, 2, 1);
+        }
+
+        private async void DeletePresantation(object sender, EventArgs e)
+        {
+            var senderPicture = (PictureBox) sender;
+            var presId = GetPresId(senderPicture);
+            Debug.WriteLine("Presentation Id = "+presId);
+            var responce = await WeKastServerApi.Instance.Delete(presId);
+            //responce.Wait();
+            LoadPresantationList();
+        }
+
+        private int GetPresId(PictureBox senderPicture)
+        {
+            var panelIcons = (TableLayoutPanel) senderPicture.Parent;
+            var filesPanel = (TableLayoutPanel) panelIcons.Parent;
+            var raw = filesPanel.GetRow(panelIcons);
+            Debug.WriteLine("raw = "+raw);
+            return ((PresantationTamplate) Presantations[raw-1]).Id;
         }
 
         private Control GetPresLayout(PresantationTamplate pres)

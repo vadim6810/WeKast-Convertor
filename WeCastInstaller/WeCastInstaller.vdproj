@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_6A7CF65FDE9040C293F96DB29C7663A1"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6B929E5412D7086FBBA5B10A01ACF386"
         "OwnerKey" = "8:_219F206E858B41C594644A8368BC2E69"
         "MsmSig" = "8:_UNDEFINED"
@@ -57,20 +63,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_9EDCA20A88D12F66A41CF826DA9EF51E"
-        "OwnerKey" = "8:_0380C6F5606B050205265537E97645FA"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9EDCA20A88D12F66A41CF826DA9EF51E"
-        "OwnerKey" = "8:_219F206E858B41C594644A8368BC2E69"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_AB85BB600FEF4563B86E2AF82D9674D8"
         "OwnerKey" = "8:_219F206E858B41C594644A8368BC2E69"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B7660D9A39A20C9A925246FD37932984"
+        "OwnerKey" = "8:_219F206E858B41C594644A8368BC2E69"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B7660D9A39A20C9A925246FD37932984"
+        "OwnerKey" = "8:_0380C6F5606B050205265537E97645FA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -94,6 +100,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_167C8B0A015E4C01B74993ADD2074E67"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_219F206E858B41C594644A8368BC2E69"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -106,6 +118,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_B7660D9A39A20C9A925246FD37932984"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D8C9C7562695205CDFAFA03CB89DEFC9"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -113,12 +131,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_6B929E5412D7086FBBA5B10A01ACF386"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9EDCA20A88D12F66A41CF826DA9EF51E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -155,12 +167,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_AB85BB600FEF4563B86E2AF82D9674D8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_167C8B0A015E4C01B74993ADD2074E67"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -250,7 +256,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.5"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.6"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=395269"
                 }
@@ -351,6 +357,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6A7CF65FDE9040C293F96DB29C7663A1"
+            {
+            "SourcePath" = "8:..\\NewPPT\\bin\\Debug\\gsdll32.dll"
+            "TargetName" = "8:gsdll32.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_37EEBDE913714A47A511031FE63A5E21"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_6B929E5412D7086FBBA5B10A01ACF386"
             {
             "AssemblyRegister" = "3:1"
@@ -444,20 +470,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9EDCA20A88D12F66A41CF826DA9EF51E"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AB85BB600FEF4563B86E2AF82D9674D8"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
                 "ScatterAssemblies"
                 {
-                    "_9EDCA20A88D12F66A41CF826DA9EF51E"
+                    "_AB85BB600FEF4563B86E2AF82D9674D8"
                     {
-                    "Name" = "8:Newtonsoft.Json.dll"
+                    "Name" = "8:System.IO.Compression.FileSystem.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Newtonsoft.Json.dll"
+            "SourcePath" = "8:System.IO.Compression.FileSystem.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_37EEBDE913714A47A511031FE63A5E21"
@@ -475,20 +501,20 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AB85BB600FEF4563B86E2AF82D9674D8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B7660D9A39A20C9A925246FD37932984"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.IO.Compression.FileSystem, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+            "AssemblyAsmDisplayName" = "8:Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_AB85BB600FEF4563B86E2AF82D9674D8"
+                    "_B7660D9A39A20C9A925246FD37932984"
                     {
-                    "Name" = "8:System.IO.Compression.FileSystem.dll"
+                    "Name" = "8:Newtonsoft.Json.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:System.IO.Compression.FileSystem.dll"
+            "SourcePath" = "8:Newtonsoft.Json.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_37EEBDE913714A47A511031FE63A5E21"
@@ -667,7 +693,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:WeCast"
         "ProductCode" = "8:{A6704523-23D4-474E-9DA1-275D586C13BE}"
-        "PackageCode" = "8:{F17E33A5-FB5A-4932-A3B5-5498CD26B04A}"
+        "PackageCode" = "8:{3C5E59ED-5AD4-4D2D-A422-0C2455F56E01}"
         "UpgradeCode" = "8:{96699B96-1399-46FF-90BB-240173F56412}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
