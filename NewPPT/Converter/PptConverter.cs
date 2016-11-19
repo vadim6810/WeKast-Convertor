@@ -462,7 +462,7 @@ namespace WeCastConvertor.Converter
         {
             if (!File.Exists(TempCopy))
                 DoPresantationCopy(slide.Parent);
-            using (ZipArchive archive = ZipFile.OpenRead(TempCopy))
+            using (var archive = ZipFile.OpenRead(TempCopy))
             {
                 string xmlPath = $"ppt/slides/_rels/slide{slide.SlideNumber}.xml.rels";
                 var zipSlideXml = archive.GetEntry(xmlPath);
