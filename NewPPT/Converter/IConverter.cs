@@ -6,5 +6,7 @@ namespace WeCastConvertor.Converter
     public interface IConverter
     {
         string Convert(String file);
+
+        //public delegate void MethodContainer();
     }
 }

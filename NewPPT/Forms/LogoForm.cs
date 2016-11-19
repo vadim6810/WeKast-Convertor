@@ -15,10 +15,13 @@ namespace WeCastConvertor.Forms
 {
     public partial class LogoForm : Form
     {
-        private bool showed = false;
+        //private bool showed = false;
+
+        private MdiConvert _mdiConvert;
         public LogoForm()
         {
             InitializeComponent();
+            _mdiConvert = new MdiConvert(this);
         }
 
         private async void LogoForm_Load(object sender, EventArgs e)
@@ -30,9 +33,9 @@ namespace WeCastConvertor.Forms
             }
             else
             {
-                Cursor = Cursors.WaitCursor;
+                //Cursor = Cursors.WaitCursor;
                 var authResult = await WeKastServerApi.Instance.Auth();
-                Cursor = Cursors.Default;
+                //Cursor = Cursors.Default;
                 if (authResult.Status!=0)
                 {
                     LoginDialogStartupOrExit(FormStartPosition.CenterParent, authResult.Message);
@@ -54,31 +57,17 @@ namespace WeCastConvertor.Forms
 
         private void pctLogo_Click(object sender, EventArgs e)
         {
-            //if (showed)
-            //    DisableForm();
-            //else
-            ShowForm();
+            _mdiConvert.Show();
+            Hide();
+            //ShowForm();
         }
 
-        private void ShowForm()
-        {
-            //IsMdiContainer = true;
-            //Height = 300;
-            MdiConvert mdiConvert = new MdiConvert(this);
-            //mdiConvert.MdiParent = this;
-            mdiConvert.Show();
-            //BackColor = SystemColors.Desktop;
-            //pctExit.Visible = true;
-            //showed = true;
-        }
-
-        private void DisableForm()
-        {
-            //BackColor = TransparencyKey;
-            pctExit.Visible = false;
-            showed = false;
-
-        }
+        //private void ShowForm()
+        //{
+        //    //_mdiConvert mdiConvert = new _mdiConvert(this);
+        //    _mdiConvert.Show();
+        //    Hide();
+        //}
 
         private void pctExit_Click(object sender, EventArgs e)
         {

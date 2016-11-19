@@ -47,7 +47,9 @@ namespace WeCastConvertor.Forms
 
         private void pctLogo_Click(object sender, EventArgs e)
         {
-            Close();
+            _parentForm.Show();
+            _filesForm.Hide();
+            Hide();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -188,7 +190,7 @@ namespace WeCastConvertor.Forms
             else
             {
                 _filesForm.Hide();
-                pictureBox1.Image = Resources.show;
+                pictureBox1.Image = Resources.show_active;
             }
         }
     }
