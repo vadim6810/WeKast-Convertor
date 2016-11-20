@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using TestConsoleApplication;
 using WeCastConvertor.Converter;
 using P = WeCastConvertor.Forms;
 
@@ -51,6 +51,7 @@ namespace WeCastConvertor.Utils
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast PptConverter/1.0");
+                client.Timeout = TimeSpan.FromMinutes(30);
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
                 return await response.Content.ReadAsStringAsync();
@@ -129,7 +130,9 @@ namespace WeCastConvertor.Utils
             {
                 content.Add(new StringContent(Login), "login");
                 content.Add(new StringContent(Password), "password");
-                var stream = new StreamContent(file);
+                //var stream = new StreamContent(file);
+                var stream = new ProgressStreamContent(file, 4 * 1024);
+                stream.Progress = Progress;
                 content.Add(stream, "file", name);
                 var response = await PostRequest("/upload", content);
                 Debug.WriteLine($"response: {response}");
@@ -150,6 +153,13 @@ namespace WeCastConvertor.Utils
                     return false;
                 }
             }
+        }
+
+        private void Progress(long bytes, long totalBytes, long totalBytesExpected)
+        {
+            var result = totalBytes/(double)totalBytesExpected;
+            ProcessHandler.OnProgressChanged((int) (100*result));
+            ProcessHandler.OnSizeChanged(Utils.GetFileSize(totalBytes), Utils.GetFileSize(totalBytesExpected));
         }
 
         public async Task<ListResponse> ListAsync(int page = -1)

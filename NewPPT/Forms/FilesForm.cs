@@ -177,23 +177,23 @@ namespace WeCastConvertor.Forms
             label.TextAlign = ContentAlignment.MiddleLeft;
             result.SetColumnSpan(label, 3);
             result.Controls.Add(GetNewLabel(pres.Type), 0, 1);
-            result.Controls.Add(GetNewLabel(GetFileSize(pres.Size)), 1, 1);
+            result.Controls.Add(GetNewLabel(Utils.Utils.GetFileSize(pres.Size)), 1, 1);
             result.Controls.Add(GetNewLabel(pres.Date.ToShortDateString()), 2, 1);
             result.Dock = DockStyle.Fill;
             return result;
         }
 
-        private string GetFileSize(int size)
-        {
-            var len = size;
-            string[] sizes = { "", "K", "M", "G" };
-            var order = 0;
-            while (len >= 1024 && ++order < sizes.Length)
-            {
-                len = len / 1024;
-            }
-            return $"{len}{sizes[order]}";
-        }
+        //private string GetFileSize(int size)
+        //{
+        //    var len = size;
+        //    string[] sizes = { "", "K", "M", "G" };
+        //    var order = 0;
+        //    while (len >= 1024 && ++order < sizes.Length)
+        //    {
+        //        len = len / 1024;
+        //    }
+        //    return $"{len}{sizes[order]}";
+        //}
 
         private Label GetNewLabel(string name)
         {

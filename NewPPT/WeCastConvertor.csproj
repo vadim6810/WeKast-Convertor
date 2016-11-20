@@ -107,6 +107,7 @@
     <Compile Include="Converter\InfoWriter.cs" />
     <Compile Include="Converter\PdfConverter.cs" />
     <Compile Include="Converter\ProcessHandler.cs" />
+    <Compile Include="Utils\ProgressStreamContent.cs" />
     <Compile Include="Converter\VideoCutter.cs" />
     <Compile Include="Converter\Wrapper.cs" />
     <Compile Include="Forms\AboutForm.cs">
@@ -169,6 +170,7 @@
     <Compile Include="Utils\EventLogger.cs" />
     <Compile Include="Utils\ILogger.cs" />
     <Compile Include="Utils\SharedPreferences.cs" />
+    <Compile Include="Utils\Utils.cs" />
     <Compile Include="Utils\WeKastServerApi.cs" />
     <EmbeddedResource Include="Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>

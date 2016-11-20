@@ -158,7 +158,7 @@
             // 
             this.lblStatusSize.AutoSize = true;
             this.lblStatusSize.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStatusSize.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.lblStatusSize.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.lblStatusSize.ForeColor = System.Drawing.SystemColors.ControlDark;
             this.lblStatusSize.Location = new System.Drawing.Point(198, 0);
             this.lblStatusSize.Name = "lblStatusSize";

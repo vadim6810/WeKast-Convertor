@@ -37,6 +37,7 @@ namespace WeCastConvertor.Forms
         {
             ProcessHandler.StatusChanged += ShowStatus;
             ProcessHandler.ProgressChanged += ShowProgress;
+            ProcessHandler.SizeChanged += ShowFileSize;
         }
 
         public int InProgress { get; set; }
@@ -162,6 +163,16 @@ namespace WeCastConvertor.Forms
             if (pgsStatusProgress.Value == pgsStatusProgress.Maximum)
                 pgsStatusProgress.Hide();
         }
+
+        private void ShowFileSize(string uploaded, string total)
+        {
+            if (ControlInvokeRequired(lblStatusSize, () => ShowFileSize(uploaded, total))) return;
+            lblStatusSize.Show();
+            lblStatusSize.Text = uploaded+@"/"+total;
+            if (uploaded.Equals(total))
+                lblStatusSize.Hide();
+        }
+
 
         private bool ControlInvokeRequired(Control c, Action a)
         {

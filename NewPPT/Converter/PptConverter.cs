@@ -48,6 +48,7 @@ namespace WeCastConvertor.Converter
         {
             PathToPresentation = file;
             var presName = Path.GetFileName(file);
+            ProcessHandler.OnStatusChanged($"Converting {presName}");
             CreateDirrectories(presName);
             //El.AttachEvents();
             var pres = Pw.Presentations.Open(PathToPresentation, MsoTriState.msoFalse, MsoTriState.msoFalse, _showPp);
@@ -178,6 +179,7 @@ namespace WeCastConvertor.Converter
             const int framesPerSecond = 30;
             //The level of quality of the slide.
             const int quality = 100;
+            ProcessHandler.OnStatusChanged("Creating video from presentation");
             pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond,
                 quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus. ppMediaTaskStatusInProgress)
@@ -193,8 +195,11 @@ namespace WeCastConvertor.Converter
 
         private void ParseSlides(Presentation pres)
         {
+           
             foreach (Slide slide in pres.Slides)
             {
+                ProcessHandler.OnStatusChanged($"Parsing slide {slide.SlideNumber}");
+                ProcessHandler.OnProgressChanged(100*slide.SlideNumber/pres.Slides.Count);
                 if (slide.SlideNumber == 1)
                     SavePreview(slide);
                 var outputFile = _slideFolder + "\\" + slide.SlideNumber + ".jpg";
@@ -216,8 +221,8 @@ namespace WeCastConvertor.Converter
         {
             if (slidesCount<1)
                 throw new Exception("Order exception: wrong slides count");
-            StringBuilder builder = new StringBuilder("1");
-            for (int i = 2; i <= slidesCount; i++)
+            var builder = new StringBuilder("1");
+            for (var i = 2; i <= slidesCount; i++)
                 builder.Append(";" + i);
             _writer.SaveOrder(builder.ToString());
         }
@@ -375,7 +380,7 @@ namespace WeCastConvertor.Converter
 
             // Register the ProgressChanged event and print the current progress
             videoDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage);
-
+            videoDownloader.DownloadProgressChanged += (sender, args) => ProcessHandler.OnProgressChanged((int) args.ProgressPercentage);
             /*
              * Execute the video downloader.
              * For GUI applications note, that this method runs synchronously.
@@ -429,7 +434,7 @@ namespace WeCastConvertor.Converter
             }
         }
 
-        private void ParseShapes(Slide slide)
+        private void ParseShapes(_Slide slide)
         {
             foreach (Shape shape in slide.Shapes)
             {
@@ -445,7 +450,8 @@ namespace WeCastConvertor.Converter
                 }
                 if (ExistYouTubeVideo(shape))
                 {
-                    Log($"slide{slide.SlideNumber} contains youtube videos");
+                    ProcessHandler.OnStatusChanged($"Downloading linked videos");
+                    Log($"slide{slide.SlideNumber} contains ");
                     var youtubeLinks = GetAllYoutubeLinks(slide);
                     var videoPath = DownloadVideoFromYouTube(youtubeLinks, slide.SlideNumber);
                     Log($"YouTube video path: {videoPath}");
