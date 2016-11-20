@@ -16,7 +16,7 @@ using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace WeCastConvertor.Converter
 {
-    internal class PptConverter : IConverter
+    internal class PptConverter : Converter
     {
         private readonly ILogger Logger = new DebugLogger();
         private readonly Application Pw = new Application();
@@ -44,7 +44,7 @@ namespace WeCastConvertor.Converter
         private string PathToPresentation { get; set; }
         private string TempCopy { get; set; }
 
-        public string Convert(string file)
+        public override string Convert(string file)
         {
             PathToPresentation = file;
             var presName = Path.GetFileName(file);

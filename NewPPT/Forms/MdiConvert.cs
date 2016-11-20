@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -14,11 +13,9 @@ namespace WeCastConvertor.Forms
 {
     public partial class MdiConvert : Form
     {
-       
-        private readonly LogoForm _parentForm;
         private readonly FilesForm _filesForm;
 
-        public int InProgress { get; set; }
+        private readonly LogoForm _parentForm;
 
         public MdiConvert()
         {
@@ -33,7 +30,16 @@ namespace WeCastConvertor.Forms
             InitializeComponent();
             _parentForm = logoForm;
             _filesForm = new FilesForm(this);
+            AttachHandlers();
         }
+
+        private void AttachHandlers()
+        {
+            ProcessHandler.StatusChanged += ShowStatus;
+            ProcessHandler.ProgressChanged += ShowProgress;
+        }
+
+        public int InProgress { get; set; }
 
         private void MdiConvert_Load(object sender, EventArgs e)
         {
@@ -49,12 +55,13 @@ namespace WeCastConvertor.Forms
         {
             _parentForm.Show();
             _filesForm.Hide();
+            pictureBox1.Image = Resources.show_active;
             Hide();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            var greyDoted = new Pen(Color.Gray, 3) { DashPattern = new float[] { 5, 5 } };
+            var greyDoted = new Pen(Color.Gray, 3) {DashPattern = new float[] {5, 5}};
             e.Graphics.DrawRectangle(greyDoted, 5, 5, 410, 160);
         }
 
@@ -62,7 +69,7 @@ namespace WeCastConvertor.Forms
         {
             // Set a new rectangle to the same size as the button's 
             // ClientRectangle property.
-            var box = (PictureBox)sender;
+            var box = (PictureBox) sender;
             var newRectangle = box.ClientRectangle;
 
             // Draw the button's border.
@@ -70,12 +77,12 @@ namespace WeCastConvertor.Forms
             var y = newRectangle.Y;
             var width = newRectangle.Width;
             var height = newRectangle.Height;
-            var radius = height / 2;
+            var radius = height/2;
             var regionPath = new GraphicsPath();
-            regionPath.AddLine(x + radius, y, x + width - 2 * radius, y); // Line
-            regionPath.AddArc(x + width - 2 * radius, y, radius * 2, radius * 2, 270, 180); // Corner
-            regionPath.AddLine(x + radius, y + height, x + width - 2 * radius, y + height); // Line
-            regionPath.AddArc(x, y, radius * 2, radius * 2, 90, 180); // Corner
+            regionPath.AddLine(x + radius, y, x + width - 2*radius, y); // Line
+            regionPath.AddArc(x + width - 2*radius, y, radius*2, radius*2, 270, 180); // Corner
+            regionPath.AddLine(x + radius, y + height, x + width - 2*radius, y + height); // Line
+            regionPath.AddArc(x, y, radius*2, radius*2, 90, 180); // Corner
 
             regionPath.CloseFigure();
 
@@ -85,19 +92,19 @@ namespace WeCastConvertor.Forms
 
         private void pctSelectFiles_MouseDown(object sender, MouseEventArgs e)
         {
-            var box = (PictureBox)sender;
+            var box = (PictureBox) sender;
             box.BorderStyle = BorderStyle.FixedSingle;
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            var box = (PictureBox)sender;
+            var box = (PictureBox) sender;
             box.BorderStyle = BorderStyle.None;
         }
 
         private async void pnlDrop_DragDrop(object sender, DragEventArgs e)
         {
-            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files)
             {
                 // Пропускаем неподдерживаемые форматы
@@ -105,7 +112,7 @@ namespace WeCastConvertor.Forms
 
                 Console.WriteLine(file);
                 AppendLog(file);
-                var presentation = new Presentation() { SourcePath = file };
+                var presentation = new Presentation {SourcePath = file};
                 await Convert(presentation);
             }
         }
@@ -123,7 +130,8 @@ namespace WeCastConvertor.Forms
             try
             {
                 InProgress++;
-                //gridData.Add(presentation);
+                //Wrapper.StatusChanged += ShowStatus;
+                //Wrapper.ProgressChanged += ShowProgress;
                 await Wrapper.ConvertAsync(presentation);
                 if (presentation.Convert != 100) return false;
                 return await WeKastServerApi.Instance.Upload(presentation);
@@ -139,12 +147,35 @@ namespace WeCastConvertor.Forms
             }
         }
 
+        private void ShowStatus(string message)
+        {
+            if (ControlInvokeRequired(lblStatusMessage, () => ShowStatus(message))) return;
+            lblStatusMessage.Text = message;
+        }
+
+        private void ShowProgress(int value)
+        {
+            if (ControlInvokeRequired(pgsStatusProgress, () => ShowProgress(value))) return;
+            //pgsStatusProgress.Maximum = 100;
+            pgsStatusProgress.Show();
+            pgsStatusProgress.Value = value;
+            if (pgsStatusProgress.Value == pgsStatusProgress.Maximum)
+                pgsStatusProgress.Hide();
+        }
+
+        private bool ControlInvokeRequired(Control c, Action a)
+        {
+            if (c.InvokeRequired) c.Invoke(new MethodInvoker(delegate { a(); }));
+            else return false;
+
+            return true;
+        }
+
         public void AppendLog(string s)
         {
             if (InvokeRequired)
             {
                 Invoke(new Action<string>(AppendLog), s);
-                return;
             }
             //LogWindow.Items.Add(s);
             //CheckForTrim();
@@ -163,7 +194,7 @@ namespace WeCastConvertor.Forms
             };
 
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-            var presentation = new Presentation() { SourcePath = openFileDialog.FileName };
+            var presentation = new Presentation {SourcePath = openFileDialog.FileName};
             await Convert(presentation);
         }
 
@@ -175,14 +206,14 @@ namespace WeCastConvertor.Forms
 
         private void CheckLogin()
         {
-            var login = new LoginForm { StartPosition = FormStartPosition.CenterParent };
+            var login = new LoginForm {StartPosition = FormStartPosition.CenterParent};
             login.ShowDialog();
         }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             Debug.WriteLine("this: {0}", this);
-            if (_filesForm.Visible==false)
+            if (_filesForm.Visible == false)
             {
                 _filesForm.Show();
                 pictureBox1.Image = Resources.hide;

@@ -131,7 +131,7 @@
             this.pgsStatusProgress.Location = new System.Drawing.Point(276, 3);
             this.pgsStatusProgress.Name = "pgsStatusProgress";
             this.pgsStatusProgress.Size = new System.Drawing.Size(111, 21);
-            this.pgsStatusProgress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.pgsStatusProgress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.pgsStatusProgress.TabIndex = 6;
             this.pgsStatusProgress.Value = 20;
             this.pgsStatusProgress.Visible = false;

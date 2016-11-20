@@ -103,9 +103,10 @@
     <Compile Include="Converter\EZSWorker.cs" />
     <Compile Include="Converter\PptConverter.cs" />
     <Compile Include="Converter\Encoder.cs" />
-    <Compile Include="Converter\IConverter.cs" />
+    <Compile Include="Converter\Converter.cs" />
     <Compile Include="Converter\InfoWriter.cs" />
     <Compile Include="Converter\PdfConverter.cs" />
+    <Compile Include="Converter\ProcessHandler.cs" />
     <Compile Include="Converter\VideoCutter.cs" />
     <Compile Include="Converter\Wrapper.cs" />
     <Compile Include="Forms\AboutForm.cs">

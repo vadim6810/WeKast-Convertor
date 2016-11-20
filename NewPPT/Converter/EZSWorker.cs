@@ -35,7 +35,6 @@ namespace WeCastConvertor.Converter
         public string PathToPresentation { get; }
         private string TempCopy { get; set; }
         private string _tempVideo;
-//        private VideoCutter _cutter;
         private InfoWriter _writer;
 
         LinkedList<Image> slides = new LinkedList<Image>();

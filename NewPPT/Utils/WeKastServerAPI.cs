@@ -9,6 +9,7 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeCastConvertor.Converter;
 using P = WeCastConvertor.Forms;
 
 namespace WeCastConvertor.Utils
@@ -114,6 +115,7 @@ namespace WeCastConvertor.Utils
 
         public async Task<bool> Upload(P.Presentation presentation)
         {
+            ProcessHandler.OnStatusChanged("Updloading");
             var path = presentation.EzsPath;
             var name = Path.GetFileName(path);
             Console.WriteLine(@"Uploading " + path);

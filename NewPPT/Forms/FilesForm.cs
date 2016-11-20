@@ -15,7 +15,7 @@ namespace WeCastConvertor.Forms
         private static readonly ArrayList Presantations = new ArrayList();
         private Dictionary<string, Image> Previews { get; } = new Dictionary<string, Image>();
 
-        private MdiConvert parentForm { get; }
+        private readonly MdiConvert _parentForm;
 
         public FilesForm()
         {
@@ -25,12 +25,13 @@ namespace WeCastConvertor.Forms
         public FilesForm(MdiConvert mdiConvert)
         {
             InitializeComponent();
-            parentForm = mdiConvert;
+            _parentForm = mdiConvert;
+            LoadPresantationList();
         }
 
         private void FilesForm_Load(object sender, EventArgs e)
         {
-            Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - Width, parentForm.Height);
+            Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - Width, _parentForm.Height);
             LoadPresantationList();
         }
 
@@ -42,7 +43,7 @@ namespace WeCastConvertor.Forms
             Presantations.Clear();
             foreach (var pres in serverPresantations.Answer)
             {
-                DateTime date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                var date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash, pres.Type, pres.Size, date));
                 if (!Previews.ContainsKey(pres.Hash))
                 {
@@ -216,16 +217,6 @@ namespace WeCastConvertor.Forms
         {
             LoadPresantationList();
         }
-
-        private void tableLayoutPanel2_Click(object sender, EventArgs e)
-        {
-            var row = tblContent.GetRow((Control)sender);
-            Debug.WriteLine("Panel row: {0}", row);
-            int presIndex = row - 2;
-            var pres = (PresantationTamplate)Presantations[presIndex];
-            Debug.WriteLine("Presantation name: " + pres.Name);
-        }
-
     }
 
     internal class PresantationTamplate
