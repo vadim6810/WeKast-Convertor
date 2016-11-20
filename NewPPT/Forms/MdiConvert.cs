@@ -116,6 +116,7 @@ namespace WeCastConvertor.Forms
                 var presentation = new Presentation {SourcePath = file};
                 await Convert(presentation);
             }
+            _filesForm.LoadPresantationList();
         }
 
         private void pnlDrop_DragEnter(object sender, DragEventArgs e)
@@ -131,8 +132,6 @@ namespace WeCastConvertor.Forms
             try
             {
                 InProgress++;
-                //Wrapper.StatusChanged += ShowStatus;
-                //Wrapper.ProgressChanged += ShowProgress;
                 await Wrapper.ConvertAsync(presentation);
                 if (presentation.Convert != 100) return false;
                 return await WeKastServerApi.Instance.Upload(presentation);

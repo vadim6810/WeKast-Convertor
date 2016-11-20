@@ -35,7 +35,7 @@ namespace WeCastConvertor.Forms
             LoadPresantationList();
         }
 
-        private async void LoadPresantationList()
+        public async void LoadPresantationList()
         {
             Cursor = Cursors.WaitCursor;
             var api = WeKastServerApi.Instance;

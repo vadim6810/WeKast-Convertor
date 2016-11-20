@@ -116,7 +116,7 @@ namespace WeCastConvertor.Utils
 
         public async Task<bool> Upload(P.Presentation presentation)
         {
-            ProcessHandler.OnStatusChanged("Updloading");
+            ProcessHandler.OnStatusChanged("Updloading...");
             var path = presentation.EzsPath;
             var name = Path.GetFileName(path);
             Console.WriteLine(@"Uploading " + path);
@@ -126,7 +126,7 @@ namespace WeCastConvertor.Utils
                 return false;
             }
             var file = new FileStream(path, FileMode.Open, FileAccess.Read);
-            using (var content = new MultipartFormDataContent("A67R7E769FF862SF2M32WLE3345RWD"))
+            using (var content = new MultipartFormDataContent())
             {
                 content.Add(new StringContent(Login), "login");
                 content.Add(new StringContent(Password), "password");
@@ -144,6 +144,7 @@ namespace WeCastConvertor.Utils
                     Console.WriteLine(@"Presentation uploaded " + path);
                     if (uploadResponse.Status != 0) return false;
                     presentation.Upload = 100;
+                    ProcessHandler.OnStatusChanged("Done");
                     return true;
                 }
                 catch (SerializationException)
