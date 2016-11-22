@@ -1,82 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using NReco.VideoInfo;
 using NReco.VideoConverter;
+using NReco.VideoInfo;
 
 namespace WeCastConvertor.Converter
 {
-    class VideoCutter
+    internal class VideoCutter
     {
-        //private readonly VideoFileReader _reader = new VideoFileReader();
+        public VideoCutter(string inputPathToVideo)
+        {
+            InputPath = inputPathToVideo;
+        }
+
         private FFMpegConverter FfMpeg { get; } = new FFMpegConverter();
         private MediaInfo VideoInfo { get; set; }
         private float FrameRate { get; set; }
 
         private string InputPath { get; }
-        //private int currentFrame { get; set; }
-
-        public VideoCutter(string inputPathToVideo)
-        {
-            InputPath = inputPathToVideo;
-
-        }
-
-
-        //private void OpenVideo()
-        //{
-        //    try
-        //    {
-        //        //_reader.Open(_path);
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
-
-        public void CloseVideo()
-        {
-            try
-            {
-                //_reader.Close();
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        public void SkipFrames(int count)
-        {
-            //currentFrame += count;
-        }
 
         public bool CheckSum(int sum)
         {
             var videoInfo = GetVideoInfio();
             Debug.WriteLine("VideoDuration: {0}", videoInfo.Duration.Duration());
-            MediaInfo.StreamInfo[] streams = videoInfo.Streams;
+            var streams = videoInfo.Streams;
             foreach (var stream in streams)
             {
                 Debug.WriteLine(stream + " frame rate: " + stream.FrameRate);
             }
             var frameRate = streams[0].FrameRate;
             //MediaInfo.StreamInfo = 
-            int frameCount = (int)(videoInfo.Duration.Duration().TotalMilliseconds * frameRate / 1000);
+            var frameCount = (int) (videoInfo.Duration.Duration().TotalMilliseconds*frameRate/1000);
             Debug.WriteLine("Frame count: {0}", frameCount);
             Debug.WriteLine("Check sum: {0}", sum);
             //Debug.WriteLine("current frame: "+currentFrame+"   FrameCount: "+_reader.FrameCount);
             //return currentFrame == _reader.FrameCount;
-            return false;
+            return frameCount==sum;
         }
 
         internal void SaveAnimation(int fromFrame, int frameCount, int slideNumber, int animId, string pathToVideo)
@@ -94,9 +55,9 @@ namespace WeCastConvertor.Converter
             }
             Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
             var settings = new ConvertSettings();
-            settings.VideoFrameRate = (int?)FrameRate;
+            settings.VideoFrameRate = (int?) FrameRate;
             settings.VideoCodec = Format.h264;
-            settings.Seek = fromFrame / (int)FrameRate;
+            settings.Seek = fromFrame/(int) FrameRate;
             settings.VideoFrameCount = frameCount;
             FfMpeg.ConvertMedia(InputPath, null, pathToVideo, null, settings);
             //if (hasFirstFrame)
@@ -127,12 +88,11 @@ namespace WeCastConvertor.Converter
             //    bmp.Save(pathToPicture);
 
             //}
-
-
         }
+
         internal void SaveAnimation(int fromFrame, int animId, string pictureName)
         {
-            float? position = fromFrame / FrameRate;
+            float? position = fromFrame/FrameRate;
             FfMpeg.GetVideoThumbnail(InputPath, pictureName, position);
         }
 
@@ -151,7 +111,7 @@ namespace WeCastConvertor.Converter
             return ffProbe.GetMediaInfo(InputPath);
         }
 
-        private bool IsFileLocked(String filename)
+        private bool IsFileLocked(string filename)
         {
             var result = false;
             var fileinfo = new FileInfo(filename);

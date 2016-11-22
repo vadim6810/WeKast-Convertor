@@ -22,6 +22,17 @@ namespace WeCastConvertor.Converter
         private readonly Application Pw = new Application();
         //private  readonly EventLogger El = new EventLogger(Logger, Pw);
 
+        //Indicates whether to use timings and narrations.
+        private const bool UseTimingsAndNarrations = true;
+        //The duration, in seconds, to view the slide.
+        private const int DefaultSlideDuration = 0;
+        //The resolution of the slide.
+        private const int VertResolution = 1080;
+        //The number of frames per second.
+        private const int FramesPerSecond = 30;
+        //The level of Quality of the slide.
+        private const int Quality = 100;
+
         //Path to windows TEMP dirrectory
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
         private readonly LinkedList<int> Durations = new LinkedList<int>();
@@ -39,7 +50,6 @@ namespace WeCastConvertor.Converter
         private string _tempVideo;
         private string _videosFolder;
         private InfoWriter _writer;
-        //private int SlideCounter;
 
         private string PathToPresentation { get; set; }
         private string TempCopy { get; set; }
@@ -89,6 +99,7 @@ namespace WeCastConvertor.Converter
 
         private void GetDurations(_Presentation pres)
         {
+            ProcessHandler.OnStatusChanged("Extracting animation");
             foreach (Slide slide in pres.Slides)
             {
                 var animId = 0;
@@ -127,6 +138,8 @@ namespace WeCastConvertor.Converter
                     //SavePicture(slide);
                     Durations.AddLast(1);
                 }
+                var progress = slide.SlideNumber / (double)pres.Slides.Count;
+                ProcessHandler.OnProgressChanged((int) (100*progress));
             }
             //End of last slide black window
             Log(_cutter.CheckSum(Durations.Sum()).ToString());
@@ -169,19 +182,10 @@ namespace WeCastConvertor.Converter
         {
             //The Name of the video file to create.
             var fileName = _tempVideo; //$"{_ezsContent}\\_tempVideo.mp4";
-            //Indicates whether to use timings and narrations.
-            const bool useTimingsAndNarrations = true;
-            //The duration, in seconds, to view the slide.
-            const int defaultSlideDuration = 0;
-            //The resolution of the slide.
-            const int vertResolution = 1080;
-            //The number of frames per second.
-            const int framesPerSecond = 30;
-            //The level of quality of the slide.
-            const int quality = 100;
+            
             ProcessHandler.OnStatusChanged("Creating video from presentation");
-            pres.CreateVideo(fileName, useTimingsAndNarrations, defaultSlideDuration, vertResolution, framesPerSecond,
-                quality);
+            pres.CreateVideo(fileName, UseTimingsAndNarrations, DefaultSlideDuration, VertResolution, FramesPerSecond,
+                Quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus. ppMediaTaskStatusInProgress)
             //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {

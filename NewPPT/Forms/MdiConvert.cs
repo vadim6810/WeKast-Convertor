@@ -160,7 +160,10 @@ namespace WeCastConvertor.Forms
             pgsStatusProgress.Show();
             pgsStatusProgress.Value = value;
             if (pgsStatusProgress.Value == pgsStatusProgress.Maximum)
+            {
                 pgsStatusProgress.Hide();
+                lblStatusSize.Hide();
+            }
         }
 
         private void ShowFileSize(string uploaded, string total)
@@ -168,8 +171,6 @@ namespace WeCastConvertor.Forms
             if (ControlInvokeRequired(lblStatusSize, () => ShowFileSize(uploaded, total))) return;
             lblStatusSize.Show();
             lblStatusSize.Text = uploaded+@"/"+total;
-            if (uploaded.Equals(total))
-                lblStatusSize.Hide();
         }
 
 
