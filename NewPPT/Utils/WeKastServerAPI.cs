@@ -131,7 +131,7 @@ namespace WeCastConvertor.Utils
                 content.Add(new StringContent(Login), "login");
                 content.Add(new StringContent(Password), "password");
                 //var stream = new StreamContent(file);
-                var stream = new ProgressStreamContent(file, 4 * 1024);
+                var stream = new ProgressStreamContent(file, 1024*Utils.GetClusterSize(path));//4 * 1024);
                 stream.Progress = Progress;
                 content.Add(stream, "file", name);
                 var response = await PostRequest("/upload", content);
