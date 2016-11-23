@@ -23,7 +23,7 @@ namespace WeCastConvertor.Converter
         //private  readonly EventLogger El = new EventLogger(Logger, Pw);
 
         //Indicates whether to use timings and narrations.
-        private const bool UseTimingsAndNarrations = true;
+        private const bool UseTimingsAndNarrations = false;
         //The duration, in seconds, to view the slide.
         private const int DefaultSlideDuration = 0;
         //The resolution of the slide.
@@ -31,7 +31,7 @@ namespace WeCastConvertor.Converter
         //The number of frames per second.
         private const int FramesPerSecond = 30;
         //The level of Quality of the slide.
-        private const int Quality = 100;
+        private const int Quality = 85;
 
         //Path to windows TEMP dirrectory
         private static readonly string TempFolderPath = Environment.GetEnvironmentVariable("TEMP");
@@ -107,7 +107,8 @@ namespace WeCastConvertor.Converter
                 {
                     animId++;
                     //Durations.AddLast(slide.SlideShowTransition.Duration+2f/30);
-                    var numberOfFrames = (int)(30 * slide.SlideShowTransition.Duration + 2);
+                    var numberOfFrames = (int)(FramesPerSecond * slide.SlideShowTransition.Duration);
+                    numberOfFrames += 2;
                     SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
                     Durations.AddLast(numberOfFrames);
                     SavePicture(slide.SlideNumber, animId, Durations.Sum());
@@ -120,7 +121,7 @@ namespace WeCastConvertor.Converter
                     animId++;
                     //Slide animation duration
 
-                    var numberOfFrames = (int)(30 * eff.Timing.Duration);
+                    var numberOfFrames = (int)(FramesPerSecond * eff.Timing.Duration);
                     if (isFirstAnimation)
                     {
                         numberOfFrames += 2;
@@ -183,7 +184,7 @@ namespace WeCastConvertor.Converter
             //The Name of the video file to create.
             var fileName = _tempVideo; //$"{_ezsContent}\\_tempVideo.mp4";
             
-            ProcessHandler.OnStatusChanged("Creating video from presentation");
+            ProcessHandler.OnStatusChanged("Creating video");
             pres.CreateVideo(fileName, UseTimingsAndNarrations, DefaultSlideDuration, VertResolution, FramesPerSecond,
                 Quality);
             while (pres.CreateVideoStatus == PpMediaTaskStatus. ppMediaTaskStatusInProgress)

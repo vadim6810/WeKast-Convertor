@@ -57,8 +57,9 @@ namespace WeCastConvertor.Converter
             var settings = new ConvertSettings();
             settings.VideoFrameRate = (int?) FrameRate;
             settings.VideoCodec = Format.h264;
-            settings.Seek = fromFrame/(int) FrameRate;
+            settings.Seek = fromFrame/FrameRate;
             settings.VideoFrameCount = frameCount;
+            settings.CustomOutputArgs = " -b:v 12000k";//" -bufsize 64k ";
             FfMpeg.ConvertMedia(InputPath, null, pathToVideo, null, settings);
             //if (hasFirstFrame)
             //    GetBitmap();
