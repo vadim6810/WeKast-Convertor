@@ -62,7 +62,7 @@ namespace WeCastConvertor.Converter
                 }
                 FrameRate = streams[0].FrameRate;
             }
-            //Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
+            Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
             var settings = new ConvertSettings();
             settings.VideoFrameRate = (int?) FrameRate;
             //settings.VideoCodec = Format.h264;

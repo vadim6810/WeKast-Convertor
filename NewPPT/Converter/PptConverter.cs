@@ -136,9 +136,9 @@ namespace WeCastConvertor.Converter
                         //Durations.AddLast(2f / 30);
                         isFirstAnimation = false;
                     }
-                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
+                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum()-1, numberOfFrames);
                     Durations.AddLast(numberOfFrames);
-                    SavePicture(slide.SlideNumber, animId, Durations.Sum());
+                    SavePicture(slide.SlideNumber, animId, Durations.Sum()-1);
                 }
 
                 //If no animations on slide
