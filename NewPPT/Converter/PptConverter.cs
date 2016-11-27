@@ -105,13 +105,21 @@ namespace WeCastConvertor.Converter
                 var animId = 0;
                 if (slide != null && slide.SlideShowTransition.EntryEffect != PpEntryEffect.ppEffectNone)
                 {
-                    animId++;
-                    //Durations.AddLast(slide.SlideShowTransition.Duration+2f/30);
-                    var numberOfFrames = (int)(FramesPerSecond * slide.SlideShowTransition.Duration);
-                    numberOfFrames += 2;
-                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
-                    Durations.AddLast(numberOfFrames);
-                    SavePicture(slide.SlideNumber, animId, Durations.Sum());
+                    if (slide.SlideShowTransition.EntryEffect == PpEntryEffect.ppEffectCut)
+                    {
+                        Log(slide.SlideShowTransition.EntryEffect.ToString());
+                        Durations.AddLast(2);
+                    }
+                    else
+                    {
+                        animId++;
+                        //Durations.AddLast(slide.SlideShowTransition.Duration+2f/30);
+                        var numberOfFrames = (int) (FramesPerSecond*slide.SlideShowTransition.Duration);
+                        numberOfFrames += 2;
+                        SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
+                        Durations.AddLast(numberOfFrames);
+                        SavePicture(slide.SlideNumber, animId, Durations.Sum());
+                    }
                 }
                 var isFirstAnimation = true;
                 //Slide before animation
@@ -195,6 +203,7 @@ namespace WeCastConvertor.Converter
                 Thread.Sleep(1000);
             }
             Thread.Sleep(100);
+            _cutter = new VideoCutter(_tempVideo);
             return fileName;
         }
 
@@ -307,7 +316,7 @@ namespace WeCastConvertor.Converter
                 Directory.CreateDirectory(_slideFolder);
             _writer = new InfoWriter(Path.Combine(_ezsContent, "info.xml"));
             _writer.AddPresanpationAtribute("type", new StringBuilder("ppt"));
-            _cutter = new VideoCutter(_tempVideo);
+            //_cutter = new VideoCutter(_tempVideo);
         }
 
         private string GetRandomEzsFolder()

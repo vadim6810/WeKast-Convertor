@@ -12,7 +12,16 @@ namespace WeCastConvertor.Converter
     {
         public VideoCutter(string inputPathToVideo)
         {
-            InputPath = inputPathToVideo;
+            if (inputPathToVideo != null)
+                InputPath = Path.Combine(Path.GetDirectoryName(inputPathToVideo),Path.GetFileNameWithoutExtension(inputPathToVideo)+"_1"+Path.GetExtension(inputPathToVideo));
+            var settings = new ConvertSettings();
+            //settings.VideoFrameRate = (int?)FrameRate;
+            //settings.VideoCodec = Format.h264;
+            //settings.Seek = fromFrame / FrameRate;
+            //Debug.WriteLine($"Seek {slideNumber} - {settings.Seek} - {frameCount} frames");
+            //settings.VideoFrameCount = frameCount;
+            settings.CustomOutputArgs = " -c:v libx264 -crf 0 ";
+            FfMpeg.ConvertMedia(inputPathToVideo, null, InputPath, null, settings);
         }
 
         private FFMpegConverter FfMpeg { get; } = new FFMpegConverter();
@@ -53,13 +62,14 @@ namespace WeCastConvertor.Converter
                 }
                 FrameRate = streams[0].FrameRate;
             }
-            Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
+            //Debug.WriteLine($"Cut from frame {fromFrame} - {frameCount} frames");
             var settings = new ConvertSettings();
             settings.VideoFrameRate = (int?) FrameRate;
-            settings.VideoCodec = Format.h264;
+            //settings.VideoCodec = Format.h264;
             settings.Seek = fromFrame/FrameRate;
+            Debug.WriteLine($"Seek {slideNumber} - {settings.Seek} - {frameCount} frames");
             settings.VideoFrameCount = frameCount;
-            settings.CustomOutputArgs = " -b:v 12000k";//" -bufsize 64k ";
+            settings.CustomOutputArgs = " -c:v libx264 -crf 18 ";
             FfMpeg.ConvertMedia(InputPath, null, pathToVideo, null, settings);
             //if (hasFirstFrame)
             //    GetBitmap();
