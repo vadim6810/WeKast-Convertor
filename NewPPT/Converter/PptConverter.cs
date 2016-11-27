@@ -103,6 +103,7 @@ namespace WeCastConvertor.Converter
             foreach (Slide slide in pres.Slides)
             {
                 var animId = 0;
+                int numberOfFrames;
                 if (slide != null && slide.SlideShowTransition.EntryEffect != PpEntryEffect.ppEffectNone)
                 {
                     if (slide.SlideShowTransition.EntryEffect == PpEntryEffect.ppEffectCut)
@@ -114,7 +115,7 @@ namespace WeCastConvertor.Converter
                     {
                         animId++;
                         //Durations.AddLast(slide.SlideShowTransition.Duration+2f/30);
-                        var numberOfFrames = (int) (FramesPerSecond*slide.SlideShowTransition.Duration);
+                        numberOfFrames = (int)(FramesPerSecond * slide.SlideShowTransition.Duration);
                         numberOfFrames += 2;
                         SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
                         Durations.AddLast(numberOfFrames);
@@ -124,21 +125,36 @@ namespace WeCastConvertor.Converter
                 var isFirstAnimation = true;
                 //Slide before animation
                 Durations.AddLast(1);
+                numberOfFrames = 0;
+                animId++;
                 foreach (Effect eff in slide.TimeLine.MainSequence)
                 {
-                    animId++;
-                    //Slide animation duration
-
-                    var numberOfFrames = (int)(FramesPerSecond * eff.Timing.Duration);
+                    if (eff.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerAfterPrevious)
+                    {
+                        numberOfFrames += (int)(FramesPerSecond * eff.Timing.Duration);
+                        if (eff.Index != slide.TimeLine.MainSequence.Count)
+                            continue;
+                    }
+                    if (eff.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerWithPrevious)
+                    {
+                        //Slide animation duration
+                        if (numberOfFrames < (int)(FramesPerSecond * eff.Timing.Duration))
+                            numberOfFrames = (int)(FramesPerSecond * eff.Timing.Duration);
+                        if (eff.Index != slide.TimeLine.MainSequence.Count)
+                            continue;
+                    }
                     if (isFirstAnimation)
                     {
                         numberOfFrames += 2;
                         //Durations.AddLast(2f / 30);
-                        isFirstAnimation = false;
                     }
-                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum()-1, numberOfFrames);
+
+                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum() - 1, numberOfFrames);
+                    isFirstAnimation = false;
+                   
                     Durations.AddLast(numberOfFrames);
-                    SavePicture(slide.SlideNumber, animId, Durations.Sum()-1);
+                    SavePicture(slide.SlideNumber, animId, Durations.Sum() - 1);
+                    animId++;
                 }
 
                 //If no animations on slide
@@ -148,7 +164,7 @@ namespace WeCastConvertor.Converter
                     Durations.AddLast(1);
                 }
                 var progress = slide.SlideNumber / (double)pres.Slides.Count;
-                ProcessHandler.OnProgressChanged((int) (100*progress));
+                ProcessHandler.OnProgressChanged((int)(100 * progress));
             }
             //End of last slide black window
             Log(_cutter.CheckSum(Durations.Sum()).ToString());
@@ -191,11 +207,11 @@ namespace WeCastConvertor.Converter
         {
             //The Name of the video file to create.
             var fileName = _tempVideo; //$"{_ezsContent}\\_tempVideo.mp4";
-            
+
             ProcessHandler.OnStatusChanged("Creating video");
             pres.CreateVideo(fileName, UseTimingsAndNarrations, DefaultSlideDuration, VertResolution, FramesPerSecond,
                 Quality);
-            while (pres.CreateVideoStatus == PpMediaTaskStatus. ppMediaTaskStatusInProgress)
+            while (pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusInProgress)
             //|| pres.CreateVideoStatus == PpMediaTaskStatus.ppMediaTaskStatusDone)
             {
                 System.Windows.Forms.Application.DoEvents();
@@ -209,11 +225,11 @@ namespace WeCastConvertor.Converter
 
         private void ParseSlides(Presentation pres)
         {
-           
+
             foreach (Slide slide in pres.Slides)
             {
                 ProcessHandler.OnStatusChanged($"Parsing slide {slide.SlideNumber}");
-                ProcessHandler.OnProgressChanged(100*slide.SlideNumber/pres.Slides.Count);
+                ProcessHandler.OnProgressChanged(100 * slide.SlideNumber / pres.Slides.Count);
                 if (slide.SlideNumber == 1)
                     SavePreview(slide);
                 var outputFile = _slideFolder + "\\" + slide.SlideNumber + ".jpg";
@@ -233,7 +249,7 @@ namespace WeCastConvertor.Converter
 
         private void SaveOrder(int slidesCount)
         {
-            if (slidesCount<1)
+            if (slidesCount < 1)
                 throw new Exception("Order exception: wrong slides count");
             var builder = new StringBuilder("1");
             for (var i = 2; i <= slidesCount; i++)
@@ -394,13 +410,13 @@ namespace WeCastConvertor.Converter
 
             // Register the ProgressChanged event and print the current progress
             videoDownloader.DownloadProgressChanged += (sender, args) => Console.WriteLine(args.ProgressPercentage);
-            videoDownloader.DownloadProgressChanged += (sender, args) => ProcessHandler.OnProgressChanged((int) args.ProgressPercentage);
+            videoDownloader.DownloadProgressChanged += (sender, args) => ProcessHandler.OnProgressChanged((int)args.ProgressPercentage);
             /*
              * Execute the video downloader.
              * For GUI applications note, that this method runs synchronously.
              */
             videoDownloader.Execute();
-            _writer.AddSlideMedia(slideNumber, $"video/v{slideNumber}{video.VideoExtension}", "video", slideNumber*100);
+            _writer.AddSlideMedia(slideNumber, $"video/v{slideNumber}{video.VideoExtension}", "video", slideNumber * 100);
             return savePath;
         }
 
@@ -518,9 +534,9 @@ namespace WeCastConvertor.Converter
                                 : $"{_ezsContent}\\video\\v{slide.SlideNumber}_{tryCount}{Path.GetExtension(pathMedia)}";
                         }
                     var typeForInfoWriter = type.Contains("audio") ? "audio" : "video";
-                    tryCount = type.Contains("audio") ? tryCount+10: tryCount;
+                    tryCount = type.Contains("audio") ? tryCount + 10 : tryCount;
                     var pathForInfoWriter = $"{typeForInfoWriter}/{Path.GetFileName(pathToUnzip)}";
-                    _writer.AddSlideMedia(slide.SlideNumber, pathForInfoWriter, typeForInfoWriter, 100*slide.SlideNumber+tryCount);
+                    _writer.AddSlideMedia(slide.SlideNumber, pathForInfoWriter, typeForInfoWriter, 100 * slide.SlideNumber + tryCount);
                 }
                 //slideXml.
                 //archive.
@@ -575,7 +591,7 @@ namespace WeCastConvertor.Converter
             if (!File.Exists(sourcePath))
                 throw new FileNotFoundException($"File {sourcePath} not found");
             SaveFile(sourcePath, destPath);
-            _writer.AddSlideMedia(slideNumber, internalPath, type, slideNumber*100);
+            _writer.AddSlideMedia(slideNumber, internalPath, type, slideNumber * 100);
         }
 
         private static string SaveFile(string sourcePath, string destPath)
