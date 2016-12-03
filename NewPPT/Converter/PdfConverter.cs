@@ -28,7 +28,7 @@ namespace WeCastConvertor.Converter
             {
                 ezsWorker.AddSlide(bitmap);
                 current++;
-                ProcessHandler.OnProgressChanged(100 * current / bitmaps.Count);
+                ProcessHandler.OnProgressChanged((int) (100 * current /(float) bitmaps.Count));
             }
             return ezsWorker.Save();
         }
@@ -40,8 +40,9 @@ namespace WeCastConvertor.Converter
             Debug.WriteLine(Environment.CurrentDirectory);
             var path = Path.GetFullPath(file);
             Stream fileStream = new FileStream(file, FileMode.Open);
-            using (var rasterizer = new GhostscriptRasterizer())
+            using (var rasterizer = new GhostscriptRasterizer( ))
             {
+                //rasterizer.CustomSwitches.Add(" -background white ");
                 var gvi = new GhostscriptVersionInfo(new Version(0, 0, 0),
                     @"gsdll32.dll", string.Empty, GhostscriptLicense.GPL);
                 rasterizer.Open(fileStream, gvi, false);

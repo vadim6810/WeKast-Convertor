@@ -143,6 +143,7 @@
             this.Name = "FilesForm";
             this.ShowInTaskbar = false;
             this.Text = "Form1";
+            this.Activated += new System.EventHandler(this.FilesForm_Activated);
             this.Load += new System.EventHandler(this.FilesForm_Load);
             this.tblTopMenu.ResumeLayout(false);
             this.tblTopMenu.PerformLayout();

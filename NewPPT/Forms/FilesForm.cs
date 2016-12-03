@@ -217,6 +217,12 @@ namespace WeCastConvertor.Forms
         {
             LoadPresantationList();
         }
+
+        private void FilesForm_Activated(object sender, EventArgs e)
+        {
+            //MessageBox.Show("File form activated", "Information", MessageBoxButtons.OK);
+            ParentForm?.Activate();
+        }
     }
 
     internal class PresantationTamplate

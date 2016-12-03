@@ -38,7 +38,7 @@
             // 
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Image = global::WeCastConvertor.Properties.Resources.logo;
-            this.pictureBox1.Location = new System.Drawing.Point(363, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(10, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(65, 65);
             this.pictureBox1.TabIndex = 2;
@@ -49,7 +49,7 @@
             // 
             this.pctExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.pctExit.Image = global::WeCastConvertor.Properties.Resources.exit;
-            this.pctExit.Location = new System.Drawing.Point(423, 0);
+            this.pctExit.Location = new System.Drawing.Point(70, 0);
             this.pctExit.Name = "pctExit";
             this.pctExit.Size = new System.Drawing.Size(17, 17);
             this.pctExit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -62,8 +62,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(440, 750);
+            this.ClientSize = new System.Drawing.Size(87, 88);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pctExit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
