@@ -61,9 +61,9 @@
     <Compile Include="Utils\ServerApiTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NewPPT\WeCastConvertor.csproj">
+    <ProjectReference Include="..\NewPPT\WeKastConvertor.csproj">
       <Project>{1898602c-e29e-471f-9b9d-b1e9c47ccacc}</Project>
-      <Name>WeCast-Convertor</Name>
+      <Name>WeKastConvertor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

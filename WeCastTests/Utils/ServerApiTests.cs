@@ -88,6 +88,7 @@ namespace WeCastTests.Utils
                     content.Add(fileContent, "file");//, "Matem_4_Bogdanovych-M.V.-Lyshenko-G.P. (3).ezs");
                     Trace.WriteLine(content.ToString());
                     var response = await httpClient.PostAsync(Url + Upload, content);
+                    response.r
                     return response;
                 }
             }

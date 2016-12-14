@@ -12,7 +12,7 @@ namespace WeCastConvertor.Converter
 {
     public class PdfConverter : Converter
     {
-        private const int DpiDefault = 150;
+        private const int DpiDefault = 96;
 
         public override string Convert(string file)
         {
@@ -45,6 +45,7 @@ namespace WeCastConvertor.Converter
                 //rasterizer.CustomSwitches.Add(" -background white ");
                 var gvi = new GhostscriptVersionInfo(new Version(0, 0, 0),
                     @"gsdll32.dll", string.Empty, GhostscriptLicense.GPL);
+                Debug.WriteLine(gvi.Version);
                 rasterizer.Open(fileStream, gvi, false);
                 for (var pageNumber = 1; pageNumber <= rasterizer.PageCount; pageNumber++)
                 {

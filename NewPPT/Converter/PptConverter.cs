@@ -143,22 +143,27 @@ namespace WeCastConvertor.Converter
                         if (eff.Index != slide.TimeLine.MainSequence.Count)
                             continue;
                     }
+                    if (eff.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick ||
+                        eff.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnShapeClick)
+                    {
+                       numberOfFrames = (int)(FramesPerSecond * eff.Timing.Duration);
+                    }
                     if (isFirstAnimation)
                     {
-                        numberOfFrames += 2;
+                        numberOfFrames += 1;
                         //Durations.AddLast(2f / 30);
                     }
 
-                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum() - 1, numberOfFrames);
+                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum() , numberOfFrames);
                     isFirstAnimation = false;
-                   
+
                     Durations.AddLast(numberOfFrames);
                     SavePicture(slide.SlideNumber, animId, Durations.Sum() - 1);
                     animId++;
                 }
 
                 //If no animations on slide
-                if (isFirstAnimation)
+                if (isFirstAnimation && (slide.SlideNumber != pres.Slides.Count))
                 {
                     //SavePicture(slide);
                     Durations.AddLast(1);

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeCastConvertor", "NewPPT\WeCastConvertor.csproj", "{1898602C-E29E-471F-9B9D-B1E9C47CCACC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeKastConvertor", "NewPPT\WeKastConvertor.csproj", "{1898602C-E29E-471F-9B9D-B1E9C47CCACC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YoutubeExtractor", "YoutubeExtractor\YoutubeExtractor.csproj", "{ECDC127F-8DEF-4F99-8300-72C13597339D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeCastTests", "WeCastTests\WeCastTests.csproj", "{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeKastTests", "WeCastTests\WeKastTests.csproj", "{93B36F04-0D7F-4C60-9DD5-96D01E8BA463}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WeCastInstaller", "WeCastInstaller\WeCastInstaller.vdproj", "{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "WeKastInstaller", "WeCastInstaller\WeCastInstaller.vdproj", "{1B8FC496-F2E2-471A-9EDA-50B57E4E93C1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApplication", "TestConsoleApplication\TestConsoleApplication.csproj", "{BEC01FFC-179A-4982-A063-B53ACB3B1CB8}"
 EndProject
