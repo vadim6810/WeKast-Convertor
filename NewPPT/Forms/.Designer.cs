@@ -124,8 +124,8 @@
             this.tblContent.Name = "tblContent";
             this.tblContent.RowCount = 1;
             this.tblContent.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tblContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 539F));
-            this.tblContent.Size = new System.Drawing.Size(440, 539);
+            this.tblContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 407F));
+            this.tblContent.Size = new System.Drawing.Size(440, 367);
             this.tblContent.TabIndex = 2;
             // 
             // FilesForm
@@ -134,7 +134,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.ControlText;
-            this.ClientSize = new System.Drawing.Size(440, 572);
+            this.ClientSize = new System.Drawing.Size(440, 400);
             this.ControlBox = false;
             this.Controls.Add(this.tblContent);
             this.Controls.Add(this.tblTopMenu);

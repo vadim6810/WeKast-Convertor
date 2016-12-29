@@ -27,6 +27,7 @@ namespace WeCastConvertor.Forms
             InitializeComponent();
             _parentForm = mdiConvert;
             LoadPresantationList();
+            Height = Screen.PrimaryScreen.WorkingArea.Height-_parentForm.Height;
         }
 
         private void FilesForm_Load(object sender, EventArgs e)
