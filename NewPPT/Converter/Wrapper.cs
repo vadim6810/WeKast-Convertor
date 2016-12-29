@@ -13,10 +13,12 @@ namespace WeCastConvertor.Converter
         {
             {".ppt",new PptConverter()},
             {".pptx",new PptConverter()},
-            {".pdf",new PdfConverter()}
+            {".pdf",new PdfConverter()},
+             {".doc",new WordConverter()},
+             {".docx",new WordConverter()}
         };
 
-        public static readonly string[] SupportedFormats = { ".pptx", ".ppt", ".pdf" };
+        public static readonly string[] SupportedFormats = { ".pptx", ".ppt", ".pdf", ".doc", ".docx" };
 
         //public static Converter.ChangeStatus StatusChanged { get; set; }
         //public static Converter.ChangeProgress ProgressChanged { get; set; }
@@ -39,6 +41,6 @@ namespace WeCastConvertor.Converter
             });
         }
 
-       
+
     }
 }

@@ -12,12 +12,24 @@ namespace WeCastConvertor.Converter
 {
     public class PdfConverter : Converter
     {
+        private EzsWorker ezsWorker;
         private const int DpiDefault = 96;
+
+        internal PdfConverter()
+        {
+        }
+
+        internal PdfConverter(EzsWorker worker)
+        {
+            if (ezsWorker == null)
+                ezsWorker = worker;
+        }
 
         public override string Convert(string file)
         {
             ProcessHandler.OnStatusChanged("Creating ezs...");
-            var ezsWorker = new EzsWorker(file);
+            if (ezsWorker == null)
+                ezsWorker = new EzsWorker(file);
             ProcessHandler.OnStatusChanged("Converting...");
             var images = GetImages(file);
             var bitmaps = images as IList<Bitmap> ?? images.ToList();

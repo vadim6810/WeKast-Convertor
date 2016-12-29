@@ -34,6 +34,12 @@ namespace WeCastConvertor.Converter
 
         public string PathToPresentation { get; }
         private string TempCopy { get; set; }
+
+        public string EzsTemp
+        {
+            get { return _ezsTemp; }
+        }
+
         private string _tempVideo;
         private InfoWriter _writer;
 

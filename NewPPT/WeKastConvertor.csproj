@@ -75,6 +75,9 @@
       <HintPath>..\packages\Ghostscript.NET.1.2.0\lib\net40\Ghostscript.NET.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.Win32.Registry, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Registry.4.3.0\lib\net46\Microsoft.Win32.Registry.dll</HintPath>
       <Private>True</Private>
@@ -107,6 +110,7 @@
     <Compile Include="Converter\InfoWriter.cs" />
     <Compile Include="Converter\PdfConverter.cs" />
     <Compile Include="Converter\ProcessHandler.cs" />
+    <Compile Include="Converter\WordConverter.cs" />
     <Compile Include="Utils\ProgressStreamContent.cs" />
     <Compile Include="Converter\VideoCutter.cs" />
     <Compile Include="Converter\Wrapper.cs" />
