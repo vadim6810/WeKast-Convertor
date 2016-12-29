@@ -9,8 +9,8 @@ namespace WeCastTests
         [TestMethod]
         public void TestPdfConvert()
         {
-            Converter converter = new PdfConverter();
-            converter.Convert(@"d:/access_1.pdf");
+            //Converter converter = new PdfConverter();
+            //converter.Convert(@"d:/access_1.pdf");
         }
     }
 

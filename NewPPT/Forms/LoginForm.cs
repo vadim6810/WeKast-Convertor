@@ -5,9 +5,10 @@ using WeCastConvertor.Utils;
 namespace WeCastConvertor.Forms
 {
     public partial class LoginForm : Form
-    {    
+    {
+        static LoginForm _instance;
 
-        public LoginForm()
+        private LoginForm()
         {
             InitializeComponent();
         }
@@ -21,7 +22,8 @@ namespace WeCastConvertor.Forms
         private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
-            Close();
+            //Close();
+            Hide();
         }
 
         private async void SaveButton_Click(object sender, EventArgs e)
@@ -39,12 +41,16 @@ namespace WeCastConvertor.Forms
             Cursor = Cursors.Default;
 
 
-            if (res.Status==0) {
+            if (res.Status == 0)
+            {
                 SharedPreferences.Login = api.Login;
                 SharedPreferences.Password = api.Password;
                 DialogResult = DialogResult.OK;
-                Close();
-            } else {
+                //Close();
+                Hide();
+            }
+            else
+            {
                 SetMessage(res.Message);
                 api.Login = SharedPreferences.Login;
                 api.Password = SharedPreferences.Password;
@@ -55,6 +61,16 @@ namespace WeCastConvertor.Forms
         internal void SetMessage(string message)
         {
             throw new NotImplementedException();
+        }
+
+        public static LoginForm GetInstance()
+        {
+            return _instance ?? (_instance = new LoginForm());
+        }
+
+        private void LoginForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            _instance = null;
         }
     }
 }

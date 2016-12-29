@@ -41,7 +41,7 @@
             // SaveButton
             // 
             this.SaveButton.Location = new System.Drawing.Point(78, 77);
-            this.SaveButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.SaveButton.Margin = new System.Windows.Forms.Padding(2);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(49, 20);
             this.SaveButton.TabIndex = 0;
@@ -52,7 +52,7 @@
             // cancel_button
             // 
             this.cancel_button.Location = new System.Drawing.Point(140, 77);
-            this.cancel_button.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cancel_button.Margin = new System.Windows.Forms.Padding(2);
             this.cancel_button.Name = "cancel_button";
             this.cancel_button.Size = new System.Drawing.Size(49, 20);
             this.cancel_button.TabIndex = 1;
@@ -84,7 +84,7 @@
             // login_textbox
             // 
             this.login_textbox.Location = new System.Drawing.Point(78, 24);
-            this.login_textbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.login_textbox.Margin = new System.Windows.Forms.Padding(2);
             this.login_textbox.Name = "login_textbox";
             this.login_textbox.Size = new System.Drawing.Size(112, 22);
             this.login_textbox.TabIndex = 4;
@@ -92,7 +92,7 @@
             // password_textbox
             // 
             this.password_textbox.Location = new System.Drawing.Point(78, 54);
-            this.password_textbox.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.password_textbox.Margin = new System.Windows.Forms.Padding(2);
             this.password_textbox.Name = "password_textbox";
             this.password_textbox.Size = new System.Drawing.Size(112, 22);
             this.password_textbox.TabIndex = 5;
@@ -106,9 +106,9 @@
             this.LoginGroup.Controls.Add(this.cancel_button);
             this.LoginGroup.Controls.Add(this.password_label);
             this.LoginGroup.Location = new System.Drawing.Point(9, 10);
-            this.LoginGroup.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LoginGroup.Margin = new System.Windows.Forms.Padding(2);
             this.LoginGroup.Name = "LoginGroup";
-            this.LoginGroup.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.LoginGroup.Padding = new System.Windows.Forms.Padding(2);
             this.LoginGroup.Size = new System.Drawing.Size(194, 105);
             this.LoginGroup.TabIndex = 6;
             this.LoginGroup.TabStop = false;
@@ -121,7 +121,7 @@
             this.ClientSize = new System.Drawing.Size(213, 132);
             this.Controls.Add(this.LoginGroup);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(229, 170);
             this.MinimizeBox = false;
@@ -130,6 +130,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LoginForm";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LoginForm_FormClosed);
             this.Load += new System.EventHandler(this.LoginForm_Load);
             this.LoginGroup.ResumeLayout(false);
             this.LoginGroup.PerformLayout();

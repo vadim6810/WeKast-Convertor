@@ -38,7 +38,7 @@ namespace WeCastConvertor.Forms
         private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen,
             string message = null)
         {
-            var login = new LoginForm {StartPosition = startPosition};
+            var login = LoginForm.GetInstance();// {StartPosition = startPosition};
             if (message != null)
                 login.SetMessage(message);
             var dialogResult = login.ShowDialog();

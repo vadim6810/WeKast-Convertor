@@ -103,7 +103,7 @@ namespace WeCastConvertor.Forms
 
         private void LoginButton_Click(object sender, EventArgs e)
         {
-            var login = new LoginForm { StartPosition = FormStartPosition.CenterParent };
+            var login = LoginForm.GetInstance();// { StartPosition = FormStartPosition.CenterParent };
             login.ShowDialog();
         }
 
@@ -159,7 +159,7 @@ namespace WeCastConvertor.Forms
 
         private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen)
         {
-            var login = new LoginForm { StartPosition = startPosition};
+            var login = LoginForm.GetInstance();// { StartPosition = startPosition};
             var dialogResult = login.ShowDialog();
             if (dialogResult == DialogResult.Cancel)
             {

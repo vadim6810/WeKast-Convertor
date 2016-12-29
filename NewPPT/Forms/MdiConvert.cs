@@ -211,13 +211,13 @@ namespace WeCastConvertor.Forms
 
         private void pctSettings_Click(object sender, EventArgs e)
         {
-            var settingsForm = new LoginForm();
+            var settingsForm = LoginForm.GetInstance();
             settingsForm.Show();
         }
 
         private void CheckLogin()
         {
-            var login = new LoginForm {StartPosition = FormStartPosition.CenterParent};
+            var login = LoginForm.GetInstance();// {StartPosition = FormStartPosition.CenterParent};
             login.ShowDialog();
         }
 
