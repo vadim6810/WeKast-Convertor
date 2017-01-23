@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WeCastConvertor.Converter;
 using WeCastConvertor.Properties;
@@ -33,14 +32,14 @@ namespace WeCastConvertor.Forms
             AttachHandlers();
         }
 
+        public int InProgress { get; set; }
+
         private void AttachHandlers()
         {
             ProcessHandler.StatusChanged += ShowStatus;
             ProcessHandler.ProgressChanged += ShowProgress;
             ProcessHandler.SizeChanged += ShowFileSize;
         }
-
-        public int InProgress { get; set; }
 
         private void MdiConvert_Load(object sender, EventArgs e)
         {
@@ -103,7 +102,7 @@ namespace WeCastConvertor.Forms
             box.BorderStyle = BorderStyle.None;
         }
 
-        private async void pnlDrop_DragDrop(object sender, DragEventArgs e)
+        private void pnlDrop_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
             foreach (var file in files)
@@ -114,7 +113,16 @@ namespace WeCastConvertor.Forms
                 Console.WriteLine(file);
                 AppendLog(file);
                 var presentation = new Presentation {SourcePath = file};
-                await Convert(presentation);
+                /*await*/
+                var convertionResult = Convert(presentation);
+                if (convertionResult)
+                {
+                    ShowStatus("Convertion successfull");
+                }
+                else
+                {
+                    ShowStatus("Convertion fail");
+                }
             }
             _filesForm.LoadPresantationList();
         }
@@ -127,18 +135,22 @@ namespace WeCastConvertor.Forms
             }
         }
 
-        private async Task<bool> Convert(Presentation presentation)
+        private bool Convert(Presentation presentation)
         {
             try
             {
                 InProgress++;
-                await Wrapper.ConvertAsync(presentation);
+                Wrapper.Convert(presentation);
                 if (presentation.Convert != 100) return false;
-                return await WeKastServerApi.Instance.Upload(presentation);
+                var task = WeKastServerApi.Instance.Upload(presentation);
+                task.Wait();
+                return task.Result;
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                if (e.InnerException != null) Console.WriteLine(e.InnerException.Message);
+                Console.WriteLine(e.StackTrace);
                 return false;
             }
             finally
@@ -170,7 +182,7 @@ namespace WeCastConvertor.Forms
         {
             if (ControlInvokeRequired(lblStatusSize, () => ShowFileSize(uploaded, total))) return;
             lblStatusSize.Show();
-            lblStatusSize.Text = uploaded+@"/"+total;
+            lblStatusSize.Text = uploaded + @"/" + total;
         }
 
 
@@ -194,7 +206,7 @@ namespace WeCastConvertor.Forms
             //LogWindow.SelectedIndex = -1;
         }
 
-        private async void pctSelectFiles_Click(object sender, EventArgs e)
+        private void pctSelectFiles_Click(object sender, EventArgs e)
         {
             var openFileDialog = new OpenFileDialog
             {
@@ -206,7 +218,7 @@ namespace WeCastConvertor.Forms
 
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             var presentation = new Presentation {SourcePath = openFileDialog.FileName};
-            await Convert(presentation);
+            Convert(presentation);
         }
 
         private void pctSettings_Click(object sender, EventArgs e)
@@ -217,7 +229,7 @@ namespace WeCastConvertor.Forms
 
         private void CheckLogin()
         {
-            var login = LoginForm.GetInstance();// {StartPosition = FormStartPosition.CenterParent};
+            var login = LoginForm.GetInstance(); // {StartPosition = FormStartPosition.CenterParent};
             login.ShowDialog();
         }
 

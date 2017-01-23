@@ -40,18 +40,27 @@ namespace WeCastConvertor.Forms
         {
             Cursor = Cursors.WaitCursor;
             var api = WeKastServerApi.Instance;
-            var serverPresantations = await api.ListAsync();
-            Presantations.Clear();
-            foreach (var pres in serverPresantations.Answer)
+            WeKastServerApi.ListResponse serverPresantations = null;
+            try
             {
-                var date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash, pres.Type, pres.Size, date));
-                if (!Previews.ContainsKey(pres.Hash))
-                {
-                    //TODO throws exception
-                    Previews[pres.Hash] = await WeKastServerApi.Instance.Preview(pres.Id);
-                }
+                serverPresantations = await api.ListAsync();
             }
+            catch (Exception e)
+            {
+                
+            }
+            Presantations.Clear();
+            if (serverPresantations?.Answer != null)
+                foreach (var pres in serverPresantations?.Answer)
+                {
+                    var date = DateTime.ParseExact(pres.Date, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                    Presantations.Add(new PresantationTamplate(pres.Id, System.IO.Path.GetFileNameWithoutExtension(pres.Name), pres.Hash, pres.Type, pres.Size, date));
+                    if (!Previews.ContainsKey(pres.Hash))
+                    {
+                        //TODO throws exception
+                        Previews[pres.Hash] = await WeKastServerApi.Instance.Preview(pres.Id);
+                    }
+                }
             ShowFileList();
             Cursor = DefaultCursor;
         }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Drawing;
+using System.Net.Http;
+using System.Text;
 using System.Windows.Forms;
 using WeCastConvertor.Utils;
 
 namespace WeCastConvertor.Forms
 {
+
     public partial class LogoForm : Form
     {
 
@@ -13,32 +16,43 @@ namespace WeCastConvertor.Forms
         public LogoForm()
         {
             InitializeComponent();
+
             _mdiConvert = new MdiConvert(this);
+
         }
 
         private async void LogoForm_Load(object sender, EventArgs e)
         {
-            Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - Width, 0);
-            if (!SharedPreferences.IsSet())
+            try
             {
-                LoginDialogStartupOrExit();
-            }
-            else
-            {
-                //Cursor = Cursors.WaitCursor;
-                var authResult = await WeKastServerApi.Instance.Auth();
-                //Cursor = Cursors.Default;
-                if (authResult.Status != 0)
+                Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - Width, 0);
+                if (!SharedPreferences.IsSet())
                 {
-                    LoginDialogStartupOrExit(FormStartPosition.CenterParent, authResult.Message);
+                    LoginDialogStartupOrExit();
+                }
+                else
+                {
+                    //Cursor = Cursors.WaitCursor;
+                    var authResult = await WeKastServerApi.Instance.Auth();
+                    //Cursor = Cursors.Default;
+                    if (authResult.Status != 0)
+                    {
+                        LoginDialogStartupOrExit(authResult.Message);
+                    }
                 }
             }
+            catch (HttpRequestException exception)
+            {
+                var message = new StringBuilder().AppendLine(exception.Message).AppendLine(exception.InnerException?.Message).ToString();
+                MessageBox.Show( message, @"Http request exception",  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+            }
+
         }
 
-        private static void LoginDialogStartupOrExit(FormStartPosition startPosition = FormStartPosition.CenterScreen,
-            string message = null)
+        private static void LoginDialogStartupOrExit(string message = null)
         {
-            var login = LoginForm.GetInstance();// {StartPosition = startPosition};
+            var login = LoginForm.GetInstance();
             if (message != null)
                 login.SetMessage(message);
             var dialogResult = login.ShowDialog();

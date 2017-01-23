@@ -61,7 +61,8 @@ namespace WeCastConvertor.Converter
             ProcessHandler.OnStatusChanged($"Converting {presName}");
             CreateDirrectories(presName);
             //El.AttachEvents();
-            var pres = Pw.Presentations.Open(PathToPresentation, MsoTriState.msoFalse, MsoTriState.msoFalse, _showPp);
+            Presentation pres = null;
+            pres = Pw.Presentations.Open(PathToPresentation, MsoTriState.msoFalse, MsoTriState.msoFalse, _showPp);
             SaveOrder(pres.Slides.Count);
             ParseSlides(pres);
             CreateVideo(pres);
@@ -146,7 +147,7 @@ namespace WeCastConvertor.Converter
                     if (eff.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick ||
                         eff.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnShapeClick)
                     {
-                       numberOfFrames = (int)(FramesPerSecond * eff.Timing.Duration);
+                        numberOfFrames = (int)(FramesPerSecond * eff.Timing.Duration);
                     }
                     if (isFirstAnimation)
                     {
@@ -154,7 +155,7 @@ namespace WeCastConvertor.Converter
                         //Durations.AddLast(2f / 30);
                     }
 
-                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum() , numberOfFrames);
+                    SaveAnimation(slide.SlideNumber, animId, Durations.Sum(), numberOfFrames);
                     isFirstAnimation = false;
 
                     Durations.AddLast(numberOfFrames);

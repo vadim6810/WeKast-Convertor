@@ -11,6 +11,7 @@ namespace WeCastConvertor.Forms
         private LoginForm()
         {
             InitializeComponent();
+            StartPosition = FormStartPosition.CenterScreen;
         }
 
         private void LoginForm_Load(object sender, EventArgs e)

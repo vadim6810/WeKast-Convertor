@@ -48,7 +48,7 @@ namespace WeCastConvertor.Forms
             {
                 InProgress++;
                 gridData.Add(presentation);
-                await Wrapper.ConvertAsync(presentation);
+                Wrapper.Convert(presentation);
                 if (presentation.Convert != 100) return false;
                 return await WeKastServerApi.Instance.Upload(presentation);
             }

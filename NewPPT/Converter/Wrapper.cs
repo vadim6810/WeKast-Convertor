@@ -25,20 +25,25 @@ namespace WeCastConvertor.Converter
 
         //public static readonly string[] SupportedFormats = {".pptx", ".ppt", ".pdf", ".doc", ".docx"};
 
-        public static Task<Converter> ConvertAsync(Presentation presentation)
+        public static void Convert(Presentation presentation)
         {
-            return Task.Run(() =>
+            Console.WriteLine(@"Starting convert " + presentation.SourcePath);
+            //var converter = new PptConverter(presentation.SourcePath);
+            var converter = converters[Path.GetExtension(presentation.SourcePath)];
+            //ProcessHandler.StatusChanged += StatusChanged;
+            //ProcessHandler.ProgressChanged += ProgressChanged;
+            try
             {
-                Console.WriteLine(@"Starting convert " + presentation.SourcePath);
-                //var converter = new PptConverter(presentation.SourcePath);
-                var converter = converters[Path.GetExtension(presentation.SourcePath)];
-                //ProcessHandler.StatusChanged += StatusChanged;
-                //ProcessHandler.ProgressChanged += ProgressChanged;
                 presentation.EzsPath = converter.Convert(presentation.SourcePath);
                 presentation.Convert = 100;
                 Console.WriteLine(@"Presentations converted " + presentation.EzsPath);
-                return converter;
-            });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine(e.InnerException);
+                Console.WriteLine(e.StackTrace);
+            }
         }
 
 

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TestConsoleApplication;
 using WeCastConvertor.Converter;
+//using System.Windows.Forms;
 using P = WeCastConvertor.Forms;
 
 namespace WeCastConvertor.Utils
@@ -19,6 +20,10 @@ namespace WeCastConvertor.Utils
         private static readonly WeKastServerApi Inst = new WeKastServerApi();
         public string Login;
         public string Password;
+
+        private const long KB = 1024;
+        private const long MB = KB * 1024;
+        private const long GB = MB * 1024;
 
         public string ServerUrl = @"http://78.153.150.254";
 
@@ -54,6 +59,7 @@ namespace WeCastConvertor.Utils
                 client.Timeout = TimeSpan.FromMinutes(30);
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
+                //if (response.StatusCode == HttpStatusCode.OK)
                 return await response.Content.ReadAsStringAsync();
             }
         }
@@ -68,15 +74,13 @@ namespace WeCastConvertor.Utils
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast PptConverter/1.0");
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "WeKast Converter/1.0");
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
                 //Debug.WriteLine("Responce status: {0}",response.StatusCode);
                 return await response.Content.ReadAsStreamAsync();
             }
         }
-
-
 
         public async Task<AuthResult> Auth()
         {
@@ -119,6 +123,9 @@ namespace WeCastConvertor.Utils
             ProcessHandler.OnStatusChanged("Updloading...");
             var path = presentation.EzsPath;
             var name = Path.GetFileName(path);
+            FileInfo fileInfo = new FileInfo(path);
+            if (fileInfo.Exists && fileInfo.Length > 70 * MB)
+                return false;
             Console.WriteLine(@"Uploading " + path);
             if (!File.Exists(path))
             {
@@ -130,9 +137,8 @@ namespace WeCastConvertor.Utils
             {
                 content.Add(new StringContent(Login), "login");
                 content.Add(new StringContent(Password), "password");
-                //var stream = new StreamContent(file);
-                var stream = new ProgressStreamContent(file, 1024*Utils.GetClusterSize(path));//4 * 1024);
-                stream.Progress = Progress;
+                var stream = new ProgressStreamContent(file, 1024 * Utils.GetClusterSize(path));
+                stream.Progress += Progress;
                 content.Add(stream, "file", name);
                 var response = await PostRequest("/upload", content);
                 Debug.WriteLine($"response: {response}");
@@ -158,8 +164,8 @@ namespace WeCastConvertor.Utils
 
         private void Progress(long bytes, long totalBytes, long totalBytesExpected)
         {
-            var result = totalBytes/(double)totalBytesExpected;
-            ProcessHandler.OnProgressChanged((int) (100*result));
+            var result = totalBytes / (double)totalBytesExpected;
+            ProcessHandler.OnProgressChanged((int)(100 * result));
             ProcessHandler.OnSizeChanged(Utils.GetFileSize(totalBytes), Utils.GetFileSize(totalBytesExpected));
         }
 
@@ -193,7 +199,6 @@ namespace WeCastConvertor.Utils
             };
             var content = new FormUrlEncodedContent(data);
             var stream = await PostRequestStream($"/preview/{id}", content);
-            //= await PostRequestStream(, data);
             try
             {
                 var res = new Bitmap(stream);
@@ -203,14 +208,14 @@ namespace WeCastConvertor.Utils
             {
                 Debug.WriteLine("Error downloading preview id={0}", id);
                 Debug.WriteLine(StreamToString(stream));
-                //GetErrorMessage(stream.)
                 return null;
             }
         }
+
         private string StreamToString(Stream stream)
         {
             stream.Position = 0;
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
             {
                 return reader.ReadToEnd();
             }
@@ -347,19 +352,17 @@ namespace WeCastConvertor.Utils
             [DataMember(Name = "error")]
             public string Error { get; set; }
         }
-
-
     }
 
     public class AuthResult
     {
-        public int Status { get; }
-        public string Message { get; }
-
         public AuthResult(int status, string message)
         {
             Status = status;
             Message = message;
         }
+
+        public int Status { get; }
+        public string Message { get; }
     }
 }
