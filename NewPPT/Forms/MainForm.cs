@@ -32,7 +32,7 @@ namespace WeCastConvertor.Forms
             foreach (var file in files)
             {
                 // Пропускаем неподдерживаемые форматы
-                if (!Array.Exists(Wrapper.SupportedFormats, s => s.Equals(Path.GetExtension(file)))) continue;
+                //if (!Array.Exists(Wrapper.SupportedFormats, s => s.Equals(Path.GetExtension(file)))) continue;
                 
                 Console.WriteLine(file);
                 AppendLog(file);

@@ -59,7 +59,6 @@ namespace WeCastConvertor.Utils
                 client.Timeout = TimeSpan.FromMinutes(30);
                 var requestUri = ServerUrl + url;
                 var response = await client.PostAsync(requestUri, content);
-                //if (response.StatusCode == HttpStatusCode.OK)
                 return await response.Content.ReadAsStringAsync();
             }
         }
@@ -120,7 +119,7 @@ namespace WeCastConvertor.Utils
 
         public async Task<bool> Upload(P.Presentation presentation)
         {
-            ProcessHandler.OnStatusChanged("Updloading...");
+            ProcessHandler.OnStatusChanged("Uploading...");
             var path = presentation.EzsPath;
             var name = Path.GetFileName(path);
             FileInfo fileInfo = new FileInfo(path);

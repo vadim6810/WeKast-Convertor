@@ -105,26 +105,27 @@ namespace WeCastConvertor.Forms
         private void pnlDrop_DragDrop(object sender, DragEventArgs e)
         {
             var files = (string[]) e.Data.GetData(DataFormats.FileDrop);
-            foreach (var file in files)
-            {
-                // Пропускаем неподдерживаемые форматы
-                if (!Array.Exists(Wrapper.SupportedFormats, s => s.Equals(Path.GetExtension(file)))) continue;
+            Wrapper.AddFiles(files);
+            //foreach (var file in files)
+            //{
+            //    // Пропускаем неподдерживаемые форматы
+            //    if (!Array.Exists(Wrapper.SupportedFormats, s => s.Equals(Path.GetExtension(file)))) continue;
 
-                Console.WriteLine(file);
-                AppendLog(file);
-                var presentation = new Presentation {SourcePath = file};
-                /*await*/
-                var convertionResult = Convert(presentation);
-                if (convertionResult)
-                {
-                    ShowStatus("Convertion successfull");
-                }
-                else
-                {
-                    ShowStatus("Convertion fail");
-                }
-            }
-            _filesForm.LoadPresantationList();
+            //    Console.WriteLine(file);
+            //    AppendLog(file);
+            //    var presentation = new Presentation {SourcePath = file};
+            //    /*await*/
+            //    var convertionResult = Convert(presentation);
+            //    if (convertionResult)
+            //    {
+            //        ShowStatus("Convertion successfull");
+            //    }
+            //    else
+            //    {
+            //        ShowStatus("Convertion fail");
+            //    }
+            //}
+            //_filesForm.LoadPresantationList();
         }
 
         private void pnlDrop_DragEnter(object sender, DragEventArgs e)
@@ -142,9 +143,9 @@ namespace WeCastConvertor.Forms
                 InProgress++;
                 Wrapper.Convert(presentation);
                 if (presentation.Convert != 100) return false;
-                var task = WeKastServerApi.Instance.Upload(presentation);
-                task.Wait();
-                return task.Result;
+                var result = WeKastServerApi.Instance.Upload(presentation).GetAwaiter().GetResult();
+                //task.Wait();
+                return result;
             }
             catch (Exception e)
             {
